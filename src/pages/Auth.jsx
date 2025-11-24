@@ -1,20 +1,104 @@
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { requestAuthOtpApi, verifyAuthOtpApi } from "../services/allApis";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
   const [otpSent, setOtpSent] = useState(false);
-  const [email, setEmail] = useState("");
+  const [emailId, setEmailId] = useState("");
+  const[otp, setOtp]=useState("")
+
+  const navigate=useNavigate();
+  console.log(emailId);
+  
 
   const handleGoogleSignup = () => {
     try {
       window.location.assign("http://localhost:7777/google");
     } catch (error) {
       console.error("Google Auth Error:", error);
-      alert("Unable to start Google login. Please try again.");
+      toast.error("Unable to start Google login. Please try again.");
     }
   };
+
+
+  const handleRequestAuthOtp = async () => {
+    try {
+      if (!emailId.trim()) {
+        return toast.error("Please enter your email", {
+          position: "bottom-right",
+          autoClose: 1000,
+          transition: Bounce,
+        });
+      }
+
+      const reqBody = { emailId };
+      const result = await requestAuthOtpApi(reqBody);
+
+      if (result.data.success) {
+        toast.success(`OTP sent to ${emailId}`, {
+          position: "bottom-right",
+          autoClose: 1200,
+          transition: Bounce,
+        });
+
+        setOtpSent(true); // ✔ MOVE TO OTP SCREEN
+      } else {
+        toast.error(result.data.message || "Failed to send OTP", {
+          position: "bottom-right",
+          autoClose: 1200,
+          transition: Bounce,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong. Try again.", {
+        position: "bottom-right",
+        autoClose: 1200,
+        transition: Bounce,
+      });
+    }
+  };
+
+const handleVerifyAuthOtp = async () => {
+  try {
+    const reqBody = { emailId, otp };
+    const result = await verifyAuthOtpApi(reqBody);
+
+    console.log(result);
+
+    if (result.data.isAdmin === true) {
+      toast.success("Welcome to Admin Dashboard", {
+        position: "top-center",
+        autoClose: 1200,
+        transition: Bounce,
+      });
+
+      navigate("/AdminDashboard");
+      return;
+    }
+
+    // Normal user
+    toast.success("Authentication Successful", {
+      position: "top-center",
+      autoClose: 1200,
+      transition: Bounce,
+    });
+
+    navigate("/");
+  } catch (error) {
+    console.error(error);
+    toast.error("Something went wrong. Try again.", {
+      position: "bottom-right",
+      autoClose: 1200,
+      transition: Bounce,
+    });
+  }
+};
+
+  
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
@@ -86,16 +170,18 @@ const Auth = () => {
                   <input
                     type="email"
                     placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={emailId}
+                    onChange={(e) => setEmailId(e.target.value)}
                     className="w-full h-12 px-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-neutral focus:outline-none"
                   />
                 </div>
 
                 {/* Request OTP */}
                 <button
+
                   className="btn btn-neutral w-full h-12 rounded-xl text-base shadow-sm"
-                  onClick={() => setOtpSent(true)}
+                  // onClick={() => setOtpSent(true)}
+                  onClick={handleRequestAuthOtp}
                 >
                   Send OTP
                 </button>
@@ -120,7 +206,7 @@ const Auth = () => {
                   Verify OTP
                 </h2>
                 <p className="text-gray-500 mb-6">
-                  We sent a 6-digit OTP to <strong>{email}</strong>
+                  We sent a 6-digit OTP to <strong>{emailId}</strong>
                 </p>
 
                 <div className="mb-6">
@@ -131,19 +217,20 @@ const Auth = () => {
                     type="text"
                     maxLength={6}
                     placeholder="123456"
+                    onChange={(e)=>setOtp(e.target.value)}
                     className="w-full h-12 px-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-neutral focus:outline-none tracking-widest text-center"
                   />
                 </div>
 
                 {/* Verify Button */}
-                <button className="btn btn-neutral w-full h-12 rounded-xl text-base shadow-sm">
-                  Continue
+                <button onClick={handleVerifyAuthOtp} className="btn btn-neutral w-full h-12 rounded-xl text-base shadow-sm">
+                  Verify
                 </button>
 
                 {/* Resend OTP */}
                 <p className="text-center text-sm text-gray-500 mt-4">
                   Didn't receive the OTP?{" "}
-                  <button className="text-neutral font-medium hover:underline">
+                  <button onClick={handleRequestAuthOtp} className="text-neutral font-medium hover:underline">
                     Resend OTP
                   </button>
                 </p>
@@ -154,8 +241,12 @@ const Auth = () => {
           </div>
         </div>
       </div>
+      <ToastContainer/>
     </div>
+
   );
 };
 
 export default Auth;
+
+

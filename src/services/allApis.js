@@ -2,11 +2,11 @@ import { commonApi } from "./commonApi";
 import { serverUrl } from "./serverUrl";
 
 // register api for users
-export const signupApi = async (reqBody) => {
-  return await commonApi("POST", `${serverUrl}/register`, reqBody, "")
+export const requestAuthOtpApi = async (reqBody) => {
+  return await commonApi("POST", `${serverUrl}/auth/requestotp`, reqBody, "")
 }
 
 // login Api admin and users
-export const loginApi = async (reqBody) => {
-  return await commonApi("POST", `${serverUrl}/login`, reqBody, "")
+export const verifyAuthOtpApi = async (reqBody) => {
+  return await commonApi("POST", `${serverUrl}/auth/verifyotp`, reqBody, "")
 }
