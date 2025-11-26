@@ -1,26 +1,8 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import './App.css'
-import Auth from './pages/Auth'
-import Home from './pages/Home'
-import AdminHome from './pages/AdminHome'
+// src/App.jsx
+import React from "react";
 
 function App() {
-
-  return (
-    <>
-
-    <BrowserRouter>
-    <Routes>
-             <Route path="/" element={<Home />} />
-             <Route path="/adminDashboard" element={<AdminHome />} />
-
-       <Route path="/auth" element={<Auth />} />
-    </Routes>
-    
-    </BrowserRouter>
- 
-    </>
-  )
+  return <div className="min-h-screen bg-base-200"></div>; // optional bg
 }
 
-export default App
+export default App;

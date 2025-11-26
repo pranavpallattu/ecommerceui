@@ -8,11 +8,11 @@ import { useNavigate } from "react-router-dom";
 const Auth = () => {
   const [otpSent, setOtpSent] = useState(false);
   const [emailId, setEmailId] = useState("");
-  const[otp, setOtp]=useState("")
+  const [otp, setOtp] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   console.log(emailId);
-  
 
   const handleGoogleSignup = () => {
     try {
@@ -22,7 +22,6 @@ const Auth = () => {
       toast.error("Unable to start Google login. Please try again.");
     }
   };
-
 
   const handleRequestAuthOtp = async () => {
     try {
@@ -34,19 +33,22 @@ const Auth = () => {
         });
       }
 
+      setLoading(true);
+
       const reqBody = { emailId };
       const result = await requestAuthOtpApi(reqBody);
+      console.log("OTP result:", result);
 
-      if (result.data.success) {
+      if (result.success) {
         toast.success(`OTP sent to ${emailId}`, {
           position: "bottom-right",
           autoClose: 1200,
           transition: Bounce,
         });
 
-        setOtpSent(true); // ✔ MOVE TO OTP SCREEN
+        setOtpSent(true);
       } else {
-        toast.error(result.data.message || "Failed to send OTP", {
+        toast.error(result.message || "Failed to send OTP", {
           position: "bottom-right",
           autoClose: 1200,
           transition: Bounce,
@@ -59,51 +61,66 @@ const Auth = () => {
         autoClose: 1200,
         transition: Bounce,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
-const handleVerifyAuthOtp = async () => {
-  try {
-    const reqBody = { emailId, otp };
-    const result = await verifyAuthOtpApi(reqBody);
+  const handleVerifyAuthOtp = async () => {
+    try {
+      if (!otp.trim() || !emailId.trim()) {
+        return toast.error("Otp is required", {
+          position: "bottom-right",
+          autoClose: 1200,
+          transition: Bounce,
+        });
+      }
 
-    console.log(result);
+      const reqBody = { emailId, otp };
+      const result = await verifyAuthOtpApi(reqBody);
 
-    if (result.data.isAdmin === true) {
-      toast.success("Welcome to Admin Dashboard", {
+      if (!result.data.success) {
+        return toast.error(result.data.message || "Invalid OTP", {
+          position: "bottom-right",
+          autoClose: 1200,
+          transition: Bounce,
+        });
+      }
+
+      console.log(result);
+
+      if (result.data.isAdmin === true) {
+        toast.success("Welcome to Admin Dashboard", {
+          position: "top-center",
+          autoClose: 1200,
+          transition: Bounce,
+        });
+
+        navigate("/AdminDashboard");
+        return;
+      }
+
+      // Normal user
+      toast.success("Authentication Successful", {
         position: "top-center",
         autoClose: 1200,
         transition: Bounce,
       });
 
-      navigate("/AdminDashboard");
-      return;
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong. Try again.", {
+        position: "bottom-right",
+        autoClose: 1200,
+        transition: Bounce,
+      });
     }
-
-    // Normal user
-    toast.success("Authentication Successful", {
-      position: "top-center",
-      autoClose: 1200,
-      transition: Bounce,
-    });
-
-    navigate("/");
-  } catch (error) {
-    console.error(error);
-    toast.error("Something went wrong. Try again.", {
-      position: "bottom-right",
-      autoClose: 1200,
-      transition: Bounce,
-    });
-  }
-};
-
-  
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
       <div className="w-full max-w-6xl bg-white shadow-xl rounded-3xl overflow-hidden grid md:grid-cols-2">
-
         {/* Left Side — Branding */}
         <div className="bg-gray-900 text-white p-14 flex flex-col justify-center items-start">
           <img
@@ -122,14 +139,14 @@ const handleVerifyAuthOtp = async () => {
 
           <p className="text-gray-400 text-md max-w-md leading-relaxed">
             Your all-in-one destination. Log in or create an account instantly
-            using Google or secure Email & OTP authentication — no passwords, no friction.
+            using Google or secure Email & OTP authentication — no passwords, no
+            friction.
           </p>
         </div>
 
         {/* Right Side Form */}
         <div className="p-14 flex items-center justify-center bg-white">
           <div className="w-full max-w-md">
-
             {/* Email Step */}
             {!otpSent && (
               <>
@@ -178,12 +195,15 @@ const handleVerifyAuthOtp = async () => {
 
                 {/* Request OTP */}
                 <button
-
-                  className="btn btn-neutral w-full h-12 rounded-xl text-base shadow-sm"
-                  // onClick={() => setOtpSent(true)}
                   onClick={handleRequestAuthOtp}
+                  className="btn shadow-md w-full h-12"
+                  disabled={loading} // disable during API call
                 >
-                  Send OTP
+                  {loading ? (
+                    <span className="loading loading-spinner loading-sm"></span>
+                  ) : (
+                    "Send OTP"
+                  )}
                 </button>
               </>
             )}
@@ -217,20 +237,26 @@ const handleVerifyAuthOtp = async () => {
                     type="text"
                     maxLength={6}
                     placeholder="123456"
-                    onChange={(e)=>setOtp(e.target.value)}
+                    onChange={(e) => setOtp(e.target.value)}
                     className="w-full h-12 px-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-neutral focus:outline-none tracking-widest text-center"
                   />
                 </div>
 
                 {/* Verify Button */}
-                <button onClick={handleVerifyAuthOtp} className="btn btn-neutral w-full h-12 rounded-xl text-base shadow-sm">
+                <button
+                  onClick={handleVerifyAuthOtp}
+                  className="btn btn-neutral w-full h-12 rounded-xl text-base shadow-sm"
+                >
                   Verify
                 </button>
 
                 {/* Resend OTP */}
                 <p className="text-center text-sm text-gray-500 mt-4">
                   Didn't receive the OTP?{" "}
-                  <button onClick={handleRequestAuthOtp} className="text-neutral font-medium hover:underline">
+                  <button
+                    onClick={handleRequestAuthOtp}
+                    className="text-neutral font-medium hover:underline"
+                  >
                     Resend OTP
                   </button>
                 </p>
@@ -241,12 +267,14 @@ const handleVerifyAuthOtp = async () => {
           </div>
         </div>
       </div>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
-
   );
 };
 
 export default Auth;
+
+
+
 
 

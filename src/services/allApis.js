@@ -10,3 +10,6 @@ export const requestAuthOtpApi = async (reqBody) => {
 export const verifyAuthOtpApi = async (reqBody) => {
   return await commonApi("POST", `${serverUrl}/auth/verifyotp`, reqBody, "")
 }
+
+
+export const getCategoriesApi
