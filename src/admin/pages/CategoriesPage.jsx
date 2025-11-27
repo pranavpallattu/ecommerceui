@@ -1,6 +1,7 @@
 // src/admin/pages/CategoriesPage.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Search, Plus, Edit3, Trash2, Eye, EyeOff, ChevronLeft, ChevronRight } from "lucide-react";
+import { getCategoriesApi } from "../../services/allApis";
 
 const CategoriesPage = () => {
   const [search, setSearch] = useState("");
@@ -29,8 +30,14 @@ const CategoriesPage = () => {
   };
 
   const getCategories=async()=>{
-    const result=await 
+    const result=await getCategoriesApi()
+    console.log(result);
+    
   }
+
+  useEffect(()=>{
+getCategories();
+  },[])
 
 
 

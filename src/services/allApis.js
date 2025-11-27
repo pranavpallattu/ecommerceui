@@ -12,4 +12,6 @@ export const verifyAuthOtpApi = async (reqBody) => {
 }
 
 
-export const getCategoriesApi
+export const getCategoriesApi=async()=>{
+  return await commonApi("GET", `${serverUrl}/category/getCategory`,{},"")
+}

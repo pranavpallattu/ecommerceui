@@ -7,6 +7,7 @@ export const commonApi = async (method, url, body = {}, reqHeader) => {
       url,
       data: method !== "GET" ? body : undefined,
       headers: reqHeader || { "Content-Type": "application/json" },
+       withCredentials: true,
     });
 
     return {

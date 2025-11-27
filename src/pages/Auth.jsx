@@ -66,57 +66,35 @@ const Auth = () => {
     }
   };
 
-  const handleVerifyAuthOtp = async () => {
-    try {
-      if (!otp.trim() || !emailId.trim()) {
-        return toast.error("Otp is required", {
-          position: "bottom-right",
-          autoClose: 1200,
-          transition: Bounce,
-        });
-      }
-
-      const reqBody = { emailId, otp };
-      const result = await verifyAuthOtpApi(reqBody);
-
-      if (!result.data.success) {
-        return toast.error(result.data.message || "Invalid OTP", {
-          position: "bottom-right",
-          autoClose: 1200,
-          transition: Bounce,
-        });
-      }
-
-      console.log(result);
-
-      if (result.data.isAdmin === true) {
-        toast.success("Welcome to Admin Dashboard", {
-          position: "top-center",
-          autoClose: 1200,
-          transition: Bounce,
-        });
-
-        navigate("/AdminDashboard");
-        return;
-      }
-
-      // Normal user
-      toast.success("Authentication Successful", {
-        position: "top-center",
-        autoClose: 1200,
-        transition: Bounce,
-      });
-
-      navigate("/");
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong. Try again.", {
-        position: "bottom-right",
-        autoClose: 1200,
-        transition: Bounce,
-      });
+ const handleVerifyAuthOtp = async () => {
+  try {
+    if (!otp.trim() || !emailId.trim()) {
+      return toast.error("Otp is required");
     }
-  };
+
+    const reqBody = { emailId, otp };
+    const result = await verifyAuthOtpApi(reqBody);
+    console.log(result);
+    
+
+    if (!result.success) {
+      return toast.error(result.message || "Invalid OTP");
+    }
+
+    if (result.data.data.isAdmin) {
+      toast.success("Welcome Admin");
+      navigate("/admin/dashboard");
+      return;
+    }
+
+    toast.success("Authentication Successful");
+    // navigate("/");
+  } catch (error) {
+    console.error(error)
+    toast.error("Something went wrong");
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
