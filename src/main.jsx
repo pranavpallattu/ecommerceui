@@ -5,8 +5,6 @@ import App from './App.jsx'
 import adminRoutes from './admin/AdminRoutes.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { authRoutes } from './AuthRouter.jsx'
-import { Provider } from 'react-redux'
-import appStore from './utils/appStore.js'
 
 const router = createBrowserRouter([
   adminRoutes,
@@ -15,10 +13,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Provider store={appStore}>
        <RouterProvider router={router}> 
     </RouterProvider>
-    </Provider>
    
   </StrictMode>,
 )
