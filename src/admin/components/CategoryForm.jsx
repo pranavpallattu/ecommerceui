@@ -8,18 +8,6 @@ const CategoryForm = ({ isOpen, onClose, onSubmit, initialData }) => {
     offer: "",
   });
 
-  useEffect(() => {
-    if (initialData) {
-      setForm({
-        name: initialData.name || "",
-        description: initialData.description || "",
-        offer: initialData.offer || "",
-      });
-    } else {
-      setForm({ name: "", description: "", offer: "" });
-    }
-  }, [initialData, isOpen]);
-
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
@@ -61,6 +49,7 @@ const CategoryForm = ({ isOpen, onClose, onSubmit, initialData }) => {
           />
 
           <div className="flex justify-end gap-3 mt-8">
+            // In CategoryForm.jsx
             <button type="button" onClick={onClose} className="btn btn-ghost">
               Cancel
             </button>

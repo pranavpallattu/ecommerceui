@@ -28,12 +28,45 @@ const useCategoryStore = create(
     limit: 5,
 
     pagination: {
-      totalCategories: 0,
-      totalPages: 1,
-      currentPage: 1,
-      hasNextPage: false,
-      hasPrevPage: false,
-    },
+        totalCategories:0,
+        totalPages:0,
+        currentPage: 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
+
+      // In categoryStore.js — ADD THIS
+isModalOpen: false,
+editData: null,
+
+// Open modal for add or edit
+openModal: (data = null) => set({ 
+  isModalOpen: true, 
+  editData: data 
+}),
+
+// Close modal + CLEAR everything
+closeModal: () => set({ 
+  isModalOpen: false, 
+  editData: null 
+}),
+
+// Submit handler
+handleSubmit: async (formData) => {
+  const { editData, addCategory, editCategory, closeModal, fetchCategories } = get();
+
+  try {
+    if (editData) {
+      await editCategory(editData._id, formData);
+    } else {
+      await addCategory(formData);
+    }
+    closeModal();        // ← closes + clears editData
+    fetchCategories();   // ← refresh list
+  } catch (err) {
+    // error already set in add/editCategory
+  }
+},
 
     // ----- simple setters -----
     setSearch: (value) => {
@@ -55,38 +88,48 @@ const useCategoryStore = create(
      * - Expects allApis.getCategoriesApi(search,page,limit) to return
      *   { success:true, data: { data: categoriesArray, pagination: {...} }, ... }
      */
-    fetchCategories: async () => {
-      try {
-        set({ loading: true, error: null });
-        const { search, page, limit } = get();
-        // call API (function should accept search,page,limit)
-        const res = await getCategoriesApi(search || "", page || 1, limit || 5);
+   /**
+ * Fetch categories — accepts object or uses current state
+ * This is the MODERN and CORRECT way
+ */
+fetchCategories: async ({ search, page, limit } = {}) => {
+  set({ loading: true, error: null });
 
-        if (!res || !res.success) {
-          set({ loading: false, error: res?.message || "Failed to fetch categories" });
-          return { success: false, message: res?.message || "Failed" };
-        }
+  // Use passed values OR current state
+  const current = get();
+  const finalSearch = search !== undefined ? search : current.search;
+  const finalPage = page !== undefined ? page : current.page;
+  const finalLimit = limit !== undefined ? limit : current.limit;
 
-        set({
-          categories: res.data.data || [],
-          pagination: res.data.pagination || {
-            totalCategories: 0,
-            totalPages: 1,
-            currentPage: page,
-            hasNextPage: false,
-            hasPrevPage: false,
-          },
-          loading: false,
-          error: null,
-        });
+  try {
+    const res = await getCategoriesApi(finalSearch, finalPage, finalLimit);
 
-        return { success: true, data: res.data };
-      } catch (err) {
-        console.error("fetchCategories error:", err);
-        set({ loading: false, error: err.message || "Server error" });
-        return { success: false, message: err.message || "Server error" };
-      }
-    },
+    if (!res.success) {
+      set({ loading: false, error: res.message || "Failed to fetch" });
+      return;
+    }
+
+    set({
+      categories: res.data.data,
+      pagination: {
+        totalCategories: res.data.pagination.totalCategories,
+        totalPages: res.data.pagination.totalPages,
+        currentPage: finalPage,
+        hasNextPage: finalPage < res.data.pagination.totalPages,
+        hasPrevPage: finalPage > 1,
+      },
+      // Also sync root state
+      search: finalSearch,
+      page: finalPage,
+      limit: finalLimit,
+      loading: false,
+      error: null,
+    });
+  } catch (err) {
+    set({ loading: false, error: "Network error" });
+    console.error("fetchCategories error:", err);
+  }
+},
 
     /**
      * Add a new category
@@ -98,7 +141,7 @@ const useCategoryStore = create(
         set({ loading: true, error: null });
         const res = await addCategoryApi(reqBody);
 
-        if (!res || !res.success) {
+        if (!res.success) {
           set({ loading: false, error: res?.message || "Failed to add category" });
           return { success: false, message: res?.message || "Failed to add category" };
         }
@@ -126,7 +169,7 @@ const useCategoryStore = create(
         set({ loading: true, error: null });
         const res = await editCategoryApi(reqBody, id);
 
-        if (!res || !res.success) {
+        if (!res.success) {
           set({ loading: false, error: res?.message || "Failed to edit category" });
           return { success: false, message: res?.message || "Failed to edit category" };
         }
@@ -150,7 +193,7 @@ const useCategoryStore = create(
         set({ loading: true, error: null });
         const res = await listCategoryApi(id);
 
-        if (!res || !res.success) {
+        if (!res.success) {
           set({ loading: false, error: res?.message || "Failed to list category" });
           return { success: false, message: res?.message || "Failed to list category" };
         }
@@ -174,7 +217,7 @@ const useCategoryStore = create(
         set({ loading: true, error: null });
         const res = await unlistCategoryApi(id);
 
-        if (!res || !res.success) {
+        if (!res.success) {
           set({ loading: false, error: res?.message || "Failed to unlist category" });
           return { success: false, message: res?.message || "Failed to unlist category" };
         }
@@ -198,7 +241,7 @@ const useCategoryStore = create(
         set({ loading: true, error: null });
         const res = await softDeleteCategoryApi(id);
 
-        if (!res || !res.success) {
+        if (!res.success) {
           set({ loading: false, error: res?.message || "Failed to delete category" });
           return { success: false, message: res?.message || "Failed to delete category" };
         }

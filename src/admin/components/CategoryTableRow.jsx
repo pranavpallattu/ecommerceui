@@ -1,7 +1,14 @@
-// src/admin/components/CategoryTableRow.jsx
 import { Edit3, Trash2, Eye, EyeOff } from "lucide-react";
+import useCategoryStore from "../../utils/stores/categoryStore";
 
-const CategoryTableRow = ({ cat, onEdit, onDelete, onToggleStatus }) => {
+const CategoryTableRow = ({ cat }) => {
+  const { openModal, softDeleteCategory, listCategory, unlistCategory } = useCategoryStore();
+
+  const handleToggle = () => {
+    if (cat.isActive) unlistCategory(cat._id);
+    else listCategory(cat._id);
+  };
+
   return (
     <tr className="hover:bg-gray-50 transition">
       <td className="px-8 py-6 font-medium text-gray-900">{cat.name}</td>
@@ -14,21 +21,19 @@ const CategoryTableRow = ({ cat, onEdit, onDelete, onToggleStatus }) => {
         )}
       </td>
       <td className="px-8 py-6">
-        <span
-          className={`badge ${cat.isActive ? "badge-success" : "badge-ghost"} badge-sm`}
-        >
+        <span className={`badge ${cat.isActive ? "badge-success" : "badge-ghost"} badge-sm`}>
           {cat.isActive ? "Active" : "Hidden"}
         </span>
       </td>
       <td className="px-8 py-6">
         <div className="flex justify-center gap-4">
-          <button onClick={onToggleStatus} className="btn btn-ghost btn-xs">
+          <button onClick={handleToggle} className="btn btn-ghost btn-xs">
             {cat.isActive ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
-          <button onClick={() => onEdit(cat)} className="btn btn-ghost btn-xs">
+          <button onClick={() => openModal(cat)} className="btn btn-ghost btn-xs">
             <Edit3 size={18} />
           </button>
-          <button onClick={() => onDelete(cat._id)} className="btn btn-ghost btn-xs">
+          <button onClick={() => softDeleteCategory(cat._id)} className="btn btn-ghost btn-xs">
             <Trash2 size={18} className="text-red-500" />
           </button>
         </div>
