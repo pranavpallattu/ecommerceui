@@ -12,7 +12,7 @@ const CategoriesHeader = () => {
       </div>
       <button
         onClick={() => openModal()}
-        className="btn btn-primary rounded-2xl h-12 px-6 flex items-center gap-2"
+className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium p-3 rounded-lg transition-colors duration-150 flex items-center gap-2"
       >
         <Plus size={20} />
         Add Category

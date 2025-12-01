@@ -15,15 +15,24 @@ const CategoryTableRow = ({ cat }) => {
       <td className="px-8 py-6 text-gray-600 text-sm">{cat.description}</td>
       <td className="px-8 py-6">
         {cat.offer ? (
-          <span className="badge badge-info badge-sm">{cat.offer}% off</span>
-        ) : (
+<span className="inline-flex items-center py-2 px-3 rounded text-xs font-bold bg-red-500 text-white">
+   50% OFF
+</span>        ) : (
           <span className="text-gray-400">—</span>
         )}
       </td>
       <td className="px-8 py-6">
-        <span className={`badge ${cat.isActive ? "badge-success" : "badge-ghost"} badge-sm`}>
-          {cat.isActive ? "Active" : "Hidden"}
-        </span>
+        {
+          cat.isActive? <span className="inline-flex items-center py-2 px-3 rounded-full text-xs font-medium bg-green-100 text-green-800">
+  <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span>
+  Active
+</span>
+:
+<span className="inline-flex items-center py-2 px-3 rounded-full text-xs font-medium bg-red-100 text-red-800">
+  <span className="w-1.5 h-1.5 rounded-full bg-red-500 mr-1.5"></span>
+  Inactive
+</span>
+        }
       </td>
       <td className="px-8 py-6">
         <div className="flex justify-center gap-4">

@@ -6,6 +6,7 @@ import CategoriesSearch from "../components/CategoriesSearch";
 import CategoriesTable from "../components/CategoriesTable";
 import CategoriesPagination from "../components/CategoriesPagination";
 import CategoryForm from "../components/CategoryForm";
+import CategoryFormModal from "../components/CategoryFormModal";
 
 const CategoriesPage = () => {
   const { categories, loading, error, fetchCategories, search, pagination } = useCategoryStore();
@@ -36,7 +37,7 @@ const CategoriesPage = () => {
       <CategoriesSearch />
       <CategoriesTable />
       <CategoriesPagination />
-      <CategoryForm />
+      <CategoryFormModal />
     </div>
   );
 };

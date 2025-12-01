@@ -12,45 +12,60 @@ const Pagination = ({ page, totalPages, onPageChange }) => {
   const pages = Array.from({ length: end - start + 1 }, (_, i) => start + i);
 
   return (
-    <div className="flex justify-center items-center gap-2 mt-8 flex-wrap">
+    <div className="flex justify-center items-center gap-2 mt-10">
+      {/* Previous Button */}
       <button
         onClick={() => onPageChange(page - 1)}
         disabled={page === 1}
-        className="btn btn-square btn-sm hover:bg-base-300 disabled:opacity-50"
+        className="join-item btn btn-square btn-sm hover:bg-base-300 disabled:opacity-50"
       >
         <ChevronLeft size={18} />
       </button>
 
+      {/* First Page + Ellipsis */}
       {start > 1 && (
         <>
-          <button onClick={() => onPageChange(1)} className="btn btn-sm">1</button>
-          {start > 2 && <span className="px-2">...</span>}
+          <button
+            onClick={() => onPageChange(1)}
+            className="join-item btn btn-sm"
+          >
+            1
+          </button>
+          {start > 2 && <span className="join-item px-3">...</span>}
         </>
       )}
 
+      {/* Visible Pages */}
       {pages.map((p) => (
         <button
           key={p}
           onClick={() => onPageChange(p)}
-          className={`btn btn-sm ${page === p ? "btn-primary" : "btn-ghost"}`}
+          className={`join-item btn btn-sm ${
+            page === p ? "btn-active" : ""
+          }`}
         >
           {p}
         </button>
       ))}
 
+      {/* Last Page + Ellipsis */}
       {end < totalPages && (
         <>
-          {end < totalPages - 1 && <span className="px-2">...</span>}
-          <button onClick={() => onPageChange(totalPages)} className="btn btn-sm">
+          {end < totalPages - 1 && <span className="join-item px-3">...</span>}
+          <button
+            onClick={() => onPageChange(totalPages)}
+            className="join-item btn btn-sm"
+          >
             {totalPages}
           </button>
         </>
       )}
 
+      {/* Next Button */}
       <button
         onClick={() => onPageChange(page + 1)}
         disabled={page === totalPages}
-        className="btn btn-square btn-sm hover:bg-base-300 disabled:opacity-50"
+        className="join-item btn btn-square btn-sm hover:bg-base-300 disabled:opacity-50"
       >
         <ChevronRight size={18} />
       </button>
