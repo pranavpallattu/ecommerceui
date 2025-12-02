@@ -40,3 +40,40 @@ export const unlistCategoryApi = async (id) => {
 export const softDeleteCategoryApi = async (id) => {
   return await commonApi("PATCH", `${serverUrl}/category/softDelete/${id}`, {}, "");
 };
+
+
+
+// GET /admin/customers?search=&page=&limit=
+export const getAllCustomersApi = async (search = "", page = 1, limit = 5) => {
+  return await commonApi(
+    "GET",
+    `${serverUrl}/admin/customers?search=${search}&page=${page}&limit=${limit}`,
+    {},
+    ""
+  );
+};
+
+// PATCH /admin/user/:id
+export const updateUserStatusApi = async (id) => {
+  return await commonApi("PATCH", `${serverUrl}/admin/user/${id}`, {}, "");
+};
+
+
+
+
+// src/services/allApis.js
+
+// GET Sales Report
+export const getSalesReportApi = async ({filterType, startDate,endDate}) => {
+  return await commonApi("GET", `${serverUrl}/admin/getsalesreport?filterType=${filterType}&startDate=${startDate},&endDate=${endDate}`,{} , "");
+};
+
+// Download PDF Report
+export const downloadSalesPDFApi = async (payload = {}) => {
+  return await commonApi("POST", `${serverUrl}/admin/report/pdf`, payload, "", true);
+};
+
+// Download Excel Report
+export const downloadSalesExcelApi = async (payload = {}) => {
+  return await commonApi("POST", `${serverUrl}/admin/report/excel`, payload, "", true);
+};

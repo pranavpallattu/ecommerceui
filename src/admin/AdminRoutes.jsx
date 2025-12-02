@@ -4,8 +4,8 @@ import CustomersPage from "./pages/CustomersPage";
 import DashboardPage from "./pages/DashboardPage";
 import ProductsPage from "./pages/ProductsPage";
 import CategoriesPage from "./pages/CategoriesPage";
-import SalesPage from "./pages/SalesPage";
 import CouponsPage from "./pages/CouponsPage";
+import SalesReportPage from "./pages/SalesReportPage";
 
 const adminRoutes = {
   path: "/admin",
@@ -16,7 +16,7 @@ const adminRoutes = {
     { path: "orders", element: <OrdersPage /> },
     { path: "products", element: <ProductsPage /> },
     { path: "categories", element: <CategoriesPage /> },
-    { path: "sales", element: <SalesPage /> },
+    { path: "sales", element: <SalesReportPage /> },
     { path: "coupons", element: <CouponsPage /> },
   ],
 };
