@@ -1,18 +1,26 @@
 import axios from "axios";
 
-export const commonApi = async (method, url, body = {}, reqHeader) => {
+export const commonApi = async (
+  method,
+  url,
+  body = {},
+  reqHeader,
+  isFile = false
+) => {
   try {
     const response = await axios({
       method,
       url,
       data: method !== "GET" ? body : undefined,
       headers: reqHeader || { "Content-Type": "application/json" },
-       withCredentials: true,
+      withCredentials: true,
+      responseType: isFile ? "blob" : "json",
     });
 
     return {
       success: true,
-      data: response.data,
+      url: isFile ? URL.createObjectURL(response.data) : null,
+      data: !isFile ? response.data : null,
       status: response.status,
     };
   } catch (error) {

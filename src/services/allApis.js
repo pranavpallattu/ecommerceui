@@ -77,3 +77,18 @@ export const downloadSalesPDFApi = async (payload = {}) => {
 export const downloadSalesExcelApi = async (payload = {}) => {
   return await commonApi("POST", `${serverUrl}/admin/report/excel`, payload, "", true);
 };
+
+
+
+export const getOrderSummaryApi = async (filter = {}) => {
+  const query = new URLSearchParams(filter).toString();
+  return await commonApi("GET", `${serverUrl}/admin/ordersummary?${query}`, {});
+};
+
+export const getBestProductsApi = async () => {
+  return await commonApi("GET", `${serverUrl}/admin/bestsellingproducts`,{} , "");
+};
+
+export const getBestCategoriesApi = async () => {
+  return await commonApi("GET", `${serverUrl}/admin/bestsellingcategories`,{} , "");
+};
