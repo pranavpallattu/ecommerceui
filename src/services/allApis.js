@@ -92,3 +92,45 @@ export const getBestProductsApi = async () => {
 export const getBestCategoriesApi = async () => {
   return await commonApi("GET", `${serverUrl}/admin/bestsellingcategories`,{} , "");
 };
+
+
+
+
+
+// src/services/allApis.js
+
+// GET /products
+export const getProductsApi = async (search = "", page = 1, limit = 10) => {
+  const query = new URLSearchParams({ search, page, limit }).toString();
+  return await commonApi("GET", `${serverUrl}/products?${query}`, {});
+};
+
+// GET /product/:id
+export const getProductByIdApi = async (id) => {
+  return await commonApi("GET", `${serverUrl}/product/${id}`, {});
+};
+
+// POST /product/addProduct
+export const addProductApi = async (formData) => {
+  return await commonApi("POST", `${serverUrl}/product/addProduct`, formData, "", true);
+};
+
+// PATCH /product/editProduct/:id
+export const editProductApi = async (id, formData) => {
+  return await commonApi("PATCH", `${serverUrl}/product/editProduct/${id}`, formData, "", true);
+};
+
+// PATCH /product/list/:id
+export const listProductApi = async (id) => {
+  return await commonApi("PATCH", `${serverUrl}/product/list/${id}`, {});
+};
+
+// PATCH /product/unlist/:id
+export const unlistProductApi = async (id) => {
+  return await commonApi("PATCH", `${serverUrl}/product/unlist/${id}`, {});
+};
+
+// DELETE /product/delete/:id
+export const softDeleteProductApi = async (id) => {
+  return await commonApi("DELETE", `${serverUrl}/product/delete/${id}`, {});
+};

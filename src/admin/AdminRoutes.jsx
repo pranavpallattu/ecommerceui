@@ -6,6 +6,7 @@ import ProductsPage from "./pages/ProductsPage";
 import CategoriesPage from "./pages/CategoriesPage";
 import CouponsPage from "./pages/CouponsPage";
 import SalesReportPage from "./pages/SalesReportPage";
+import ProductDetailsPage from "./pages/ProductDetailsPage";
 
 const adminRoutes = {
   path: "/admin",
@@ -15,6 +16,7 @@ const adminRoutes = {
     { path: "customers", element: <CustomersPage /> },
     { path: "orders", element: <OrdersPage /> },
     { path: "products", element: <ProductsPage /> },
+    { path: "products/:id", element: <ProductDetailsPage /> },
     { path: "categories", element: <CategoriesPage /> },
     { path: "sales", element: <SalesReportPage /> },
     { path: "coupons", element: <CouponsPage /> },
