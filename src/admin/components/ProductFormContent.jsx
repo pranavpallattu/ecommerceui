@@ -1,9 +1,12 @@
 // src/admin/components/products/ProductFormContent.jsx
 import { useEffect, useState } from "react";
-import  useProductStore from "../../utils/stores/productStore";
+import useProductStore from "../../utils/stores/productStore";
+import useCategoryStore from "../../utils/stores/categoryStore";
+
 
 const ProductFormContent = () => {
-  const { editData, handleSubmit, closeModal, categories } = useProductStore();
+  const { editData, handleSubmit, closeModal } = useProductStore();
+  const {categories , fetchCategories} = useCategoryStore()
 
   const [form, setForm] = useState({
     productName: "",
@@ -17,8 +20,10 @@ const ProductFormContent = () => {
     removedImages: [],
   });
 
-  // Fill form when editing or reset when adding
+  // Reset form on open/edit
   useEffect(() => {
+  fetchCategories();
+
     if (editData) {
       setForm({
         productName: editData.productName || "",
@@ -48,13 +53,10 @@ const ProductFormContent = () => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    const totalImages = files.length + form.existingImages.length;
-
-    if (totalImages > 4) {
+    if (files.length + form.existingImages.length > 4) {
       alert("Maximum 4 images allowed");
       return;
     }
-
     setForm({ ...form, productImage: files });
   };
 
@@ -85,192 +87,152 @@ const ProductFormContent = () => {
     formData.append("regularPrice", form.regularPrice);
     formData.append("offer", form.offer || 0);
 
-    // Send existing images
-    form.existingImages.forEach((url) => {
-      formData.append("existingImages", url);
-    });
-
-    // Send removed images
-    form.removedImages.forEach((url) => {
-      formData.append("removedImages", url);
-    });
-
-    // Send new images
-    form.productImage.forEach((file) => {
-      formData.append("productImage", file);
-    });
+    form.existingImages.forEach((url) => formData.append("existingImages", url));
+    form.removedImages.forEach((url) => formData.append("removedImages", url));
+    form.productImage.forEach((file) => formData.append("productImage", file));
 
     handleSubmit(formData);
   };
 
   return (
-    <>
-      <h3 className="font-bold text-2xl mb-8">
-        {editData ? "Edit Product" : "Add New Product"}
-      </h3>
+    <form onSubmit={onSubmit} className="space-y-6">
+      {/* Product Name */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+        <input
+          type="text"
+          value={form.productName}
+          onChange={(e) => setForm({ ...form, productName: e.target.value })}
+          className="input input-bordered w-full"
+          required
+        />
+      </div>
 
-      <form onSubmit={onSubmit} className="space-y-6">
-        {/* Product Name */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-medium">Product Name</span>
-          </label>
+      {/* Category */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+        <select
+          value={form.category}
+          onChange={(e) => setForm({ ...form, category: e.target.value })}
+          className="select select-bordered w-full"
+          required
+        >
+          <option value="">Select category</option>
+          {categories?.map((cat) => (
+            <option key={cat._id} value={cat._id}>
+              {cat?.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Description */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+        <textarea
+          value={form.description}
+          onChange={(e) => setForm({ ...form, description: e.target.value })}
+          className="textarea textarea-bordered w-full h-32"
+          required
+        />
+      </div>
+
+      {/* Price Row */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Regular Price</label>
           <input
-            type="text"
-            value={form.productName}
-            onChange={(e) => setForm({ ...form, productName: e.target.value })}
+            type="number"
+            value={form.regularPrice}
+            onChange={(e) => setForm({ ...form, regularPrice: e.target.value })}
             className="input input-bordered w-full"
             required
           />
         </div>
-
-        {/* Category */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-medium">Category</span>
-          </label>
-          <select
-            value={form.category}
-            onChange={(e) => setForm({ ...form, category: e.target.value })}
-            className="select select-bordered w-full"
-            required
-          >
-            <option value="">Select category</option>
-            {categories?.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Description */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-medium">Description</span>
-          </label>
-          <textarea
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-            className="textarea textarea-bordered h-32"
-            required
-          />
-        </div>
-
-        {/* Price, Offer, Quantity */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-medium">Regular Price</span>
-            </label>
-            <input
-              type="number"
-              value={form.regularPrice}
-              onChange={(e) => setForm({ ...form, regularPrice: e.target.value })}
-              className="input input-bordered w-full"
-              required
-            />
-          </div>
-
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-medium">Offer % (optional)</span>
-            </label>
-            <input
-              type="number"
-              min="0"
-              max="100"
-              value={form.offer}
-              onChange={(e) => setForm({ ...form, offer: e.target.value })}
-              className="input input-bordered w-full"
-            />
-          </div>
-
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-medium">Stock Quantity</span>
-            </label>
-            <input
-              type="number"
-              value={form.quantity}
-              onChange={(e) => setForm({ ...form, quantity: e.target.value })}
-              className="input input-bordered w-full"
-              required
-            />
-          </div>
-        </div>
-
-        {/* Image Upload */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-medium">
-              Product Images (1-4)
-            </span>
-          </label>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Offer % (optional)</label>
           <input
-            type="file"
-            multiple
-            accept="image/*"
-            onChange={handleImageChange}
-            className="file-input file-input-bordered w-full"
+            type="number"
+            min="0"
+            max="100"
+            value={form.offer}
+            onChange={(e) => setForm({ ...form, offer: e.target.value })}
+            className="input input-bordered w-full"
           />
         </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Stock Quantity</label>
+          <input
+            type="number"
+            value={form.quantity}
+            onChange={(e) => setForm({ ...form, quantity: e.target.value })}
+            className="input input-bordered w-full"
+            required
+          />
+        </div>
+      </div>
 
-        {/* Existing Images */}
-        {form.existingImages.length > 0 && (
-          <div className="grid grid-cols-4 gap-4">
+      {/* Image Upload */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Product Images (1–4)
+        </label>
+        <input
+          type="file"
+          multiple
+          accept="image/*"
+          onChange={handleImageChange}
+          className="file-input file-input-bordered w-full"
+        />
+      </div>
+
+      {/* Image Previews */}
+      {(form.existingImages.length > 0 || form.productImage.length > 0) && (
+        <div>
+          <p className="text-sm font-medium text-gray-700 mb-3">Image Preview</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {form.existingImages.map((url, i) => (
-              <div key={i} className="relative group">
-                <img
-                  src={url}
-                  alt="product"
-                  className="w-full h-32 object-cover rounded-xl"
-                />
+              <div key={`exist-${i}`} className="relative">
+                <img src={url} alt="" className="w-full h-40 object-cover rounded-lg" />
                 <button
                   type="button"
                   onClick={() => removeImage(i, true)}
-                  className="absolute top-2 right-2 btn btn-circle btn-xs btn-error opacity-0 group-hover:opacity-100 transition"
+                  className="absolute top-2 right-2 btn btn-circle btn-xs btn-error"
                 >
-                  ✕
+                  X
                 </button>
               </div>
             ))}
-          </div>
-        )}
-
-        {/* New Images Preview */}
-        {form.productImage.length > 0 && (
-          <div className="grid grid-cols-4 gap-4 mt-4">
             {form.productImage.map((file, i) => (
-              <div key={i} className="relative group">
+              <div key={`new-${i}`} className="relative">
                 <img
                   src={URL.createObjectURL(file)}
                   alt="preview"
-                  className="w-full h-32 object-cover rounded-xl"
+                  className="w-full h-40 object-cover rounded-lg"
                 />
                 <button
                   type="button"
                   onClick={() => removeImage(i)}
-                  className="absolute top-2 right-2 btn btn-circle btn-xs btn-error opacity-0 group-hover:opacity-100 transition"
+                  className="absolute top-2 right-2 btn btn-circle btn-xs btn-error"
                 >
-                  ✕
+                  X
                 </button>
               </div>
             ))}
           </div>
-        )}
-
-        {/* Buttons */}
-        <div className="modal-action mt-10">
-          <button type="button" onClick={closeModal} className="btn btn-ghost">
-            Cancel
-          </button>
-          <button type="submit" className="btn btn-primary px-8">
-            {editData ? "Update Product" : "Add Product"}
-          </button>
         </div>
-      </form>
-    </>
+      )}
+
+      {/* Buttons */}
+      <div className="flex justify-end gap-4 pt-6 border-t">
+        <button type="button" onClick={closeModal} className="btn btn-ghost">
+          Cancel
+        </button>
+        <button type="submit" className="btn btn-primary px-8">
+          {editData ? "Update Product" : "Add Product"}
+        </button>
+      </div>
+    </form>
   );
 };
 

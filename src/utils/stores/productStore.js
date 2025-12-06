@@ -1,6 +1,6 @@
-// src/utils/stores/productStore.js
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+
 import {
   getProductsApi,
   getProductByIdApi,
@@ -13,7 +13,9 @@ import {
 
 const useProductStore = create(
   devtools((set, get) => ({
-    // === STATE ===
+    // =============================
+    // State
+    // =============================
     products: [],
     product: null,
     loading: false,
@@ -31,113 +33,155 @@ const useProductStore = create(
       hasPrevPage: false,
     },
 
-    // Modal
+    // Modal control
     isModalOpen: false,
     editData: null,
 
-    // === SETTERS ===
+    // =============================
+    // Helpers & Setters
+    // =============================
     setSearch: (value) => set({ search: value, page: 1 }),
     setPage: (page) => set({ page }),
 
-    openModal: (data = null) => set({ isModalOpen: true, editData: data }),
-    closeModal: () => set({ isModalOpen: false, editData: null }),
+    openModal: (data = null) =>
+      set({
+        isModalOpen: true,
+        editData: data,
+      }),
 
-    // === FETCH ALL PRODUCTS ===
+    closeModal: () =>
+      set({
+        isModalOpen: false,
+        editData: null,
+      }),
+
+    // =============================
+    // Fetch All Products
+    // =============================
     fetchProducts: async ({ search, page, limit } = {}) => {
       set({ loading: true, error: null });
 
-      const current = get();
-      const finalSearch = search !== undefined ? search : current.search;
-      const finalPage = page !== undefined ? page : current.page;
-      const finalLimit = limit !== undefined ? limit : current.limit;
+      const state = get();
+      const finalSearch = search ?? state.search;
+      const finalPage = page ?? state.page;
+      const finalLimit = limit ?? state.limit;
 
       try {
         const res = await getProductsApi(finalSearch, finalPage, finalLimit);
 
         if (!res.success) {
-          set({ loading: false, error: res.message || "Failed" });
+          set({
+            loading: false,
+            error: res.message || "Failed to load products",
+          });
           return;
         }
 
+        const pg = res.data.pagination;
+
         set({
+          loading: false,
           products: res.data.data,
-          pagination: {
-            totalProducts: res.data.pagination.totalProducts,
-            totalPages: res.data.pagination.totalPages,
-            currentPage: finalPage,
-            hasNextPage: finalPage < res.data.pagination.totalPages,
-            hasPrevPage: finalPage > 1,
-          },
           search: finalSearch,
           page: finalPage,
-          loading: false,
+          pagination: {
+            totalProducts: pg.totalProducts,
+            totalPages: pg.totalPages,
+            currentPage: finalPage,
+            hasNextPage: finalPage < pg.totalPages,
+            hasPrevPage: finalPage > 1,
+          },
         });
       } catch (err) {
         set({ loading: false, error: "Network error" });
       }
     },
 
-    // === FETCH SINGLE PRODUCT ===
+    // =============================
+    // Fetch Single Product
+    // =============================
     fetchProductById: async (id) => {
       set({ loading: true, error: null });
+
       try {
         const res = await getProductByIdApi(id);
-        if (res.success) {
-          set({ product: res.data, loading: false });
+        if (!res.success) {
+          set({ loading: false, error: res.message });
+          return;
+        }
+
+        set({ product: res.data, loading: false });
+      } catch (err) {
+        set({ loading: false, error: "Network error" });
+      }
+    },
+
+    // =============================
+    // ADD or EDIT Product
+    // =============================
+    handleSubmit: async (formData) => {
+      const { editData } = get();
+      set({ loading: true });
+
+      try {
+        let res;
+
+        if (editData) {
+          // Edit existing product
+          res = await editProductApi(editData._id, formData);
         } else {
-          set({ error: res.message, loading: false });
+          // Add new product
+          res = await addProductApi(formData);
         }
+
+        if (!res.success) {
+          set({ loading: false, error: res.message });
+          return;
+        }
+
+        // Refresh product list
+        await get().fetchProducts();
+
+        // Close modal
+        set({ loading: false, isModalOpen: false, editData: null });
       } catch (err) {
-        set({ loading: false, error: "Failed to load product" });
+        set({
+          loading: false,
+          error: "Something went wrong",
+        });
       }
     },
 
-    // === ADD PRODUCT ===
-    addProduct: async (formData) => {
-      set({ loading: true });
+    // =============================
+    // LIST / UNLIST PRODUCT
+    // =============================
+    toggleListing: async (id, action) => {
       try {
-        const res = await addProductApi(formData);
+        const res =
+          action === "list"
+            ? await listProductApi(id)
+            : await unlistProductApi(id);
+
         if (res.success) {
           get().fetchProducts();
-          get().closeModal();
         }
       } catch (err) {
-        set({ error: "Failed to add product" });
-      } finally {
-        set({ loading: false });
+        console.log("Error toggling product listing");
       }
     },
 
-    // === EDIT PRODUCT ===
-    editProduct: async (id, formData) => {
-      set({ loading: true });
+    // =============================
+    // SOFT DELETE PRODUCT
+    // =============================
+    deleteProduct: async (id) => {
       try {
-        const res = await editProductApi(id, formData);
+        const res = await softDeleteProductApi(id);
         if (res.success) {
           get().fetchProducts();
-          get().closeModal();
         }
       } catch (err) {
-        set({ error: "Failed to edit product" });
-      } finally {
-        set({ loading: false });
+        console.log("Delete error:", err);
       }
-    },
-
-    // === LIST / UNLIST ===
-    listProduct: async (id) => {
-      await listProductApi(id);
-      get().fetchProducts();
-    },
-    unlistProduct: async (id) => {
-      await unlistProductApi(id);
-      get().fetchProducts();
-    },
-
-    // === SOFT DELETE ===
-    softDeleteProduct: async (id) => {
-      await softDeleteProductApi(id);
-      get().fetchProducts();
     },
   }))
 );

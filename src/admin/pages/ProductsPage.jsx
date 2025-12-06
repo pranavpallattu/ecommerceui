@@ -21,6 +21,7 @@ const ProductsPage = () => {
       <div className="max-w-7xl mx-auto space-y-10">
         <ProductsHeader />
         <ProductGrid />
+        <ProductFormModal/>
         <Pagination
           page={pagination.currentPage}
           totalPages={pagination.totalPages}
