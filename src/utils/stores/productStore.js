@@ -109,8 +109,8 @@ const useProductStore = create(
           set({ loading: false, error: res.message });
           return;
         }
-
-        set({ product: res.data, loading: false });
+        set({editData:res.data?.data})
+        set({ product: res.data?.data, loading: false });
       } catch (err) {
         set({ loading: false, error: "Network error" });
       }
@@ -129,9 +129,10 @@ const useProductStore = create(
         if (editData) {
           // Edit existing product
           res = await editProductApi(editData._id, formData);
+          await get.fetchProductById(editData._id)
         } else {
           // Add new product
-          res = await addProductApi(formData);
+          res = await addProductApi(formData,true);
         }
 
         if (!res.success) {
@@ -141,6 +142,7 @@ const useProductStore = create(
 
         // Refresh product list
         await get().fetchProducts();
+        
 
         // Close modal
         set({ loading: false, isModalOpen: false, editData: null });
@@ -155,15 +157,15 @@ const useProductStore = create(
     // =============================
     // LIST / UNLIST PRODUCT
     // =============================
-    toggleListing: async (id, action) => {
+    toggleListing: async (id, isChecked) => {
       try {
         const res =
-          action === "list"
+          isChecked
             ? await listProductApi(id)
             : await unlistProductApi(id);
 
         if (res.success) {
-          get().fetchProducts();
+          get().fetchProductById(id);
         }
       } catch (err) {
         console.log("Error toggling product listing");

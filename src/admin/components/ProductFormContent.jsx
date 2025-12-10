@@ -51,14 +51,24 @@ const ProductFormContent = () => {
     }
   }, [editData]);
 
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length + form.existingImages.length > 4) {
-      alert("Maximum 4 images allowed");
-      return;
-    }
-    setForm({ ...form, productImage: files });
-  };
+const handleImageChange = (e) => {
+  const files = Array.from(e.target.files);
+
+  // TOTAL IMAGES = existing + new + uploaded again
+  const totalImages =
+    form.existingImages.length + form.productImage.length + files.length;
+
+  if (totalImages > 4) {
+    alert("Maximum 4 images allowed");
+    return;
+  }
+
+  setForm({
+    ...form,
+    productImage: [...form.productImage, ...files], // append instead of replace
+  });
+};
+
 
   const removeImage = (index, isExisting = false) => {
     if (isExisting) {
@@ -109,7 +119,7 @@ const ProductFormContent = () => {
       </div>
 
       {/* Category */}
-      <div>
+  { !editData &&   <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
         <select
           value={form.category}
@@ -124,7 +134,7 @@ const ProductFormContent = () => {
             </option>
           ))}
         </select>
-      </div>
+      </div>}
 
       {/* Description */}
       <div>

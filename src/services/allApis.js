@@ -112,12 +112,13 @@ export const getProductByIdApi = async (id) => {
 
 // POST /product/addProduct
 export const addProductApi = async (formData) => {
-  return await commonApi("POST", `${serverUrl}/product/addProduct`, formData, "", true);
+  return await commonApi("POST", `${serverUrl}/product/addProduct`, formData, {}, true);
 };
+
 
 // PATCH /product/editProduct/:id
 export const editProductApi = async (id, formData) => {
-  return await commonApi("PATCH", `${serverUrl}/product/editProduct/${id}`, formData, "", true);
+  return await commonApi("PUT", `${serverUrl}/product/editProduct/${id}`, formData, {}, true);
 };
 
 // PATCH /product/list/:id
