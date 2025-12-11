@@ -161,3 +161,20 @@ export const deleteCouponApi=async(id) =>{
 }
 
 
+
+
+
+
+export const getOrdersApi=async(search = "", page = 1, limit = 5) =>{
+  return await commonApi("GET",`${serverUrl}/admin/orders?search=${search}&page=${page}&limit=${limit}`, {}, "")
+}
+
+
+export const getOrderApi=async(id) =>{
+  return await commonApi("GET",`${serverUrl}/admin/orders/${id}`, {}, "")
+}
+
+
+export const updateOrderStatusApi=async(id,body) =>{
+  return await commonApi("PATCH",`${serverUrl}/admin/orders/${id}`, body, "")
+}

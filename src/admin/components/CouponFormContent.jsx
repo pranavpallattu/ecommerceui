@@ -22,6 +22,7 @@ const CouponFormContent = () => {
       setForm({
         code: editData.code || "",
         description: editData.description || "",
+        discountType: editData.discountType || "",   // ✅ FIXED
         discount: editData.discount || "",
         minPurchase: editData.minPurchase || "",
         expiryDate: editData.expiryDate?.split("T")[0] || "",
@@ -42,7 +43,6 @@ const CouponFormContent = () => {
     }
   }, [editData]);
 
-  // ------------ Form Submit -------------
   const onSubmit = (e) => {
     e.preventDefault();
     handleSubmit(form);
@@ -69,32 +69,29 @@ const CouponFormContent = () => {
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Discount Type
         </label>
-      {
-        editData? 
-             <input
-          type="text"
-          value={editData.discountType}
-          disabled
-        //   onChange={(e) => setForm({ ...form, code: e.target.value })}
-          className="input input-bordered w-full bg-gray-200 p-2"
-          required
-        />
-           : 
 
+        {editData ? (
+          <input
+            type="text"
+            value={editData.discountType}
+            disabled
+            className="input input-bordered w-full bg-gray-200 p-2"
+            required
+          />
+        ) : (
           <select
-          value={form.discountType}
-          onChange={(e) =>
-            setForm({ ...form, discountType: e.target.value })
-          }
-          className="select select-bordered w-full"
-          required
-        >
-          <option value="">Select discount type</option>
-          <option value="flat">Flat (₹)</option>
-          <option value="percentage">Percentage (%)</option>
-        </select>
-
-      }
+            value={form.discountType}
+            onChange={(e) =>
+              setForm({ ...form, discountType: e.target.value })
+            }
+            className="select select-bordered w-full"
+            required
+          >
+            <option value="">Select discount type</option>
+            <option value="flat">Flat (₹)</option>
+            <option value="percentage">Percentage (%)</option>
+          </select>
+        )}
       </div>
 
       {/* Description */}
@@ -117,7 +114,8 @@ const CouponFormContent = () => {
         {/* Discount */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Discount {form.discountType === "flat" ? "(₹)" : "(%)"}
+            Discount{" "}
+            {form.discountType === "flat" ? "(₹)" : "(%)"}
           </label>
           <input
             type="number"
