@@ -135,3 +135,29 @@ export const unlistProductApi = async (id) => {
 export const softDeleteProductApi = async (id) => {
   return await commonApi("DELETE", `${serverUrl}/product/delete/${id}`, {});
 };
+
+
+
+
+export const getCouponsApi=async(search = "", page = 1, limit = 5) =>{
+  return await commonApi("GET",`${serverUrl}/admin/coupons?search=${search}&page=${page}&limit=${limit}`, {}, "")
+}
+
+export const addCouponApi=async(reqBody) =>{
+  return await commonApi("POST",`${serverUrl}/admin/coupons`, reqBody, "")
+}
+
+export const editCouponApi=async(id, reqBody) =>{
+  return await commonApi("PATCH",`${serverUrl}/admin/coupons/${id}`, reqBody, "")
+}
+
+export const updateCouponStatusApi=async(id) =>{
+  return await commonApi("PATCH",`${serverUrl}/admin/coupons/${id}/status`, {}, "")
+}
+
+
+export const deleteCouponApi=async(id) =>{
+  return await commonApi("DELETE",`${serverUrl}/admin/coupons/${id}`, {}, "")
+}
+
+
