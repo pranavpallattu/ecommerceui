@@ -1,6 +1,7 @@
 // src/admin/components/Navbar.jsx
 import React from "react";
 import { Bell, UserCircle2, LogOut, User } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
@@ -9,10 +10,10 @@ const Navbar = () => {
 
         {/* Notification Bell */}
         <div className="relative">
-          <button className="p-2.5 rounded-full hover:bg-gray-100 transition-colors">
+        <Link to={"/admin/notifications"}>    <button className="p-2.5 rounded-full hover:bg-gray-100 transition-colors">
             <Bell size={22} className="text-gray-700" />
             <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-          </button>
+          </button></Link>
 
           {/* Optional: Simple tooltip on hover */}
           <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap opacity-0 pointer-events-none transition-opacity hover:opacity-100 bg-gray-800 text-white text-xs px-2 py-1 rounded">
@@ -31,12 +32,6 @@ const Navbar = () => {
           </div>
 
           <ul className="dropdown-content menu p-2 shadow-lg bg-white rounded-box w-48 mt-2 border border-gray-200 z-50">
-            <li>
-              <a className="flex items-center gap-3">
-                <User size={16} />
-                Profile
-              </a>
-            </li>
             <li>
               <a className="flex items-center gap-3 text-red-600 font-medium">
                 <LogOut size={16} />

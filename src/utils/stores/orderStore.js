@@ -51,7 +51,7 @@ const useOrderStore = create(
         }
 
         set({
-          orders: res.data.data,
+          orders: res.data?.data,
           pagination: {
             totalOrders: res.data.pagination.totalOrders,
             totalPages: res.data.pagination.totalPages,
