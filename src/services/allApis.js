@@ -11,6 +11,28 @@ export const verifyAuthOtpApi = async (reqBody) => {
   return await commonApi("POST", `${serverUrl}/auth/verifyotp`, reqBody, "");
 };
 
+
+
+export const getMeApi = async () => {
+  return await commonApi(
+    "GET",
+    `${serverUrl}/auth/me`,
+    {},
+    ""
+  );
+};
+
+
+
+
+
+
+
+
+
+
+
+
 export const getCategoriesApi = async (search, page, limit) => {
   return await commonApi(
     "GET",
@@ -177,4 +199,99 @@ export const getOrderApi=async(id) =>{
 
 export const updateOrderStatusApi=async(id,body) =>{
   return await commonApi("PATCH",`${serverUrl}/admin/orders/${id}`, body, "")
+}
+
+
+
+
+// export const orderReturnApproveApi=async(id) =>{
+//   return await commonApi("PATCH",`${serverUrl}/admin/orders/${id}`, body, "")
+// }
+
+
+/* =======================
+   NOTIFICATIONS
+======================= */
+
+// Get all return pending notifications (order + item)
+export const getReturnPendingNotificationsApi = async () => {
+  return await commonApi(
+    "GET",
+    `${serverUrl}/admin/notifications/returns`,
+    {},
+    ""
+  );
+};
+
+/* =======================
+   ORDER RETURN
+======================= */
+
+// Approve full order return
+export const approveOrderReturnApi = async (orderId) => {
+  return await commonApi(
+    "PATCH",
+    `${serverUrl}/admin/orders/${orderId}/return/approve`,
+    {},
+    ""
+  );
+};
+
+// Reject full order return
+export const rejectOrderReturnApi = async (orderId, reason = "") => {
+  return await commonApi(
+    "PATCH",
+    `${serverUrl}/admin/orders/${orderId}/return/reject`,
+    { reason },
+    ""
+  );
+};
+
+/* =======================
+   ITEM RETURN
+======================= */
+
+// Approve item return
+export const approveItemReturnApi = async (orderId, itemId) => {
+  return await commonApi(
+    "PATCH",
+    `${serverUrl}/admin/orders/${orderId}/items/${itemId}/return/approve`,
+    {},
+    ""
+  );
+};
+
+// Reject item return
+export const rejectItemReturnApi = async (orderId, itemId, reason = "") => {
+  return await commonApi(
+    "PATCH",
+    `${serverUrl}/admin/orders/${orderId}/items/${itemId}/return/reject`,
+    { reason },
+    ""
+  );
+};
+
+
+
+
+
+
+
+
+
+
+
+
+export const getHomeProductsApi=async()=>{
+  return await commonApi("GET",`${serverUrl}/home`,{},"")
+}
+
+
+export const getProductDetailsApi=async(id)=>{
+    return await commonApi("GET",`${serverUrl}/productDetails/${id}`,{},"")
+
+}
+
+export const searchProductsApi=async(searchQuery)=>{
+      return await commonApi("GET",`${serverUrl}/products/search?search=${searchQuery}`,{},"")
 }
