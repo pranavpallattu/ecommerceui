@@ -292,6 +292,17 @@ export const getProductDetailsApi=async(id)=>{
 
 }
 
-export const searchProductsApi=async(searchQuery)=>{
-      return await commonApi("GET",`${serverUrl}/products/search?search=${searchQuery}`,{},"")
-}
+export const getShopProductsApi = async (
+  search = "",
+  page = 1,
+  limit = 5,
+  category = "all",
+  sort = "default"
+) => {
+  return await commonApi(
+    "GET",
+    `${serverUrl}/products/shop?page=${page}&limit=${limit}&category=${category}&sort=${sort}&search=${search}`,
+    {},
+    ""
+  );
+};
