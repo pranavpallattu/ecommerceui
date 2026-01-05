@@ -306,3 +306,19 @@ export const getShopProductsApi = async (
     ""
   );
 };
+
+
+
+
+export const getWishlistApi=async()=>{
+  return await commonApi("GET","/wishlist",{},"")
+}
+
+export const addtoWishlistApi=async(productId)=>{
+  return await commonApi("POST",`/wishlist/${productId}`,{},"")
+}
+
+
+export const removeFromWishlistApi=async(productId)=>{
+  return await commonApi("DELETE",`/wishlist/${productId}`,{},"")
+}

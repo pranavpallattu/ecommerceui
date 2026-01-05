@@ -5,7 +5,7 @@ import HomePage from "./pages/HomePage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import ShopPage from "./pages/ShopPage";
 // import ProductDetailsPage from "./pages/ProductDetailsPage";
-// import WishlistPage from "./pages/WishlistPage";
+import WishlistPage from "./pages/WishlistPage";
 // import CartPage from "./pages/CartPage";
 // import CheckoutPage from "./pages/CheckoutPage";
 // import OrderConfirmationPage from "./pages/OrderConfirmationPage";
@@ -25,7 +25,7 @@ const userRoutes = {
     { index: true, element: <HomePage /> }, // "/"
     { path: "shop", element: <ShopPage /> },
     { path: "product/:id", element: <ProductDetailsPage /> },
-    // { path: "wishlist", element: <WishlistPage /> },
+    { path: "wishlist", element: <WishlistPage /> },
     // { path: "cart", element: <CartPage /> },
     // { path: "checkout", element: <CheckoutPage /> },
     // { path: "order-confirmation/:id", element: <OrderConfirmationPage /> },
