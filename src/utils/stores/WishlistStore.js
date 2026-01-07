@@ -1,3 +1,4 @@
+// src/utils/stores/userWishlistStore.js (or WishlistStore.js)
 import { create } from "zustand";
 import {
   addtoWishlistApi,
@@ -14,10 +15,11 @@ const useUserWishlistStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const res = await getWishlistApi();
-      set({
-        wishlistProducts: res.data.data?.products || [],
-        loading: false,
-      });
+      if (res.success) {
+        // Backend returns { products: [{ product: { ... } }] }
+        const products = res.data?.data?.products?.map(item => item.product) || [];
+        set({ wishlistProducts: products, loading: false });
+      }
     } catch (error) {
       set({
         loading: false,
@@ -27,28 +29,22 @@ const useUserWishlistStore = create((set, get) => ({
   },
 
   addtoWishlist: async (productId) => {
-    set({ loading: true, error: null });
+    set({ loading: true });
     try {
       await addtoWishlistApi(productId);
       await get().fetchWishlistProducts();
     } catch (error) {
-      set({
-        loading: false,
-        error: error?.response?.data?.message || "Failed to add to wishlist",
-      });
+      set({ loading: false, error: "Failed to add" });
     }
   },
 
   removeFromWishlist: async (productId) => {
-    set({ loading: true, error: null });
+    set({ loading: true });
     try {
       await removeFromWishlistApi(productId);
       await get().fetchWishlistProducts();
     } catch (error) {
-      set({
-        loading: false,
-        error: error?.response?.data?.message || "Failed to remove from wishlist",
-      });
+      set({ loading: false, error: "Failed to remove" });
     }
   },
 }));

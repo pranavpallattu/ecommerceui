@@ -311,14 +311,32 @@ export const getShopProductsApi = async (
 
 
 export const getWishlistApi=async()=>{
-  return await commonApi("GET","/wishlist",{},"")
+  return await commonApi("GET",`${serverUrl}/wishlist`,{},"")
 }
 
 export const addtoWishlistApi=async(productId)=>{
-  return await commonApi("POST",`/wishlist/${productId}`,{},"")
+  return await commonApi("POST",`${serverUrl}/wishlist/${productId}`,{},"")
+}
+
+export const removeFromWishlistApi=async(productId)=>{
+  return await commonApi("DELETE",`${serverUrl}/wishlist/${productId}`,{},"")
 }
 
 
-export const removeFromWishlistApi=async(productId)=>{
-  return await commonApi("DELETE",`/wishlist/${productId}`,{},"")
+
+export const getCartApi=async()=>{
+  return await commonApi("GET",`${serverUrl}/cart`,{},"")
+}
+
+export const addtoCartApi=async(productId)=>{
+  return await commonApi("POST",`${serverUrl}/cart/${productId}`,{},"")
+}
+
+
+export const removeFromCartApi=async(productId)=>{
+  return await commonApi("DELETE",`${serverUrl}/cart/${productId}`,{},"")
+}
+
+export const updateQuantityApi=async(reqBody)=>{
+  return await commonApi("PATCH",`${serverUrl}/cart/updatequantity`,reqBody,"")
 }

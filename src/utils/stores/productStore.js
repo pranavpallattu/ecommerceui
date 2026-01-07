@@ -81,7 +81,7 @@ const useProductStore = create(
 
         set({
           loading: false,
-          products: res.data.data,
+          products: res.data?.data,
           search: finalSearch,
           page: finalPage,
           pagination: {

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 import { useLocation, useSearchParams } from "react-router-dom";
+import useUserWishlistStore from "../../utils/stores/WishlistStore";
 
 
 const Navbar = () => {
@@ -12,6 +13,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const{wishlistProducts}=useUserWishlistStore();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -144,8 +147,12 @@ const Navbar = () => {
 
         {/* Icons */}
         <div className="flex items-center gap-2">
-          <Link to="/wishlist" className="btn btn-ghost btn-circle">
+         
+           <Link to="/wishlist" className="btn btn-ghost btn-circle relative">
             <Heart size={22} className="text-gray-700" />
+            <span className="absolute -top-1 -right-1 badge badge-primary badge-xs">
+              {wishlistProducts?.length}
+            </span>
           </Link>
 
           <Link to="/cart" className="btn btn-ghost btn-circle relative">
