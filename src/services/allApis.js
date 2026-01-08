@@ -340,3 +340,18 @@ export const removeFromCartApi=async(productId)=>{
 export const updateQuantityApi=async(reqBody)=>{
   return await commonApi("PATCH",`${serverUrl}/cart/updatequantity`,reqBody,"")
 }
+
+
+
+
+export const getAvailableCouponsApi=async()=>{
+  return await commonApi("GET",`${serverUrl}/cart/coupons`,{},"")
+}
+
+export const applyCouponApi=async(reqBody)=>{
+  return await commonApi("POST", `${serverUrl}/cart/applyCoupon`,reqBody,"")
+}
+
+export const removeCouponApi=async()=>{
+  return await commonApi("DELETE", `${serverUrl}/cart/removeCoupon`,{},"")
+}

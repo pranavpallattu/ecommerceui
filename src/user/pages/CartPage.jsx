@@ -1,42 +1,53 @@
 // src/pages/CartPage.jsx
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Trash2, Plus, Minus, Tag, X } from "lucide-react";
 import useCartStore from "../../utils/stores/CartStore";
+import { Trash2, Plus, Minus, Tag, X } from "lucide-react";
 
 const CartPage = () => {
-  const [couponCode, setCouponCode] = useState("");
-
   const {
     cartProducts: cart,
     loading,
     fetchCartProducts,
     removeFromCart,
-    updateQuantiy,
+    updateQuantity,
   } = useCartStore();
 
   useEffect(() => {
     fetchCartProducts();
   }, []);
 
+  // Fixed handleQuantity logic
   const handleQuantity = (productId, delta) => {
-    const item = cart.items.find(i => i.product._id === productId);
+    const item = cart?.items?.find((i) => i.product._id === productId);
     if (!item) return;
-    const newQty = item.quantity + delta;
+
+    const currentQty = item.quantity;
+    const newQty = currentQty + delta;
+
+    // Minimum quantity = 1
     if (newQty < 1) return;
-    updateQuantiy({ productId, quantity: newQty });
+
+    // Maximum = available stock
+    if (newQty > item.product.quantity) {
+      alert(`Only ${item.product.quantity} items available in stock`);
+      return;
+    }
+
+    // Update quantity via API
+    updateQuantity({ productId, quantity: newQty });
   };
 
   const items = cart?.items || [];
   const isEmpty = items.length === 0;
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <span className="loading loading-spinner loading-lg text-primary"></span>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="min-h-screen flex items-center justify-center bg-gray-50">
+  //       <span className="loading loading-spinner loading-lg text-primary"></span>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 lg:py-12">
@@ -92,7 +103,7 @@ const CartPage = () => {
                         </span>
                       </div>
 
-                      {/* Quantity */}
+                      {/* Quantity Controls */}
                       <div className="flex items-center gap-3">
                         <button
                           onClick={() => handleQuantity(p._id, -1)}
@@ -124,7 +135,7 @@ const CartPage = () => {
               })}
             </div>
 
-            {/* Summary */}
+            {/* Summary & Coupon */}
             <div className="space-y-6">
               {/* Order Summary */}
               <div className="bg-white rounded-2xl shadow-sm p-8">
@@ -156,7 +167,7 @@ const CartPage = () => {
                 </button>
               </div>
 
-              {/* Coupon Section */}
+              {/* Coupon */}
               <div className="bg-white rounded-2xl shadow-sm p-8">
                 <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
                   <Tag size={22} />
@@ -166,8 +177,6 @@ const CartPage = () => {
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    value={couponCode}
-                    onChange={(e) => setCouponCode(e.target.value)}
                     placeholder="Enter code"
                     className="input input-bordered flex-1 rounded-xl"
                   />

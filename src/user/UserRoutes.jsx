@@ -14,7 +14,7 @@ import CartPage from "./pages/CartPage";
 // import ProfilePage from "./pages/ProfilePage";
 // import WalletPage from "./pages/WalletPage";
 // import AddressPage from "./pages/AddressPage";
-// import CouponsPage from "./pages/CouponsPage";
+import CouponsPage from "./pages/CouponsPage";
 import ContactPage from "./pages/ContactPage"
 import AboutPage from "./pages/AboutPage";
 
@@ -34,7 +34,7 @@ const userRoutes = {
     // { path: "profile", element: <ProfilePage /> },
     // { path: "wallet", element: <WalletPage /> },
     // { path: "address", element: <AddressPage /> },
-    // { path: "coupons", element: <CouponsPage /> },
+    { path: "coupons", element: <CouponsPage /> },
     { path: "contact", element: <ContactPage /> },
     { path: "about", element: <AboutPage /> },
   ],

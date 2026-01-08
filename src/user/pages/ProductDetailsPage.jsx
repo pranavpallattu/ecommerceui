@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import useUserProductStore from "../../utils/stores/userProductStore";
 import ProductCard from "../components/ProductCard";
 import { Heart, ShoppingCart } from "lucide-react";
+import useCartStore from "../../utils/stores/CartStore";
+import useUserWishlistStore from "../../utils/stores/WishlistStore";
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
@@ -17,9 +19,28 @@ const ProductDetailsPage = () => {
     fetchProductDetails,
   } = useUserProductStore();
 
+  const { addToCart } = useCartStore();
+  const { wishlistProducts, addtoWishlist, removeFromWishlist } = useUserWishlistStore();
+
   useEffect(() => {
     fetchProductDetails(id);
   }, [id]);
+
+  // Check if in wishlist
+  const isInWishlist = wishlistProducts?.some(
+    (item) => item._id === product?._id
+  ) || false;
+
+  const handleWishlistToggle = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (isInWishlist) {
+      removeFromWishlist(product._id);
+    } else {
+      addtoWishlist(product._id);
+    }
+  };
 
   if (loading) {
     return (
@@ -54,16 +75,14 @@ const ProductDetailsPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* Images */}
           <div className="space-y-4">
-            {/* Main Image */}
             <div className="aspect-[4/5] rounded-xl overflow-hidden bg-white shadow-sm">
               <img
-                src={product.productImage?.[selectedImage] || product.productImage?.[0] || "https://via.placeholder.com/600"}
+                src={product.productImage?.[selectedImage] || product.productImage?.[0]}
                 alt={product.productName}
                 className="w-full h-full object-cover"
               />
             </div>
 
-            {/* Thumbnails */}
             {product.productImage?.length > 1 && (
               <div className="grid grid-cols-5 gap-3">
                 {product.productImage.map((img, i) => (
@@ -83,17 +102,23 @@ const ProductDetailsPage = () => {
 
           {/* Product Info */}
           <div className="space-y-6">
-            {/* Title & Wishlist */}
+            {/* Title + Wishlist Heart */}
             <div className="flex justify-between items-start">
               <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
                 {product.productName}
               </h1>
-              <button className="btn btn-ghost btn-circle">
-                <Heart size={24} className="text-gray-600 hover:text-red-500" />
+              <button
+                onClick={handleWishlistToggle}
+                className="btn btn-ghost btn-circle hover:bg-red-50"
+              >
+                <Heart
+                  size={28}
+                  className={`transition-all ${isInWishlist ? "fill-red-500 text-red-500" : "text-gray-600"}`}
+                />
               </button>
             </div>
 
-            {/* Status */}
+            {/* Stock Status */}
             <div className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${
               inStock ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
             }`}>
@@ -103,7 +128,7 @@ const ProductDetailsPage = () => {
             {/* Price */}
             <div className="flex items-baseline gap-3">
               <span className="text-3xl font-bold text-gray-900">
-                ₹{product.salePrice?.toFixed(0)}
+                ₹{product.salePrice}
               </span>
               {hasDiscount && (
                 <span className="text-xl text-gray-500 line-through">
@@ -113,25 +138,27 @@ const ProductDetailsPage = () => {
             </div>
 
             {/* Description */}
-            <div className="space-y-3">
-              <p className="text-gray-700 leading-relaxed">
-                {product.description}
-              </p>
-            </div>
+            <p className="text-gray-700 leading-relaxed">
+              {product.description}
+            </p>
 
-            {/* Action Buttons - Side by Side */}
-            <div className="flex gap-4">
+            {/* Action Buttons */}
+            <div className="flex gap-4 mt-8">
               <button
+                onClick={() => addToCart(product._id)}
                 disabled={!inStock}
-                className="btn flex-1 flex items-center justify-center gap-3 "
+                className="btn btn-primary flex-1 flex items-center justify-center gap-3 disabled:opacity-50"
               >
                 <ShoppingCart size={22} />
                 Add to Cart
               </button>
 
-              <button className="btn btn-outline flex-1 flex items-center justify-center gap-3">
-                <Heart size={22} />
-                Add to Wishlist
+              <button
+                onClick={handleWishlistToggle}
+                className="btn btn-outline flex-1 flex items-center justify-center gap-3"
+              >
+                <Heart size={22} className={isInWishlist ? "fill-current text-red-500" : ""} />
+                {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
               </button>
             </div>
           </div>
