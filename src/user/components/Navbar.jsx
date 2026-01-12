@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
+import {  LayoutDashboard, MapPin, Wallet, LogOut } from "lucide-react";
+
 import { useLocation, useSearchParams } from "react-router-dom";
 import useUserWishlistStore from "../../utils/stores/WishlistStore";
 
@@ -162,9 +164,68 @@ const Navbar = () => {
             </span>
           </Link>
 
-          <Link to="/profile" className="btn btn-ghost btn-circle">
-            <User size={22} className="text-gray-700" />
-          </Link>
+         
+
+
+
+
+
+
+
+
+
+
+
+<div className="dropdown dropdown-end">
+  <label tabIndex={0} className="btn btn-ghost btn-circle">
+    <User size={22} className="text-gray-700" />
+  </label>
+
+  <ul
+    tabIndex={0}
+    className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-3"
+  >
+    <li>
+      <Link to="/profile" className="flex items-center gap-2">
+        <LayoutDashboard size={18} />
+        Dashboard
+      </Link>
+    </li>
+
+    <li>
+      <Link to="/address" className="flex items-center gap-2">
+        <MapPin size={18} />
+        Address
+      </Link>
+    </li>
+
+    <li>
+      <Link to="/wallet" className="flex items-center gap-2">
+        <Wallet size={18} />
+        Wallet
+      </Link>
+    </li>
+
+    <li className="border-t mt-1">
+      <button
+        className="flex items-center gap-2 text-red-600"
+      >
+        <LogOut size={18} />
+        Logout
+      </button>
+    </li>
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
 
           <Link
             to="/auth"

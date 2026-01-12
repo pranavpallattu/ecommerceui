@@ -12,7 +12,7 @@ import CartPage from "./pages/CartPage";
 // import OrdersPage from "./pages/OrdersPage";
 // import OrderDetailsPage from "./pages/OrderDetailsPage";
 // import ProfilePage from "./pages/ProfilePage";
-// import WalletPage from "./pages/WalletPage";
+import WalletPage from "./pages/WalletPage";
 // import AddressPage from "./pages/AddressPage";
 import CouponsPage from "./pages/CouponsPage";
 import ContactPage from "./pages/ContactPage"
@@ -32,7 +32,7 @@ const userRoutes = {
     // { path: "orders", element: <OrdersPage /> },
     // { path: "orders/:id", element: <OrderDetailsPage /> },
     // { path: "profile", element: <ProfilePage /> },
-    // { path: "wallet", element: <WalletPage /> },
+    { path: "wallet", element: <WalletPage /> },
     // { path: "address", element: <AddressPage /> },
     { path: "coupons", element: <CouponsPage /> },
     { path: "contact", element: <ContactPage /> },

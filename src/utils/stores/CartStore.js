@@ -11,18 +11,20 @@ const useCartStore = create((set, get) => ({
   loading: false,
   error: null,
 
-  fetchCartProducts: async () => {
-    set({ loading: true, error: null });
-    try {
-      const res = await getCartApi();
-      set({ cartProducts: res.data.data, loading: false });
-    } catch (error) {
-      set({
-        loading: false,
-        error: error?.response?.data?.message || "Failed to fetch cart",
-      });
-    }
-  },
+fetchCartProducts: async () => {
+  set({ loading: true, error: null });
+  try {
+    // Add timestamp to bypass any cache
+    const res = await getCartApi(`?t=${Date.now()}`);
+    console.log("Fresh cart from API:", res.data.data); // ← Debug here
+    set({ cartProducts: res.data.data, loading: false });
+  } catch (error) {
+    set({
+      loading: false,
+      error: error?.response?.data?.message || "Failed to fetch cart",
+    });
+  }
+},
 
   addToCart: async (productId) => {
     set({ loading: true, error: null });

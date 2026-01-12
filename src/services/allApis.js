@@ -355,3 +355,30 @@ export const applyCouponApi=async(reqBody)=>{
 export const removeCouponApi=async()=>{
   return await commonApi("DELETE", `${serverUrl}/cart/removeCoupon`,{},"")
 }
+
+
+export const getWalletApi = async () => {
+  return await commonApi("GET", `${serverUrl}/wallet`,{},"");
+};
+
+
+
+
+
+export const getAddressApi=async()=>{
+  return await commonApi("GET", `${serverUrl}/addresses`,{},"")
+}
+
+export const addAddressApi=async(reqBody)=>{
+  return await commonApi("POST", `${serverUrl}/addresses`,reqBody,"")
+}
+
+
+export const deleteAddressApi=async(id)=>{
+  return await commonApi("DELETE", `${serverUrl}/addresses/${id}`,{},"")
+}
+
+export const editAddressApi=async(id)=>{
+  return await commonApi("PATCH", `${serverUrl}/addresses/${id}`,{},"")
+}
+
