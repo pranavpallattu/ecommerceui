@@ -5,6 +5,7 @@ import {
   getAllCustomersApi,
   updateUserStatusApi,
 } from "../../services/allApis";
+import { toast } from "react-toastify";
 
 const useCustomerStore = create(
   devtools((set, get) => ({
@@ -66,29 +67,38 @@ const useCustomerStore = create(
     },
 
     // === TOGGLE BLOCK/UNBLOCK ===
-    toggleBlockCustomer: async (id) => {
-      const customer = get().customers.find(c => c._id === id);
-      if (!customer) return;
+   toggleBlockCustomer: async (id) => {
+  set({ loading: true, error: null });
 
-      set({ loading: true });
+  try {
+    const res = await updateUserStatusApi(id);
 
-      try {
-        const res = await updateUserStatusApi(id);
+    if (!res.success) {
+      const errorMessage = res?.data?.message || res.message || "Failed to update user status";
+      toast.error(errorMessage);
+      set({ loading: false });
+      return;
+    }
 
-        if (res.success) {
-          set((state) => ({
-            customers: state.customers.map(c =>
-              c._id === id ? { ...c, isBlocked: !c.isBlocked } : c
-            ),
-            loading: false,
-          }));
-        } else {
-          set({ loading: false, error: res.message });
-        }
-      } catch (err) {
-        set({ loading: false, error: "Failed to update status" });
-      }
-    },
+    // If successful, update the customer status
+    set((state) => ({
+      customers: state.customers.map((c) =>
+        c._id === id ? { ...c, isBlocked: !c.isBlocked } : c
+      ),
+      loading: false,
+    }));
+
+    // Show success toast
+    toast.success(res?.data?.message || "Customer status updated successfully");
+
+  } catch (err) {
+    // Handle network or unexpected errors
+    const errorMessage = err?.response?.data?.message || err.message || "Failed to update user status";
+    toast.error(errorMessage);
+    set({ loading: false, error: errorMessage });
+  }
+},
+
   }))
 );
 

@@ -1,15 +1,12 @@
 // src/admin/pages/CategoriesPage.jsx
 import React, { useEffect } from "react";
 import useCategoryStore from "../../utils/stores/categoryStore";
-import CategoriesHeader from "../components/CategoriesHeader";
-import CategoriesSearch from "../components/CategoriesSearch";
-import CategoriesTable from "../components/CategoriesTable";
-import CategoriesPagination from "../components/CategoriesPagination";
-import CategoryForm from "../components/CategoryForm";
-import CategoryFormModal from "../components/CategoryFormModal";
-
+import CategoriesHeader from "../components/category/CategoriesHeader";
+import CategoriesTable from "../components/category/CategoriesTable";
+import CategoryFormModal from "../components/category/CategoryFormModal";
+import Pagination from "../components/Pagination"
 const CategoriesPage = () => {
-  const { categories, loading, error, fetchCategories, search, pagination } = useCategoryStore();
+  const { fetchCategories, search, pagination } = useCategoryStore();
 
   // Single effect: search + pagination
   useEffect(() => {
@@ -19,24 +16,15 @@ const CategoriesPage = () => {
     return () => clearTimeout(timer);
   }, [search, pagination.currentPage, fetchCategories]);
 
-  // if (loading && categories.length === 0) {
-  //   return (
-  //     <div className="flex justify-center items-center h-96">
-  //       <span className="loading loading-spinner loading-lg"></span>
-  //     </div>
-  //   );
-  // }
-
-  if (error) {
-    return <div className="alert alert-error text-center">{error}</div>;
-  }
-
   return (
-    <div className="space-y-8 p-6">
+    <div className="space-y-4 sm:space-y-6 md:space-y-8 p-3 sm:p-4 md:p-6">
       <CategoriesHeader />
-      <CategoriesSearch />
       <CategoriesTable />
-      <CategoriesPagination />
+      <Pagination
+        page={pagination.currentPage}
+        totalPages={pagination.totalPages}
+        onPageChange={(page) => fetchCategories({ search, page })}
+      />
       <CategoryFormModal />
     </div>
   );

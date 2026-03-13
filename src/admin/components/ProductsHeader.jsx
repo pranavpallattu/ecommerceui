@@ -6,32 +6,49 @@ const ProductsHeader = () => {
   const { search, setSearch, openModal } = useProductStore();
 
   return (
-    <div className="bg-white rounded-3xl shadow-2xl p-8 border border-blue-100">
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-        <div>
-          <h1 className="text-4xl font-bold text-gray-900">Products</h1>
-          <p className="text-blue-600 mt-2 text-lg">Manage your store inventory</p>
+    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 md:p-8 border border-blue-100">
+      <div className="flex flex-col gap-4 sm:gap-6 md:flex-row md:justify-between md:items-center md:gap-8">
+
+        {/* Left Side */}
+        <div className="flex-shrink-0">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">Products</h1>
+          <p className="text-blue-600 mt-1 sm:mt-2 text-sm sm:text-base md:text-lg">
+            Manage your store inventory
+          </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-4 w-full lg:w-auto">
-          <div className="relative max-w-md w-full">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-500" size={22} />
+        {/* Right Side - Search & Button */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full md:w-auto md:min-w-[400px] lg:min-w-[500px]">
+
+          {/* Search Wrapper */}
+          <div className="relative w-full">
+            <Search
+              className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-blue-500"
+              size={18}
+            />
             <input
               type="text"
               placeholder="Search products..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="input input-bordered w-full pl-12 h-14 rounded-2xl border-blue-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+              className="input input-bordered w-full pl-10 sm:pl-12 h-12 sm:h-14 rounded-xl sm:rounded-2xl 
+                         border-blue-200 text-sm sm:text-base
+                         focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all"
             />
           </div>
 
+          {/* Add Button */}
           <button
             onClick={() => openModal()}
-            className="btn btn-primary h-14 px-8 rounded-2xl flex items-center gap-3 shadow-lg hover:shadow-xl transition-all"
+            className="btn btn-primary h-12 sm:h-14 px-6 sm:px-8 rounded-xl sm:rounded-2xl 
+                       flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base
+                       shadow-lg hover:shadow-xl transition-all whitespace-nowrap"
           >
-            <Plus size={22} />
-            Add Product
+            <Plus size={20} />
+            <span className="hidden xs:inline">Add Product</span>
+            <span className="xs:hidden">Add</span>
           </button>
+
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ import {
   updateCouponStatusApi,
   deleteCouponApi,
 } from "../../services/allApis";
+import { toast } from "react-toastify";
 
 const useCouponStore = create(
   devtools((set, get) => ({
@@ -72,7 +73,7 @@ const useCouponStore = create(
         }
 
         set({
-               coupons: res.data.data,
+          coupons: res.data.data,
           pagination: {
             totalCustomers: res.data.pagination.totalCoupons,
             totalPages: res.data.pagination.totalPages,
@@ -95,38 +96,86 @@ const useCouponStore = create(
 
     handleSubmit: async (formData) => {
       const { editData } = get();
-      set({ loading: true });
+
+      // 🧪 Frontend validation
+      if (!formData.code?.trim()) {
+        toast.error("Coupon code is required");
+        return;
+      }
+
+      if (!formData.discount || formData.discount <= 0) {
+        toast.error("Discount must be greater than 0");
+        return;
+      }
+
+      if (!formData.expiryDate) {
+        toast.error("Expiry date is required");
+        return;
+      }
+
+      set({ loading: true, error: null });
 
       try {
         let res;
+
         if (editData) {
           res = await editCouponApi(editData._id, formData);
         } else {
           res = await addCouponApi(formData);
         }
-        if (!res.success) {
-          set({ loading: false, error: res.message });
+
+        // ❌ backend failure
+        if (!res?.success) {
+          toast.error(res?.data?.message || "Operation failed");
+          set({ loading: false });
           return;
         }
 
-        // Refresh product list
+        // ✅ success toast ONLY here
+        toast.success(
+          editData
+            ? "Coupon updated successfully"
+            : "Coupon added successfully",
+        );
+
         await get().fetchCoupons();
 
-        // Close modal
-        set({ loading: false, isModalOpen: false, editData: null });
+        set({
+          loading: false,
+          isModalOpen: false,
+          editData: null,
+        });
       } catch (err) {
-        set({ loading: false, error: err.message });
+        toast.error(
+          err?.response?.data?.message || err.message || "Something went wrong",
+        );
+        set({ loading: false });
       }
     },
 
     updateCouponStatus: async (id) => {
+      set({ loading: true, error: null });
+
       try {
         const res = await updateCouponStatusApi(id);
-        if (res.success) {
-          get().fetchCoupons();
+
+        if (!res?.success) {
+          toast.error(res?.data?.message || "Failed to update coupon status");
+          set({ loading: false });
+          return;
         }
+
+        // ✅ success from backend message
+        toast.success(res?.data?.message);
+
+        await get().fetchCoupons();
+
+        set({ loading: false });
       } catch (err) {
-        console.log("coupon update status error", err);
+        toast.error(
+          err?.response?.data?.message || err.message || "Something went wrong",
+        );
+        set({ loading: false });
       }
     },
 
@@ -134,16 +183,31 @@ const useCouponStore = create(
     // SOFT DELETE Coupon
     // =============================
     deleteCoupon: async (id) => {
+      set({ loading: true, error: null });
+
       try {
         const res = await deleteCouponApi(id);
-        if (res.success) {
-          get().fetchCoupons();
+
+        if (!res?.success) {
+          toast.error(res?.data?.message || "Failed to delete coupon");
+          set({ loading: false });
+          return;
         }
+
+        // ✅ success toast
+        toast.success(res?.data?.message);
+
+        await get().fetchCoupons();
+
+        set({ loading: false });
       } catch (err) {
-        console.log("Delete error:", err);
+        toast.error(
+          err?.response?.data?.message || err.message || "Something went wrong",
+        );
+        set({ loading: false });
       }
     },
-  }))
+  })),
 );
 
 export default useCouponStore;

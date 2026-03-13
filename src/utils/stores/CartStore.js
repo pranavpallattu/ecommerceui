@@ -5,6 +5,7 @@ import {
   removeFromCartApi,
   updateQuantityApi,
 } from "../../services/allApis";
+import { toast } from "react-toastify";
 
 const useCartStore = create((set, get) => ({
   cartProducts: null,
@@ -29,7 +30,11 @@ fetchCartProducts: async () => {
   addToCart: async (productId) => {
     set({ loading: true, error: null });
     try {
-      await addtoCartApi(productId);
+      const res= await addtoCartApi(productId);
+      if(!res.success){
+        toast.error(res?.message)
+      }
+      toast.success("Product added to cart")
       await get().fetchCartProducts();
     } catch (error) {
       set({
@@ -42,7 +47,11 @@ fetchCartProducts: async () => {
   removeFromCart: async (productId) => {
     set({ loading: true, error: null });
     try {
-      await removeFromCartApi(productId);
+    const res=  await removeFromCartApi(productId);
+          if(!res.success){
+        toast.error(res?.message)
+      }
+      toast.success("Product removed from cart")
       await get().fetchCartProducts();
     } catch (error) {
       set({
@@ -56,7 +65,11 @@ fetchCartProducts: async () => {
   updateQuantity: async (reqBody) => {
     set({ loading: true, error: null });
     try {
-      await updateQuantityApi(reqBody);
+      const res=await updateQuantityApi(reqBody);
+      if(!res.success){
+        toast.error(res?.message)
+      }
+      toast.success(res?.data?.message)
       await get().fetchCartProducts();
     } catch (error) {
       set({

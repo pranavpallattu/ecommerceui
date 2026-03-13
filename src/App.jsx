@@ -1,26 +1,29 @@
-// src/App.jsx
-import React, { useEffect } from "react";
-import { getMeApi } from "./services/allApis";
-import useUserStore from "./utils/stores/userStore";
+import { useEffect } from "react";
+import { Outlet } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+
+import ConfirmModal from "./admin/components/ConfirmModal";
+// import useUserStore from "./utils/stores/userStore";
+// import useAdminStore from "./utils/stores/adminStore";
+import useAuthStore from "./utils/stores/userAuthStore";
 
 function App() {
-   const{addUser, removeUser}=useUserStore()
+  const checkAuth = useAuthStore((state) => state.checkAuth);
+  // const checkAdminAuth = useAdminStore((state) => state.checkAdminAuth);
+
 
   useEffect(() => {
-  getMeApi()
-    .then(res => {
-      addUser({
-        user: res.data.data,
-        role: res.data.data.isAdmin ? "admin" : "user",
-      });
-    })
-    .catch(() => {
-      removeUser(); // optional
-    });
-}, []);
+    checkAuth(); // ✅ SINGLE SOURCE OF TRUTH
+    // checkAdminAuth();
+  }, []);
 
-
-  return <div className="min-h-screen bg-base-200"></div>; // optional bg
+  return (
+    <div className="min-h-screen bg-base-200">
+      <ToastContainer position="top-right" autoClose={3000} />
+      <Outlet />
+      <ConfirmModal />
+    </div>
+  );
 }
 
 export default App;

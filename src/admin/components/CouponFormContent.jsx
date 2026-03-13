@@ -22,7 +22,7 @@ const CouponFormContent = () => {
       setForm({
         code: editData.code || "",
         description: editData.description || "",
-        discountType: editData.discountType || "",   // ✅ FIXED
+        discountType: editData.discountType || "",
         discount: editData.discount || "",
         minPurchase: editData.minPurchase || "",
         expiryDate: editData.expiryDate?.split("T")[0] || "",
@@ -49,24 +49,24 @@ const CouponFormContent = () => {
   };
 
   return (
-    <form onSubmit={onSubmit} className="space-y-6">
+    <form onSubmit={onSubmit} className="space-y-4 sm:space-y-6">
       {/* Coupon Code */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
           Coupon Code
         </label>
         <input
           type="text"
           value={form.code}
           onChange={(e) => setForm({ ...form, code: e.target.value })}
-          className="input input-bordered w-full"
+          className="input input-bordered w-full text-sm sm:text-base"
           required
         />
       </div>
 
       {/* Discount Type */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
           Discount Type
         </label>
 
@@ -75,7 +75,7 @@ const CouponFormContent = () => {
             type="text"
             value={editData.discountType}
             disabled
-            className="input input-bordered w-full bg-gray-200 p-2"
+            className="input input-bordered w-full bg-gray-200 text-sm sm:text-base"
             required
           />
         ) : (
@@ -84,7 +84,7 @@ const CouponFormContent = () => {
             onChange={(e) =>
               setForm({ ...form, discountType: e.target.value })
             }
-            className="select select-bordered w-full"
+            className="select select-bordered w-full text-sm sm:text-base"
             required
           >
             <option value="">Select discount type</option>
@@ -96,7 +96,7 @@ const CouponFormContent = () => {
 
       {/* Description */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
           Description
         </label>
         <textarea
@@ -104,18 +104,17 @@ const CouponFormContent = () => {
           onChange={(e) =>
             setForm({ ...form, description: e.target.value })
           }
-          className="textarea textarea-bordered w-full h-32"
+          className="textarea textarea-bordered w-full h-24 sm:h-32 text-sm sm:text-base"
           required
         />
       </div>
 
       {/* Discount Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
         {/* Discount */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Discount{" "}
-            {form.discountType === "flat" ? "(₹)" : "(%)"}
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+            Discount {form.discountType === "flat" ? "(₹)" : "(%)"}
           </label>
           <input
             type="number"
@@ -124,14 +123,14 @@ const CouponFormContent = () => {
             onChange={(e) =>
               setForm({ ...form, discount: e.target.value })
             }
-            className="input input-bordered w-full"
+            className="input input-bordered w-full text-sm sm:text-base"
             required
           />
         </div>
 
         {/* Minimum Purchase */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
             Minimum Purchase (₹)
           </label>
           <input
@@ -141,14 +140,14 @@ const CouponFormContent = () => {
             onChange={(e) =>
               setForm({ ...form, minPurchase: e.target.value })
             }
-            className="input input-bordered w-full"
+            className="input input-bordered w-full text-sm sm:text-base"
             required
           />
         </div>
 
         {/* Expiry Date */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="sm:col-span-2 md:col-span-1">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
             Expiry Date
           </label>
           <input
@@ -157,16 +156,16 @@ const CouponFormContent = () => {
             onChange={(e) =>
               setForm({ ...form, expiryDate: e.target.value })
             }
-            className="input input-bordered w-full"
+            className="input input-bordered w-full text-sm sm:text-base"
             required
           />
         </div>
       </div>
 
       {/* Usage Limits Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
             Usage Limit (Total)
           </label>
           <input
@@ -176,12 +175,13 @@ const CouponFormContent = () => {
             onChange={(e) =>
               setForm({ ...form, usageLimit: e.target.value })
             }
-            className="input input-bordered w-full"
+            className="input input-bordered w-full text-sm sm:text-base"
+            placeholder="Optional"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
             Per User Limit
           </label>
           <input
@@ -191,22 +191,26 @@ const CouponFormContent = () => {
             onChange={(e) =>
               setForm({ ...form, perUserLimit: e.target.value })
             }
-            className="input input-bordered w-full"
+            className="input input-bordered w-full text-sm sm:text-base"
+            placeholder="Optional"
           />
         </div>
       </div>
 
       {/* Buttons */}
-      <div className="flex justify-end gap-4 pt-6 border-t">
+      <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4 pt-4 sm:pt-6 border-t">
         <button
           type="button"
           onClick={closeModal}
-          className="btn btn-ghost"
+          className="btn btn-ghost w-full sm:w-auto text-sm sm:text-base"
         >
           Cancel
         </button>
 
-        <button type="submit" className="btn btn-primary px-8">
+        <button 
+          type="submit" 
+          className="btn btn-primary w-full sm:w-auto sm:px-8 text-sm sm:text-base"
+        >
           {editData ? "Update Coupon" : "Add Coupon"}
         </button>
       </div>

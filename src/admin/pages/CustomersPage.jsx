@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import CustomersHeader from "../components/CustomerHeader";
 import CustomersTable from "../components/CustomersTable";
-import Pagination from "../components/Pagination"; // ← Correct import
+import Pagination from "../components/Pagination";
 import useCustomerStore from "../../utils/stores/customerStore";
 
 const CustomersPage = () => {
@@ -16,8 +16,8 @@ const CustomersPage = () => {
   }, [search, pagination.currentPage]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-3 sm:p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 md:space-y-8">
         <CustomersHeader />
         <CustomersTable />
         <Pagination

@@ -16,8 +16,8 @@ const useWalletStore = create((set) => ({
 
       if (res.success) {
         set({
-          balance: res.data.data.balance,
-          transactionHistory: res.data.data.transactionHistory || [],
+          balance: res?.data?.data?.balance,
+          transactionHistory: res?.data?.data?.transactionHistory || [],
           loading: false,
         });
       }

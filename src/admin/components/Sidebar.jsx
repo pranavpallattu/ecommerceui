@@ -9,6 +9,7 @@ import {
   BadgePercent,
   Users,
   BarChart3,
+  X,
 } from "lucide-react";
 
 const navItems = [
@@ -21,9 +22,42 @@ const navItems = [
   { name: "Sales Report", path: "/admin/sales", icon: BarChart3 },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 h-screen fixed left-0 top-0 flex flex-col z-10">
+    <>
+      {/* Desktop Sidebar - Always visible on lg+ */}
+      <aside className="hidden lg:flex w-64 bg-white border-r border-gray-200 h-screen fixed left-0 top-0 flex-col z-10">
+        <SidebarContent />
+      </aside>
+
+      {/* Mobile Sidebar - Drawer that slides in */}
+      <aside 
+        className={`
+          lg:hidden fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 
+          flex flex-col z-40 transform transition-transform duration-300 ease-in-out
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        `}
+      >
+        {/* Close button for mobile */}
+        <div className="absolute top-4 right-4 lg:hidden">
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            <X size={20} className="text-gray-600" />
+          </button>
+        </div>
+
+        <SidebarContent onLinkClick={onClose} />
+      </aside>
+    </>
+  );
+};
+
+// Separate content component to avoid duplication
+const SidebarContent = ({ onLinkClick }) => {
+  return (
+    <>
       {/* === PREMIUM HEADER === */}
       <div className="p-2 border-b border-gray-200 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800">
         <div className="flex items-center gap-3">
@@ -54,6 +88,7 @@ const Sidebar = () => {
               <li key={item.path}>
                 <NavLink
                   to={item.path}
+                  onClick={onLinkClick}
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group ${
                       isActive
@@ -63,13 +98,17 @@ const Sidebar = () => {
                   }
                   end
                 >
-                  <Icon
-                    size={19}
-                    className={`transition-colors ${
-                      NavLink.isActive ? "text-blue-700" : "text-gray-500 group-hover:text-gray-700"
-                    }`}
-                  />
-                  <span>{item.name}</span>
+                  {({ isActive }) => (
+                    <>
+                      <Icon
+                        size={19}
+                        className={`transition-colors ${
+                          isActive ? "text-blue-700" : "text-gray-500 group-hover:text-gray-700"
+                        }`}
+                      />
+                      <span>{item.name}</span>
+                    </>
+                  )}
                 </NavLink>
               </li>
             );
@@ -83,7 +122,7 @@ const Sidebar = () => {
           © 2025 oneBazaar. All rights reserved.
         </p>
       </div>
-    </aside>
+    </>
   );
 };
 

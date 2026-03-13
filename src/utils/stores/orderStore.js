@@ -5,11 +5,12 @@ import {
   getOrdersApi,
   updateOrderStatusApi,
 } from "../../services/allApis";
+import { toast } from "react-toastify";
 
 const useOrderStore = create(
   devtools((set, get) => ({
     orders: [],
-    order:null,
+    order: null,
     loading: false,
     error: null,
 
@@ -42,6 +43,7 @@ const useOrderStore = create(
 
       try {
         const res = await getOrdersApi(finalSearch, finalPage, finalLimit);
+
         if (!res.success) {
           set({
             loading: false,
@@ -73,6 +75,8 @@ const useOrderStore = create(
 
       try {
         const res = await getOrderApi(id);
+        console.log(res);
+
         if (!res.success) {
           set({ loading: false, error: res.message });
           return;
@@ -86,14 +90,18 @@ const useOrderStore = create(
     updateOrderStatus: async (id, newStatus) => {
       try {
         const res = await updateOrderStatusApi(id, { status: newStatus });
-        if (res.success) {
-          get().fetchOrderById(id);
+        if (!res.success) {
+          toast.error(res?.message);
         }
+        get().fetchOrderById(id);
+        toast.success(res?.data?.message);
       } catch (err) {
+        console.error(err);
+
         console.log("order update status error", err);
       }
     },
-  }))
+  })),
 );
 
 export default useOrderStore;

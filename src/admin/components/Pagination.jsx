@@ -1,4 +1,4 @@
-// src/components/Pagination.jsx
+// src/components/Pagination.jsx (Updated for better mobile responsiveness)
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Pagination = ({ page, totalPages, onPageChange }) => {
@@ -12,14 +12,15 @@ const Pagination = ({ page, totalPages, onPageChange }) => {
   const pages = Array.from({ length: end - start + 1 }, (_, i) => start + i);
 
   return (
-    <div className="flex justify-center items-center gap-2 mt-10">
+    <div className="flex justify-center items-center gap-1 sm:gap-2 mt-6 sm:mt-8 md:mt-10 px-2">
       {/* Previous Button */}
       <button
         onClick={() => onPageChange(page - 1)}
         disabled={page === 1}
-        className="join-item btn btn-square btn-sm hover:bg-base-300 disabled:opacity-50"
+        className="btn btn-square btn-xs sm:btn-sm hover:bg-base-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        aria-label="Previous page"
       >
-        <ChevronLeft size={18} />
+        <ChevronLeft size={16} className="sm:w-[18px] sm:h-[18px]" />
       </button>
 
       {/* First Page + Ellipsis */}
@@ -27,11 +28,11 @@ const Pagination = ({ page, totalPages, onPageChange }) => {
         <>
           <button
             onClick={() => onPageChange(1)}
-            className="join-item btn btn-sm"
+            className="btn btn-xs sm:btn-sm hidden xs:inline-flex"
           >
             1
           </button>
-          {start > 2 && <span className="join-item px-3">...</span>}
+          {start > 2 && <span className="px-1 sm:px-2 text-xs sm:text-sm hidden xs:inline">...</span>}
         </>
       )}
 
@@ -40,7 +41,7 @@ const Pagination = ({ page, totalPages, onPageChange }) => {
         <button
           key={p}
           onClick={() => onPageChange(p)}
-          className={`join-item btn btn-sm ${
+          className={`btn btn-xs sm:btn-sm ${
             page === p ? "btn-active" : ""
           }`}
         >
@@ -51,10 +52,10 @@ const Pagination = ({ page, totalPages, onPageChange }) => {
       {/* Last Page + Ellipsis */}
       {end < totalPages && (
         <>
-          {end < totalPages - 1 && <span className="join-item px-3">...</span>}
+          {end < totalPages - 1 && <span className="px-1 sm:px-2 text-xs sm:text-sm hidden xs:inline">...</span>}
           <button
             onClick={() => onPageChange(totalPages)}
-            className="join-item btn btn-sm"
+            className="btn btn-xs sm:btn-sm hidden xs:inline-flex"
           >
             {totalPages}
           </button>
@@ -65,10 +66,16 @@ const Pagination = ({ page, totalPages, onPageChange }) => {
       <button
         onClick={() => onPageChange(page + 1)}
         disabled={page === totalPages}
-        className="join-item btn btn-square btn-sm hover:bg-base-300 disabled:opacity-50"
+        className="btn btn-square btn-xs sm:btn-sm hover:bg-base-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        aria-label="Next page"
       >
-        <ChevronRight size={18} />
+        <ChevronRight size={16} className="sm:w-[18px] sm:h-[18px]" />
       </button>
+
+      {/* Mobile Page Info */}
+      <div className="sm:hidden ml-2 text-xs text-gray-600">
+        {page}/{totalPages}
+      </div>
     </div>
   );
 };

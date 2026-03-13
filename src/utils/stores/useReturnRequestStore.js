@@ -6,6 +6,7 @@ import {
   approveItemReturnApi,
   rejectItemReturnApi,
 } from "../../services/allApis";
+import { toast } from "react-toastify";
 
 export const useReturnRequestStore = create((set, get) => ({
   /* =======================
@@ -13,6 +14,7 @@ export const useReturnRequestStore = create((set, get) => ({
   ======================= */
   orderReturns: [],
   itemReturns: [],
+  totalReturns: null,
   loading: false,
   actionLoading: false,
   error: null,
@@ -30,6 +32,9 @@ export const useReturnRequestStore = create((set, get) => ({
         set({
           orderReturns: res.data.data.orderReturns || [],
           itemReturns: res.data.data.itemReturns || [],
+          totalReturns:
+            res.data.data.orderReturns.length +
+            res.data.data.itemReturns.length,
         });
       } else {
         throw new Error(res?.message || "Failed to fetch return requests");
@@ -52,8 +57,10 @@ export const useReturnRequestStore = create((set, get) => ({
       const res = await approveOrderReturnApi(orderId);
 
       if (!res?.success) {
-        throw new Error(res?.message || "Order return approval failed");
+        toast.error(res?.message || "Order return approval failed");
       }
+
+      toast.success("Order return request approved");
 
       // Refresh list after success
       await get().fetchReturnRequests();
@@ -71,8 +78,10 @@ export const useReturnRequestStore = create((set, get) => ({
       const res = await rejectOrderReturnApi(orderId, reason);
 
       if (!res?.success) {
-        throw new Error(res?.message || "Order return rejection failed");
+        toast.error(res?.message || "Order return rejection failed");
       }
+
+      toast.success("Order return request rejected");
 
       await get().fetchReturnRequests();
     } catch (err) {
@@ -93,8 +102,10 @@ export const useReturnRequestStore = create((set, get) => ({
       const res = await approveItemReturnApi(orderId, itemId);
 
       if (!res?.success) {
-        throw new Error(res?.message || "Item return approval failed");
+        toast.error(res?.message || "Item return approval failed");
       }
+
+      toast.success("Item return request approved");
 
       await get().fetchReturnRequests();
     } catch (err) {
@@ -111,8 +122,10 @@ export const useReturnRequestStore = create((set, get) => ({
       const res = await rejectItemReturnApi(orderId, itemId, reason);
 
       if (!res?.success) {
-        throw new Error(res?.message || "Item return rejection failed");
+        toast.error(res?.message || "Item return rejection failed");
       }
+
+      toast.success("Item return request rejected");
 
       await get().fetchReturnRequests();
     } catch (err) {
@@ -121,5 +134,4 @@ export const useReturnRequestStore = create((set, get) => ({
       set({ actionLoading: false });
     }
   },
-
 }));

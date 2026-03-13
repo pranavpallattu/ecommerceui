@@ -1,0 +1,58 @@
+// src/admin/components/categories/CategoriesHeader.jsx
+import { Plus, Search } from "lucide-react";
+import useCategoryStore from "../../../utils/stores/categoryStore";
+
+const CategoriesHeader = () => {
+  const { search, setSearch, openAddModal } = useCategoryStore();
+
+  return (
+    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 md:p-8 border border-blue-100">
+      <div className="flex flex-col gap-4 sm:gap-6 md:flex-row md:justify-between md:items-center md:gap-8">
+
+        {/* Left Side */}
+        <div className="flex-shrink-0">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">Categories</h1>
+          <p className="text-blue-600 mt-1 sm:mt-2 text-sm sm:text-base md:text-lg">
+            Manage and organize product categories
+          </p>
+        </div>
+
+        {/* Right Side - Search & Button */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full md:w-auto md:min-w-[400px] lg:min-w-[500px]">
+
+          {/* Search */}
+          <div className="relative w-full">
+            <Search
+              className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-blue-500"
+              size={18}
+            />
+            <input
+              type="text"
+              placeholder="Search categories..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="input input-bordered w-full pl-10 sm:pl-12 h-12 sm:h-14 rounded-xl sm:rounded-2xl 
+                         border-blue-200 text-sm sm:text-base
+                         focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all"
+            />
+          </div>
+
+          {/* Add Category Button */}
+          <button
+            onClick={openAddModal}
+            className="btn btn-primary h-12 sm:h-14 px-6 sm:px-8 rounded-xl sm:rounded-2xl 
+                       flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base
+                       shadow-lg hover:shadow-xl transition-all whitespace-nowrap"
+          >
+            <Plus size={20} />
+            <span className="hidden xs:inline">Add Category</span>
+            <span className="xs:hidden">Add</span>
+          </button>
+
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CategoriesHeader;

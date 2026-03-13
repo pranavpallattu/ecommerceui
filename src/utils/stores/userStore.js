@@ -1,40 +1,39 @@
-import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
+// // src/utils/stores/userStore.js
+// import { create } from "zustand";
+// import { persist } from "zustand/middleware";
+// import { getUserMeApi, userLogoutApi } from "../../services/allApis";
+// import { createJSONStorage } from "zustand/middleware";
 
-const useUserStore = create(
-  devtools(
-    persist(
-      (set) => ({
-        user: null,            // user data from backend
-        role: null,            // "admin" | "user"
-        isAuthenticated: false,
+// const useUserStore = create(
+//   persist(
+//     (set) => ({
+//       user: null,
+//       loading: true,
 
-        // Save user after login
-        addUser: ({ user, role }) =>
-          set({
-            user,
-            role,
-            isAuthenticated: true,
-          }),
+//       setUser: (user) => set({ user }),
 
-        // Clear user after logout
-        removeUser: () =>
-          set({
-            user: null,
-            role: null,
-            isAuthenticated: false,
-          }),
-      }),
-      {
-        name: "user-store", // saved in localStorage
-        partialize: (state) => ({
-          user: state.user,
-          role: state.role,
-          isAuthenticated: state.isAuthenticated,
-        }),
-      }
-    )
-  )
-);
+//       checkUserAuth: async () => {
+//         try {
+//           const res = await getUserMeApi();
+//           console.log(res);
+          
+//           set({ user: res?.data?.data, loading: false });
+//         } catch {
+//           set({ user: null, loading: false });
+//         }
+//       },
 
-export default useUserStore;
+//       logoutUser: async () => {
+//         await userLogoutApi();
+//         set({ user: null });
+//       },
+//     }),
+//      {
+//     name: "user-auth-storage",
+//     storage: createJSONStorage(() => sessionStorage),
+//     partialize: (state) => ({ user: state.user }),
+//   }
+//   )
+// );
+
+// export default useUserStore;

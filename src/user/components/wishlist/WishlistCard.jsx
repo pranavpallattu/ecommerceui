@@ -1,0 +1,92 @@
+// src/components/WishlistCardAlt.jsx
+import { X, ShoppingCart, Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import useCartStore from "../../../utils/stores/CartStore";
+
+const WishlistCard = ({ product, onRemove, onAddToCart }) => {
+
+  const { cartProducts } = useCartStore();
+  const alreadyInCart = cartProducts?.items?.some(
+    (item) => item.product._id == product._id
+  );
+
+  const inStock = product.quantity > 0;
+
+  return (
+    <div className="group relative bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all border border-gray-100">
+
+      {/* Responsive Layout */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-4 sm:p-6">
+
+        {/* Image */}
+        <div className="w-full sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-gray-50 flex-shrink-0">
+          <Link to={`/product/${product?._id}`}>
+            <img
+              src={product.productImage?.[0] || "https://via.placeholder.com/200"}
+              alt={product.productName}
+              className="w-full h-full object-cover"
+            />
+          </Link>
+        </div>
+
+        {/* Info */}
+        <div className="flex-1 w-full">
+          <h3 className="text-lg sm:text-xl font-medium text-gray-900 line-clamp-2 mb-2">
+            {product.productName}
+          </h3>
+
+          <div className="flex items-baseline gap-2 sm:gap-3 mb-2 sm:mb-3">
+            <span className="text-xl sm:text-2xl font-bold text-gray-900">
+              ₹{product.salePrice}
+            </span>
+
+            {product.regularPrice > product.salePrice && (
+              <span className="text-sm sm:text-lg text-gray-500 line-through">
+                ₹{product.regularPrice}
+              </span>
+            )}
+          </div>
+
+          <p className={`text-sm font-medium ${inStock ? "text-green-700" : "text-red-700"}`}>
+            {inStock ? "In Stock" : "Out of Stock"}
+          </p>
+        </div>
+
+        {/* Buttons */}
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
+
+          {alreadyInCart ? (
+            <Link to={"/cart"} className="w-full sm:w-auto">
+              <button
+                disabled={!inStock}
+                className="btn btn-primary rounded-xl px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-40 flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                <ShoppingCart size={18} />
+                <span>Go to Cart</span>
+              </button>
+            </Link>
+          ) : (
+            <button
+              onClick={onAddToCart}
+              disabled={!inStock}
+              className="btn btn-primary rounded-xl px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-40 flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              <ShoppingCart size={18} />
+              <span>Add to Cart</span>
+            </button>
+          )}
+
+          <button
+            onClick={onRemove}
+            className="btn btn-error text-white rounded-xl px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-auto flex items-center justify-center gap-2"
+          >
+            <Trash2 size={18} />
+            <span>Remove</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default WishlistCard;

@@ -5,6 +5,7 @@ import {
   getWishlistApi,
   removeFromWishlistApi,
 } from "../../services/allApis";
+import { toast } from "react-toastify";
 
 const useUserWishlistStore = create((set, get) => ({
   wishlistProducts: [],
@@ -31,7 +32,12 @@ const useUserWishlistStore = create((set, get) => ({
   addtoWishlist: async (productId) => {
     set({ loading: true });
     try {
-      await addtoWishlistApi(productId);
+    const res=  await addtoWishlistApi(productId);
+      if(!res.success){
+toast.error(res?.message)
+
+      }
+      toast.success("Product added to wishlist")
       await get().fetchWishlistProducts();
     } catch (error) {
       set({ loading: false, error: "Failed to add" });
@@ -41,7 +47,13 @@ const useUserWishlistStore = create((set, get) => ({
   removeFromWishlist: async (productId) => {
     set({ loading: true });
     try {
-      await removeFromWishlistApi(productId);
+     const res = await removeFromWishlistApi(productId);
+       if(!res.success){
+toast.error(res?.message)
+
+      }
+      toast.success("Product removed from wishlist")
+
       await get().fetchWishlistProducts();
     } catch (error) {
       set({ loading: false, error: "Failed to remove" });

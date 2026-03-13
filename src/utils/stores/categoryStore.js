@@ -9,6 +9,7 @@ import {
   unlistCategoryApi,
   softDeleteCategoryApi,
 } from "../../services/allApis";
+import { toast } from "react-toastify";
 
 /**
  * Category store (Zustand)
@@ -28,32 +29,43 @@ const useCategoryStore = create(
     limit: 5,
 
     pagination: {
-        totalCategories:0,
-        totalPages:0,
-        currentPage: 1,
-        hasNextPage: false,
-        hasPrevPage: false,
-      },
+      totalCategories: 0,
+      totalPages: 0,
+      currentPage: 1,
+      hasNextPage: false,
+      hasPrevPage: false,
+    },
 
-      // In categoryStore.js — ADD THIS
+// categoryStore.js
 isModalOpen: false,
+modalMode: "add", // "add" | "edit"
 editData: null,
 
-// Open modal for add or edit
-openModal: (data = null) => set({ 
-  isModalOpen: true, 
-  editData: data 
-}),
+openAddModal: () =>
+  set({
+    isModalOpen: true,
+    modalMode: "add",
+    editData: null,
+  }),
 
-// Close modal + CLEAR everything
-closeModal: () => set({ 
-  isModalOpen: false, 
-  editData: null 
-}),
+openEditModal: (data) =>
+  set({
+    isModalOpen: true,
+    modalMode: "edit",
+    editData: data,
+  }),
 
-// Submit handler
-handleSubmit: async (formData) => {
-  const { editData, addCategory, editCategory, closeModal, fetchCategories } = get();
+closeModal: () =>
+  set({
+    isModalOpen: false,
+    modalMode: "add",
+    editData: null,
+  }),
+
+
+    // Submit handler
+ handleSubmit: async (formData) => {
+  const { editData, addCategory, editCategory, closeModal } = get();
 
   try {
     if (editData) {
@@ -61,12 +73,13 @@ handleSubmit: async (formData) => {
     } else {
       await addCategory(formData);
     }
-    closeModal();        // ← closes + clears editData
-    fetchCategories();   // ← refresh list
+
+    closeModal(); // ✅ ONLY close modal
   } catch (err) {
-    // error already set in add/editCategory
+    // handled inside store
   }
 },
+
 
     // ----- simple setters -----
     setSearch: (value) => {
@@ -88,75 +101,77 @@ handleSubmit: async (formData) => {
      * - Expects allApis.getCategoriesApi(search,page,limit) to return
      *   { success:true, data: { data: categoriesArray, pagination: {...} }, ... }
      */
-   /**
- * Fetch categories — accepts object or uses current state
- * This is the MODERN and CORRECT way
- */
-fetchCategories: async ({ search, page, limit } = {}) => {
-  set({ loading: true, error: null });
+    /**
+     * Fetch categories — accepts object or uses current state
+     * This is the MODERN and CORRECT way
+     */
+    fetchCategories: async ({ search, page, limit } = {}) => {
+      set({ loading: true, error: null });
 
-  // Use passed values OR current state
-  const current = get();
-  const finalSearch = search !== undefined ? search : current.search;
-  const finalPage = page !== undefined ? page : current.page;
-  const finalLimit = limit !== undefined ? limit : current.limit;
+      // Use passed values OR current state
+      const current = get();
+      const finalSearch = search !== undefined ? search : current.search;
+      const finalPage = page !== undefined ? page : current.page;
+      const finalLimit = limit !== undefined ? limit : current.limit;
 
-  try {
-    const res = await getCategoriesApi(finalSearch, finalPage, finalLimit);
+      try {
+        const res = await getCategoriesApi(finalSearch, finalPage, finalLimit);
 
-    if (!res.success) {
-      set({ loading: false, error: res.message || "Failed to fetch" });
-      return;
-    }
+        if (!res.success) {
+          set({ loading: false, error: res.message || "Failed to fetch" });
+          return;
+        }
 
-    set({
-      categories: res.data.data,
-      pagination: {
-        totalCategories: res.data.pagination.totalCategories,
-        totalPages: res.data.pagination.totalPages,
-        currentPage: finalPage,
-        hasNextPage: finalPage < res.data.pagination.totalPages,
-        hasPrevPage: finalPage > 1,
-      },
-      // Also sync root state
-      search: finalSearch,
-      page: finalPage,
-      limit: finalLimit,
-      loading: false,
-      error: null,
-    });
-  } catch (err) {
-    set({ loading: false, error: "Network error" });
-    console.error("fetchCategories error:", err);
-  }
-},
+        set({
+          categories: res.data.data,
+          pagination: {
+            totalCategories: res.data.pagination.totalCategories,
+            totalPages: res.data.pagination.totalPages,
+            currentPage: finalPage,
+            hasNextPage: finalPage < res.data.pagination.totalPages,
+            hasPrevPage: finalPage > 1,
+          },
+          // Also sync root state
+          search: finalSearch,
+          page: finalPage,
+          limit: finalLimit,
+          loading: false,
+          error: null,
+        });
+      } catch (err) {
+        set({ loading: false, error: "Network error" });
+        console.error("fetchCategories error:", err);
+      }
+    },
 
     /**
      * Add a new category
      * - reqBody: { name, description, offer }
      * - On success we re-fetch categories (server is source of truth)
      */
-    addCategory: async (reqBody) => {
-      try {
-        set({ loading: true, error: null });
-        const res = await addCategoryApi(reqBody);
+   addCategory: async (reqBody) => {
+  set({ loading: true, error: null });
 
-        if (!res.success) {
-          set({ loading: false, error: res?.message || "Failed to add category" });
-          return { success: false, message: res?.message || "Failed to add category" };
-        }
+  try {
+    const res = await addCategoryApi(reqBody);
 
-        // re-fetch to get fresh list (keeps pagination consistent)
-        await get().fetchCategories();
-        return { success: true, data: res.data };
-      } catch (err) {
-        console.error("addCategory error:", err);
-        set({ loading: false, error: err.message || "Server error" });
-        return { success: false, message: err.message || "Server error" };
-      } finally {
-        set({ loading: false });
-      }
-    },
+    if (!res.success) {
+      toast.error(res?.message || "Failed to add category");
+      set({ error: res.message });
+      return;
+    }
+
+    toast.success("Category added successfully");
+    await get().fetchCategories();
+
+  } catch (err) {
+    toast.error(err?.response?.data?.message || "Server error");
+    set({ error: "Server error" });
+  } finally {
+    set({ loading: false });
+  }
+},
+
 
     /**
      * Edit category
@@ -170,16 +185,24 @@ fetchCategories: async ({ search, page, limit } = {}) => {
         const res = await editCategoryApi(reqBody, id);
 
         if (!res.success) {
-          set({ loading: false, error: res?.message || "Failed to edit category" });
-          return { success: false, message: res?.message || "Failed to edit category" };
+          toast.error(res?.data?.message);
+
+          set({
+            error: res?.message || "Failed to edit category",
+          });
+          return {
+            success: false,
+            message: res?.message || "Failed to edit category",
+          };
         }
+
+        toast.success("Category edited successfully");
 
         await get().fetchCategories();
         return { success: true, data: res.data };
       } catch (err) {
-        console.error("editCategory error:", err);
-        set({ loading: false, error: err.message || "Server error" });
-        return { success: false, message: err.message || "Server error" };
+        toast.error(err?.response?.data?.message || "Server error");
+        set({ error: "Server error" });
       } finally {
         set({ loading: false });
       }
@@ -194,16 +217,24 @@ fetchCategories: async ({ search, page, limit } = {}) => {
         const res = await listCategoryApi(id);
 
         if (!res.success) {
-          set({ loading: false, error: res?.message || "Failed to list category" });
-          return { success: false, message: res?.message || "Failed to list category" };
+          toast.error(res?.data?.message);
+
+          set({
+            loading: false,
+            error: res?.message || "Failed to list category",
+          });
+          return {
+            success: false,
+            message: res?.message || "Failed to list category",
+          };
         }
+        toast.success("Category listed successfully");
 
         await get().fetchCategories();
         return { success: true, data: res.data };
       } catch (err) {
-        console.error("listCategory error:", err);
-        set({ loading: false, error: err.message || "Server error" });
-        return { success: false, message: err.message || "Server error" };
+        toast.error(err?.response?.data?.message || "Server error");
+        set({ loading: false, error: "Server error" });
       } finally {
         set({ loading: false });
       }
@@ -218,16 +249,25 @@ fetchCategories: async ({ search, page, limit } = {}) => {
         const res = await unlistCategoryApi(id);
 
         if (!res.success) {
-          set({ loading: false, error: res?.message || "Failed to unlist category" });
-          return { success: false, message: res?.message || "Failed to unlist category" };
+          toast.error(res?.data?.message);
+
+          set({
+            loading: false,
+            error: res?.message || "Failed to unlist category",
+          });
+          return {
+            success: false,
+            message: res?.message || "Failed to unlist category",
+          };
         }
+
+        toast.success("Category unlisted successfully");
 
         await get().fetchCategories();
         return { success: true, data: res.data };
       } catch (err) {
-        console.error("unlistCategory error:", err);
-        set({ loading: false, error: err.message || "Server error" });
-        return { success: false, message: err.message || "Server error" };
+        toast.error(err?.response?.data?.message || "Server error");
+        set({ loading: false, error: "Server error" });
       } finally {
         set({ loading: false });
       }
@@ -242,21 +282,29 @@ fetchCategories: async ({ search, page, limit } = {}) => {
         const res = await softDeleteCategoryApi(id);
 
         if (!res.success) {
-          set({ loading: false, error: res?.message || "Failed to delete category" });
-          return { success: false, message: res?.message || "Failed to delete category" };
+          toast.error(res?.data?.message || "Failed to delete category");
+          set({
+            loading: false,
+            error: res?.message || "Failed to delete category",
+          });
+          return {
+            success: false,
+            message: res?.message || "Failed to delete category",
+          };
         }
+
+        toast.success("Category deleted successfully");
 
         await get().fetchCategories();
         return { success: true, data: res.data };
       } catch (err) {
-        console.error("softDeleteCategory error:", err);
-        set({ loading: false, error: err.message || "Server error" });
-        return { success: false, message: err.message || "Server error" };
+        toast.error(err?.response?.data?.message || "Server error");
+        set({ loading: false, error: "Server error" });
       } finally {
         set({ loading: false });
       }
     },
-  }))
+  })),
 );
 
 export default useCategoryStore;

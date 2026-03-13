@@ -1,6 +1,6 @@
-// src/admin/pages/CustomersPage.jsx
+// src/admin/pages/OrdersPage.jsx
 import React, { useEffect } from "react";
-import Pagination from "../components/Pagination"; // ← Correct import
+import Pagination from "../components/Pagination";
 import useOrderStore from "../../utils/stores/orderStore";
 import OrdersHeader from "../components/OrdersHeader";
 import OrdersTable from "../components/OrdersTable";
@@ -13,11 +13,11 @@ const OrdersPage = () => {
       fetchOrders({ search, page: pagination.currentPage });
     }, 300);
     return () => clearTimeout(timer);
-  }, [search, pagination.currentPage]);
+  }, [search, pagination.currentPage, fetchOrders]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-3 sm:p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 md:space-y-8">
         <OrdersHeader/>
         <OrdersTable/>
         <Pagination

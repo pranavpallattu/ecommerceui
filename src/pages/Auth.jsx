@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { requestAuthOtpApi, verifyAuthOtpApi } from "../services/allApis";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import useUserStore from "../utils/stores/userStore";
+import useAuthStore from "../utils/stores/userAuthStore";
 
 const Auth = () => {
   const [otpSent, setOtpSent] = useState(false);
@@ -12,13 +12,13 @@ const Auth = () => {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { addUser } = useUserStore();
+  const { setUser } = useAuthStore();
 
   const navigate = useNavigate();
 
   const handleGoogleSignup = () => {
     try {
-      window.location.assign("http://localhost:7777/google");
+      window.location.assign("http://localhost:7777/api/auth/google");
     } catch (error) {
       console.error("Google Auth Error:", error);
       toast.error("Unable to start Google login. Please try again.");
@@ -68,33 +68,65 @@ const Auth = () => {
     }
   };
 
+  // const handleVerifyAuthOtp = async () => {
+  //   try {
+  //     if (!otp.trim() || !emailId.trim()) {
+  //       return toast.error("OTP is required");
+  //     }
+
+  //     const result = await verifyAuthOtpApi({ emailId, otp });
+
+  //     console.log(result);
+
+  //     if (!result.success) {
+  //       return toast.error(result.message || "Invalid OTP");
+  //     }
+
+  // const user =  result?.data?.data;
+
+  //     // ✅ Save user in store
+  //     setUser(user);
+
+  //     console.log(user)
+
+  //     toast.success("Authentication successful");
+
+  //     // ✅ Role-based navigation
+  //    setTimeout(()=>{
+  //      if (user?.isAdmin) {
+  //       navigate("/admin/dashboard", {replace:true});
+  //     } else {
+  //       navigate("/", {replace:true});
+  //     }
+  //    }, 200)
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error("Something went wrong");
+  //   }
+  // };
+
   const handleVerifyAuthOtp = async () => {
     try {
-      if (!otp.trim() || !emailId.trim()) {
-        return toast.error("Otp is required");
-      }
+      const result = await verifyAuthOtpApi({ emailId, otp });
 
-      const reqBody = { emailId, otp };
-      const result = await verifyAuthOtpApi(reqBody);
-      console.log(result);
+      if (!result.success) return toast.error(result.message);
 
-      if (!result.success) {
-        return toast.error(result.message || "Invalid OTP");
-      }
+      const user = result.data.data;
 
-      const { user } = result.data.data;
+      setUser({
+        ...user,
+        role: user.isAdmin ? "admin" : "user",
+      });
+      toast.success("Login successful");
 
-      if (result.data.data.isAdmin) {
-        addUser({ user, role: user.isAdmin ? "admin" : "user" });
-        toast.success("Welcome Admin");
-        navigate("/admin/dashboard");
-        return;
-      }
-
-      toast.success("Authentication Successful");
-      // navigate("/");
-    } catch (error) {
-      console.error(error);
+      setTimeout(() => {
+        if (user.isAdmin) {
+          navigate("/admin/dashboard", { replace: true });
+        } else {
+          navigate("/", { replace: true });
+        }
+      }, 200);
+    } catch {
       toast.error("Something went wrong");
     }
   };

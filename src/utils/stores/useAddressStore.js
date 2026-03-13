@@ -1,3 +1,4 @@
+// src/utils/stores/useAddressStore.js
 import { create } from "zustand";
 import {
   getAddressApi,
@@ -5,97 +6,79 @@ import {
   deleteAddressApi,
   editAddressApi,
 } from "../../services/allApis";
+import { toast } from "react-toastify";
+import { validateAddress } from "./validation";
 
 const useAddressStore = create((set, get) => ({
   addresses: [],
   loading: false,
   error: null,
+  defaultAddress:null,
 
-  /* -------------------- Fetch Addresses -------------------- */
+  // Fetch all addresses
   fetchAddresses: async () => {
     set({ loading: true, error: null });
     try {
       const res = await getAddressApi();
+      console.log(res);
+      
 
-      if (res?.status === true) {
-        set({
-          addresses: res.data,
-          loading: false,
-        });
-      } else {
-        throw new Error(res?.message || "Failed to fetch addresses");
+      if (res.status || res.success) {
+        
+        set({ addresses: res?.data?.data?.addresses, defaultAddress: res?.data?.data?.defaultAddress || [], loading: false });
       }
+      
     } catch (error) {
       set({
         loading: false,
-        error:
-          error?.response?.data?.message ||
-          error.message ||
-          "Failed to fetch addresses",
+        error: error?.response?.data?.message || "Failed to fetch addresses",
       });
     }
   },
 
-  /* -------------------- Add Address -------------------- */
+  // Add new address
   addAddress: async (addressData) => {
+    const validationError = validateAddress(addressData);
+    if (validationError) {
+      return toast.error(validationError);
+    }
     set({ loading: true, error: null });
     try {
       const res = await addAddressApi(addressData);
-
-      if (res?.success) {
-        // Optimistic update (new address first)
-        set((state) => ({
-          addresses: [res.data, ...state.addresses],
-          loading: false,
-        }));
-        return { success: true };
+      if (!res.success) {
+        toast.error(res?.message);
       }
+      toast.success("Address added successfully");
+      // Refresh the address list
+      await get().fetchAddresses();
+      set({ loading: false });
     } catch (error) {
-      const message =
-        error?.response?.data?.message || "Failed to add address";
+      const message = error?.response?.data?.message || "Failed to add address";
+      console.log(error);
+
       set({ loading: false, error: message });
       return { success: false, message };
     }
   },
 
-  /* -------------------- Delete Address (Soft Delete) -------------------- */
-  deleteAddress: async (id) => {
-    set({ loading: true, error: null });
-    try {
-      const res = await deleteAddressApi(id);
-
-      if (res?.status === true) {
-        set((state) => ({
-          addresses: state.addresses.filter(
-            (address) => address._id !== id
-          ),
-          loading: false,
-        }));
-        return { success: true };
-      }
-    } catch (error) {
-      const message =
-        error?.response?.data?.message || "Failed to delete address";
-      set({ loading: false, error: message });
-      return { success: false, message };
+  // Edit address
+  editAddress: async (id, addressData) => {
+    const validationError = validateAddress(addressData);
+    if (validationError) {
+      return toast.error(validationError);
     }
-  },
 
-  /* -------------------- Edit Address -------------------- */
-  editAddress: async (id, updatedData) => {
     set({ loading: true, error: null });
     try {
-      const res = await editAddressApi(id, updatedData);
-
-      if (res?.success) {
-        set((state) => ({
-          addresses: state.addresses.map((address) =>
-            address._id === id ? res.data : address
-          ),
-          loading: false,
-        }));
-        return { success: true };
+      const res = await editAddressApi(id, addressData);
+      if (!res.success) {
+        toast.error(res?.message);
       }
+      toast.success("Address edited successfully");
+      // Refresh the address list
+
+      await get().fetchAddresses();
+      set({ loading: false });
     } catch (error) {
       const message =
         error?.response?.data?.message || "Failed to update address";
@@ -104,9 +87,23 @@ const useAddressStore = create((set, get) => ({
     }
   },
 
-  /* -------------------- Clear Store (on logout) -------------------- */
-  clearAddresses: () => {
-    set({ addresses: [], loading: false, error: null });
+  // Delete address (soft delete)
+  deleteAddress: async (id) => {
+    set({ loading: true, error: null });
+    try {
+      const res = await deleteAddressApi(id);
+      if (!res.success) {
+        return toast.error(res?.message);
+      }
+      toast.success("Address removed successfully");
+      await get().fetchAddresses();
+      set({ loading: false });
+    } catch (error) {
+      const message =
+        error?.response?.data?.message || "Failed to delete address";
+      set({ loading: false, error: message });
+      return { success: false, message };
+    }
   },
 }));
 

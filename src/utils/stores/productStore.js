@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import { toast } from "react-toastify";
 
 import {
   getProductsApi,
@@ -14,7 +15,7 @@ import {
 const useProductStore = create(
   devtools((set, get) => ({
     // =============================
-    // State
+    // STATE
     // =============================
     products: [],
     product: null,
@@ -33,12 +34,12 @@ const useProductStore = create(
       hasPrevPage: false,
     },
 
-    // Modal control
+    // Modal
     isModalOpen: false,
     editData: null,
 
     // =============================
-    // Helpers & Setters
+    // UI HELPERS
     // =============================
     setSearch: (value) => set({ search: value, page: 1 }),
     setPage: (page) => set({ page }),
@@ -56,32 +57,33 @@ const useProductStore = create(
       }),
 
     // =============================
-    // Fetch All Products
+    // FETCH PRODUCTS
     // =============================
-    fetchProducts: async ({ search, page, limit } = {}) => {
+    fetchProducts: async (params = {}) => {
       set({ loading: true, error: null });
 
       const state = get();
-      const finalSearch = search ?? state.search;
-      const finalPage = page ?? state.page;
-      const finalLimit = limit ?? state.limit;
+      const finalSearch = params.search ?? state.search;
+      const finalPage = params.page ?? state.page;
+      const finalLimit = params.limit ?? state.limit;
 
       try {
-        const res = await getProductsApi(finalSearch, finalPage, finalLimit);
+        const res = await getProductsApi(
+          finalSearch,
+          finalPage,
+          finalLimit
+        );
 
-        if (!res.success) {
-          set({
-            loading: false,
-            error: res.message || "Failed to load products",
-          });
+        if (!res?.success) {
+          toast.error(res?.message || "Failed to fetch products");
+          set({ loading: false });
           return;
         }
 
         const pg = res.data.pagination;
 
         set({
-          loading: false,
-          products: res.data?.data,
+          products: res.data.data,
           search: finalSearch,
           page: finalPage,
           pagination: {
@@ -91,33 +93,44 @@ const useProductStore = create(
             hasNextPage: finalPage < pg.totalPages,
             hasPrevPage: finalPage > 1,
           },
+          loading: false,
         });
       } catch (err) {
-        set({ loading: false, error: "Network error" });
+        console.error(err);
+        toast.error("Network error while fetching products");
+        set({ loading: false });
       }
     },
 
     // =============================
-    // Fetch Single Product
+    // FETCH PRODUCT BY ID
     // =============================
     fetchProductById: async (id) => {
       set({ loading: true, error: null });
 
       try {
         const res = await getProductByIdApi(id);
-        if (!res.success) {
-          set({ loading: false, error: res.message });
+
+        if (!res?.success) {
+          toast.error(res?.message || "Failed to load product");
+          set({ loading: false });
           return;
         }
-        set({editData:res.data?.data})
-        set({ product: res.data?.data, loading: false });
+
+        set({
+          product: res.data.data,
+          editData: res.data.data,
+          loading: false,
+        });
       } catch (err) {
-        set({ loading: false, error: "Network error" });
+        console.error(err);
+        toast.error("Network error");
+        set({ loading: false });
       }
     },
 
     // =============================
-    // ADD or EDIT Product
+    // ADD / EDIT PRODUCT
     // =============================
     handleSubmit: async (formData) => {
       const { editData } = get();
@@ -127,30 +140,33 @@ const useProductStore = create(
         let res;
 
         if (editData) {
-          // Edit existing product
+          // EDIT
           res = await editProductApi(editData._id, formData);
-          await get.fetchProductById(editData._id)
         } else {
-          // Add new product
-          res = await addProductApi(formData,true);
+          // ADD
+          res = await addProductApi(formData);
         }
 
-        if (!res.success) {
-          set({ loading: false, error: res.message });
+        if (!res?.success) {
+          toast.error(res?.message || "Operation failed");
+          set({ loading: false });
           return;
         }
 
-        // Refresh product list
-        await get().fetchProducts();
-        
+        toast.success(res?.data?.message || "Product saved successfully");
 
-        // Close modal
-        set({ loading: false, isModalOpen: false, editData: null });
-      } catch (err) {
+        await get().fetchProducts();
+        await get().fetchProductById(editData ? editData?._id : formData?._id);
+
         set({
           loading: false,
-          error: "Something went wrong",
+          isModalOpen: false,
+          editData: null,
         });
+      } catch (err) {
+        console.error(err);
+        toast.error("Something went wrong");
+        set({ loading: false });
       }
     },
 
@@ -159,16 +175,23 @@ const useProductStore = create(
     // =============================
     toggleListing: async (id, isChecked) => {
       try {
-        const res =
-          isChecked
-            ? await listProductApi(id)
-            : await unlistProductApi(id);
+        const res = isChecked
+          ? await listProductApi(id)
+          : await unlistProductApi(id);
 
-        if (res.success) {
-          get().fetchProductById(id);
+        if (!res?.success) {
+         return toast.error(res?.message || "Failed to update status");
         }
+
+        toast.success(
+          isChecked ? "Product listed " : "Product unlisted "
+        );
+
+        get().fetchProducts();
+        get().fetchProductById(id)
       } catch (err) {
-        console.log("Error toggling product listing");
+        console.error(err);
+        toast.error("Failed to update product status");
       }
     },
 
@@ -178,11 +201,17 @@ const useProductStore = create(
     deleteProduct: async (id) => {
       try {
         const res = await softDeleteProductApi(id);
-        if (res.success) {
-          get().fetchProducts();
+
+        if (!res?.success) {
+          toast.error(res?.message || "Failed to delete product");
+          return;
         }
+
+        toast.success("Product deleted successfully ");
+        get().fetchProducts();
       } catch (err) {
-        console.log("Delete error:", err);
+        console.error(err);
+        toast.error("Delete failed");
       }
     },
   }))
