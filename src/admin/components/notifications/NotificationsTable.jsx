@@ -1,10 +1,9 @@
-// src/admin/components/notifications/NotificationsTable.jsx
-import { useReturnRequestStore } from "../../utils/stores/useReturnRequestStore";
-import NotificationsTableRow from "./NotificationsTableRow";
-
-const NotificationsTable = () => {
-  const { orderReturns, itemReturns, loading } = useReturnRequestStore();
-
+import NotificationsTableRow from "./NotificationsTableRow"
+export default function NotificationsTable({ 
+  orderReturns, 
+  itemReturns, 
+  loading 
+}) {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-80 sm:h-96 bg-white rounded-xl sm:rounded-2xl">
@@ -78,6 +77,4 @@ const NotificationsTable = () => {
       </div>
     </div>
   );
-};
-
-export default NotificationsTable;
+}

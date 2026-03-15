@@ -1,20 +1,3 @@
-// import { Navigate, Outlet } from "react-router-dom";
-// import useAdminStore from "../../utils/stores/adminStore";
-
-// const AdminProtectedRoute = () => {
-//   const { admin, loading } = useAdminStore();
-
-//   if (loading) return null;
-//   if (!admin) return <Navigate to="/auth" replace />;
-
-//   return <Outlet />;
-// };
-
-// export default AdminProtectedRoute;
-
-
-
-// src/admin/components/AdminProtectedRoute.jsx
 import { Navigate, Outlet } from "react-router-dom";
 import useAuthStore from "../../utils/stores/userAuthStore";
 

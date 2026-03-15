@@ -7,7 +7,7 @@ import useConfirmModalStore from "../../utils/stores/useConfirmModalStore";
 import HeaderSection from "../components/product-details/HeaderSection";
 import ImageGallery from "../components/product-details/ImageGallery";
 import ProductInfo from "../components/product-details/ProductInfo";
-import ProductFormModal from "../components/ProductFormModal";
+import ProductFormModal from "../components/products/ProductFormModal";
 
 export default function ProductDetailsPage() {
   const { id } = useParams();

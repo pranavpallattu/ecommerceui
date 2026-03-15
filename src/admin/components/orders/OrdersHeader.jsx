@@ -1,10 +1,7 @@
 // src/admin/components/orders/OrdersHeader.jsx
 import { Search } from "lucide-react";
-import useOrderStore from "../../utils/stores/orderStore";
 
-const OrdersHeader = () => {
-  const { search, setSearch } = useOrderStore();
-
+export default function OrdersHeader({ search, setSearch }) {
   return (
     <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 md:p-8 border border-blue-100">
       <div className="flex flex-col gap-4 sm:gap-6 md:flex-row md:justify-between md:items-center">
@@ -35,6 +32,4 @@ const OrdersHeader = () => {
       </div>
     </div>
   );
-};
-
-export default OrdersHeader;
+}

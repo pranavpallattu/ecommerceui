@@ -1,11 +1,16 @@
 // src/admin/components/orders/OrdersTable.jsx
-import useOrderStore from "../../utils/stores/orderStore";
 import OrdersTableRow from "./OrdersTableRow";
 
-const OrdersTable = () => {
-  const { orders, loading } = useOrderStore();
+export default function OrdersTable({ orders, loading }) {
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-80 sm:h-96 bg-white rounded-xl sm:rounded-2xl">
+        <span className="loading loading-spinner loading-md sm:loading-lg text-blue-600"></span>
+      </div>
+    );
+  }
 
-  if (orders?.length === 0) {
+  if (!orders?.length) {
     return (
       <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-10 sm:p-16 md:p-20 text-center">
         <p className="text-lg sm:text-xl md:text-2xl text-gray-500">No orders found</p>
@@ -45,20 +50,19 @@ const OrdersTable = () => {
               </th>
             </tr>
           </thead>
+
           <tbody className="divide-y divide-blue-50">
-            {orders?.map((order) => (
+            {orders.map((order) => (
               <OrdersTableRow key={order._id} order={order} />
             ))}
           </tbody>
         </table>
       </div>
-      
+
       {/* Mobile Scroll Hint */}
       <div className="sm:hidden bg-blue-50 px-4 py-2 text-center">
         <p className="text-xs text-blue-600">← Scroll horizontally to see all columns →</p>
       </div>
     </div>
   );
-};
-
-export default OrdersTable;
+}

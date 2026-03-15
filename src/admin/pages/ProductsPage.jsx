@@ -1,10 +1,10 @@
 // src/admin/pages/ProductsPage.jsx
 import React, { useEffect } from "react";
 import useProductStore from "../../utils/stores/productStore";
-import ProductsHeader from "../components/ProductsHeader";
-import ProductGrid from "../components/ProductsGrid";
-import ProductFormModal from "../components/ProductFormModal";
+import ProductGrid from "../components/products/ProductsGrid";
+import ProductFormModal from "../components/products/ProductFormModal";
 import Pagination from "../components/Pagination";
+import ProductsHeader from "../components/products/ProductsHeader";
 
 const ProductsPage = () => {
   const { fetchProducts, search, pagination } = useProductStore();

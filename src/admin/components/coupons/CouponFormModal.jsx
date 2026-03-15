@@ -1,9 +1,9 @@
-// src/admin/components/products/ProductFormModal.jsx
-import useProductStore from "../../utils/stores/productStore";
-import ProductFormContent from "./ProductFormContent";
+// src/admin/components/coupons/CouponFormModal.jsx
+import useCouponStore from "../../../utils/stores/couponStore";
+import CouponFormContent from "./CouponFormContent";
 
-const ProductFormModal = () => {
-  const { isModalOpen, closeModal, editData } = useProductStore();
+export default function CouponFormModal() {
+  const { isModalOpen, closeModal, editData, handleSubmit } = useCouponStore();
 
   if (!isModalOpen) return null;
 
@@ -20,7 +20,7 @@ const ProductFormModal = () => {
         {/* Header */}
         <div className="flex justify-between items-center p-4 sm:p-6 border-b sticky top-0 bg-white z-10">
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-            {editData ? "Edit Product" : "Add New Product"}
+            {editData ? "Edit Coupon" : "Add New Coupon"}
           </h2>
           <button
             onClick={closeModal}
@@ -31,13 +31,15 @@ const ProductFormModal = () => {
           </button>
         </div>
 
-        {/* Body */}
+        {/* Pass props to content */}
         <div className="p-4 sm:p-6">
-          <ProductFormContent />
+          <CouponFormContent
+            editData={editData}
+            handleSubmit={handleSubmit}
+            closeModal={closeModal}
+          />
         </div>
       </div>
     </div>
   );
-};
-
-export default ProductFormModal;
+}

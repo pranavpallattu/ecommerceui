@@ -1,5 +1,5 @@
 // src/admin/components/coupons/CouponsTable.jsx
-import useCouponStore from "../../utils/stores/couponStore";
+import useCouponStore from "../../../utils/stores/couponStore";
 import CouponsTableRow from "./CouponsTableRow";
 
 const CouponsTable = () => {

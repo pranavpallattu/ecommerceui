@@ -21,24 +21,6 @@ export const logoutApi = () =>
 
 
 
-// /* ================= ADMIN AUTH ================= */
-
-// // ADMIN ME
-// export const getAdminMeApi = () =>
-//   commonApi("GET", `${serverUrl}/api/auth/admin/me`);
-
-// // ADMIN LOGOUT
-// export const adminLogoutApi = () =>
-//   commonApi("POST", `${serverUrl}/api/auth/admin/logout`);
-
-
-
-
-
-
-
-
-
 export const getCategoriesApi = async (search, page, limit) => {
   return await commonApi(
     "GET",

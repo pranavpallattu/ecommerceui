@@ -1,10 +1,7 @@
 // src/admin/components/coupons/CouponFormContent.jsx
 import { useEffect, useState } from "react";
-import useCouponStore from "../../utils/stores/couponStore";
 
-const CouponFormContent = () => {
-  const { editData, handleSubmit, closeModal } = useCouponStore();
-
+export default function CouponFormContent({ editData, handleSubmit, closeModal }) {
   const [form, setForm] = useState({
     code: "",
     description: "",
@@ -16,18 +13,19 @@ const CouponFormContent = () => {
     perUserLimit: "",
   });
 
-  // Fill form in edit mode
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     if (editData) {
       setForm({
         code: editData.code || "",
         description: editData.description || "",
         discountType: editData.discountType || "",
-        discount: editData.discount || "",
-        minPurchase: editData.minPurchase || "",
+        discount: editData.discount?.toString() || "",           // ← convert number to string for input
+        minPurchase: editData.minPurchase?.toString() || "",
         expiryDate: editData.expiryDate?.split("T")[0] || "",
-        usageLimit: editData.usageLimit || "",
-        perUserLimit: editData.perUserLimit || "",
+        usageLimit: editData.usageLimit?.toString() || "",
+        perUserLimit: editData.perUserLimit?.toString() || "",
       });
     } else {
       setForm({
@@ -43,9 +41,27 @@ const CouponFormContent = () => {
     }
   }, [editData]);
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    handleSubmit(form);
+    setIsSubmitting(true);
+
+    // Convert number fields to actual numbers (or undefined/null if empty)
+    const submitData = {
+      ...form,
+      discount: form.discount ? Number(form.discount) : undefined,
+      minPurchase: form.minPurchase ? Number(form.minPurchase) : undefined,
+      usageLimit: form.usageLimit ? Number(form.usageLimit) : undefined,
+      perUserLimit: form.perUserLimit ? Number(form.perUserLimit) : undefined,
+    };
+
+    try {
+      await handleSubmit(submitData);
+      // Modal will close automatically from store
+    } catch (err) {
+      console.error("Submit failed:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -61,6 +77,7 @@ const CouponFormContent = () => {
           onChange={(e) => setForm({ ...form, code: e.target.value })}
           className="input input-bordered w-full text-sm sm:text-base"
           required
+          disabled={isSubmitting}
         />
       </div>
 
@@ -81,11 +98,10 @@ const CouponFormContent = () => {
         ) : (
           <select
             value={form.discountType}
-            onChange={(e) =>
-              setForm({ ...form, discountType: e.target.value })
-            }
+            onChange={(e) => setForm({ ...form, discountType: e.target.value })}
             className="select select-bordered w-full text-sm sm:text-base"
             required
+            disabled={isSubmitting}
           >
             <option value="">Select discount type</option>
             <option value="flat">Flat (₹)</option>
@@ -101,17 +117,15 @@ const CouponFormContent = () => {
         </label>
         <textarea
           value={form.description}
-          onChange={(e) =>
-            setForm({ ...form, description: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, description: e.target.value })}
           className="textarea textarea-bordered w-full h-24 sm:h-32 text-sm sm:text-base"
           required
+          disabled={isSubmitting}
         />
       </div>
 
       {/* Discount Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-        {/* Discount */}
         <div>
           <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
             Discount {form.discountType === "flat" ? "(₹)" : "(%)"}
@@ -120,15 +134,13 @@ const CouponFormContent = () => {
             type="number"
             min="0"
             value={form.discount}
-            onChange={(e) =>
-              setForm({ ...form, discount: e.target.value })
-            }
+            onChange={(e) => setForm({ ...form, discount: e.target.value })}
             className="input input-bordered w-full text-sm sm:text-base"
             required
+            disabled={isSubmitting}
           />
         </div>
 
-        {/* Minimum Purchase */}
         <div>
           <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
             Minimum Purchase (₹)
@@ -137,15 +149,13 @@ const CouponFormContent = () => {
             type="number"
             min="0"
             value={form.minPurchase}
-            onChange={(e) =>
-              setForm({ ...form, minPurchase: e.target.value })
-            }
+            onChange={(e) => setForm({ ...form, minPurchase: e.target.value })}
             className="input input-bordered w-full text-sm sm:text-base"
             required
+            disabled={isSubmitting}
           />
         </div>
 
-        {/* Expiry Date */}
         <div className="sm:col-span-2 md:col-span-1">
           <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
             Expiry Date
@@ -153,11 +163,10 @@ const CouponFormContent = () => {
           <input
             type="date"
             value={form.expiryDate}
-            onChange={(e) =>
-              setForm({ ...form, expiryDate: e.target.value })
-            }
+            onChange={(e) => setForm({ ...form, expiryDate: e.target.value })}
             className="input input-bordered w-full text-sm sm:text-base"
             required
+            disabled={isSubmitting}
           />
         </div>
       </div>
@@ -172,11 +181,10 @@ const CouponFormContent = () => {
             type="number"
             min="1"
             value={form.usageLimit}
-            onChange={(e) =>
-              setForm({ ...form, usageLimit: e.target.value })
-            }
+            onChange={(e) => setForm({ ...form, usageLimit: e.target.value })}
             className="input input-bordered w-full text-sm sm:text-base"
             placeholder="Optional"
+            disabled={isSubmitting}
           />
         </div>
 
@@ -188,11 +196,10 @@ const CouponFormContent = () => {
             type="number"
             min="1"
             value={form.perUserLimit}
-            onChange={(e) =>
-              setForm({ ...form, perUserLimit: e.target.value })
-            }
+            onChange={(e) => setForm({ ...form, perUserLimit: e.target.value })}
             className="input input-bordered w-full text-sm sm:text-base"
             placeholder="Optional"
+            disabled={isSubmitting}
           />
         </div>
       </div>
@@ -203,6 +210,7 @@ const CouponFormContent = () => {
           type="button"
           onClick={closeModal}
           className="btn btn-ghost w-full sm:w-auto text-sm sm:text-base"
+          disabled={isSubmitting}
         >
           Cancel
         </button>
@@ -210,12 +218,11 @@ const CouponFormContent = () => {
         <button 
           type="submit" 
           className="btn btn-primary w-full sm:w-auto sm:px-8 text-sm sm:text-base"
+          disabled={isSubmitting}
         >
-          {editData ? "Update Coupon" : "Add Coupon"}
+          {isSubmitting ? "Saving..." : (editData ? "Update Coupon" : "Add Coupon")}
         </button>
       </div>
     </form>
   );
-};
-
-export default CouponFormContent;
+}

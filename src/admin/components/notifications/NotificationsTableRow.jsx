@@ -1,7 +1,7 @@
 // src/admin/components/notifications/NotificationsTableRow.jsx
 import { CheckCircle, XCircle } from "lucide-react";
 import { useState } from "react";
-import { useReturnRequestStore } from "../../utils/stores/useReturnRequestStore";
+import { useReturnRequestStore } from "../../../utils/stores/useReturnRequestStore";
 
 const STATUS_BADGE = {
   ReturnPending: "bg-yellow-100 text-yellow-700",

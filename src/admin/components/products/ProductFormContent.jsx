@@ -1,7 +1,7 @@
 // src/admin/components/products/ProductFormContent.jsx
 import { useEffect, useState } from "react";
-import useProductStore from "../../utils/stores/productStore";
-import useCategoryStore from "../../utils/stores/categoryStore";
+import useProductStore from "../../../utils/stores/productStore";
+import useCategoryStore from "../../../utils/stores/categoryStore";
 
 const ProductFormContent = () => {
   const { editData, handleSubmit, closeModal } = useProductStore();

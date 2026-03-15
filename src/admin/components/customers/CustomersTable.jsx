@@ -1,26 +1,7 @@
-// src/admin/components/customers/CustomersTable.jsx
-import useCustomerStore from "../../utils/stores/customerStore";
+// src/components/customers/CustomersTable.jsx
 import CustomerTableRow from "./CustomerTableRow";
 
-const CustomersTable = () => {
-  const { customers, loading } = useCustomerStore();
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64 sm:h-96 bg-white rounded-xl sm:rounded-2xl">
-        <span className="loading loading-spinner loading-lg text-blue-600"></span>
-      </div>
-    );
-  }
-
-  if (customers.length === 0) {
-    return (
-      <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-10 sm:p-20 text-center">
-        <p className="text-xl sm:text-2xl text-gray-500">No customers found</p>
-      </div>
-    );
-  }
-
+export default function CustomersTable({ customers }) {
   return (
     <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
       <div className="overflow-x-auto">
@@ -53,6 +34,4 @@ const CustomersTable = () => {
       </div>
     </div>
   );
-};
-
-export default CustomersTable;
+}

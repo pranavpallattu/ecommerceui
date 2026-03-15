@@ -1,6 +1,6 @@
 // src/admin/components/products/ProductsHeader.jsx
 import { Search, Plus } from "lucide-react";
-import useProductStore from "../../utils/stores/productStore";
+import useProductStore from "../../../utils/stores/productStore";
 
 const ProductsHeader = () => {
   const { search, setSearch, openModal } = useProductStore();

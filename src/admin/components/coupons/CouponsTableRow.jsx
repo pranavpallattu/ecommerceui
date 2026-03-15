@@ -7,8 +7,8 @@ import {
   Percent,
   Trash2,
 } from "lucide-react";
-import useCouponStore from "../../utils/stores/couponStore";
-import useConfirmModalStore from "../../utils/stores/useConfirmModalStore";
+import useCouponStore from "../../../utils/stores/couponStore";
+import useConfirmModalStore from "../../../utils/stores/useConfirmModalStore";
 
 const CouponsTableRow = ({ coupon }) => {
   const { openModal, updateCouponStatus, deleteCoupon } = useCouponStore();

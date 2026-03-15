@@ -1,7 +1,7 @@
 // src/admin/components/products/ProductGrid.jsx
-import useProductStore from "../../utils/stores/productStore";
-import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
+import useProductStore from "../../../utils/stores/productStore";
+import { Link } from "react-router-dom";
 
 const ProductGrid = () => {
   const { products, loading } = useProductStore();

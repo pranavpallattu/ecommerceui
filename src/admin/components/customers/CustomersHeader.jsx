@@ -1,10 +1,7 @@
-// src/admin/components/customers/CustomersHeader.jsx
+// src/components/customers/CustomersHeader.jsx
 import { Search } from "lucide-react";
-import useCustomerStore from "../../utils/stores/customerStore";
 
-const CustomerHeader = () => {
-  const { search, setSearch } = useCustomerStore();
-
+export default function CustomersHeader({ search, setSearch }) {
   return (
     <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 md:p-8 border border-blue-100">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 sm:gap-6">
@@ -28,6 +25,4 @@ const CustomerHeader = () => {
       </div>
     </div>
   );
-};
-
-export default CustomerHeader;
+}

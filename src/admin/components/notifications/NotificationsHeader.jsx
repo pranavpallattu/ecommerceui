@@ -1,5 +1,5 @@
 // src/admin/components/notifications/NotificationsHeader.jsx
-const NotificationsHeader = () => {
+export default function NotificationsHeader() {
   return (
     <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 md:p-8 border border-blue-100">
       <div>
@@ -12,6 +12,4 @@ const NotificationsHeader = () => {
       </div>
     </div>
   );
-};
-
-export default NotificationsHeader;
+}

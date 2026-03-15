@@ -1,6 +1,6 @@
 // src/admin/components/coupons/CouponsHeader.jsx
 import { Plus, Search } from "lucide-react";
-import useCouponStore from "../../utils/stores/couponStore";
+import useCouponStore from "../../../utils/stores/couponStore";
 
 const CouponsHeader = () => {
   const { search, setSearch, openModal } = useCouponStore();
