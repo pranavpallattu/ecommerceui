@@ -1,5 +1,5 @@
 // src/admin/components/products/ProductGrid.jsx
-import ProductCard from "./ProductCard";
+import ProductCard from "../ProductCard";
 import useProductStore from "../../../utils/stores/productStore";
 import { Link } from "react-router-dom";
 

@@ -31,8 +31,14 @@ const useOrderStore = create(
     // =============================
 
     setSearch: (value) => set({ search: value, page: 1 }),
-    setPage: (page) => set({ page }),
-
+// src/utils/stores/orderStore.js (inside create(...))
+setPage: (newPage) => set((state) => ({
+  page: newPage,
+  pagination: {
+    ...state.pagination,
+    currentPage: newPage,
+  },
+})),
     fetchOrders: async ({ search, page, limit } = {}) => {
       set({ loading: true, error: null });
 
