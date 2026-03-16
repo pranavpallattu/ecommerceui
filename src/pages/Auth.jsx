@@ -18,7 +18,7 @@ const Auth = () => {
 
   const handleGoogleSignup = () => {
     try {
-      window.location.assign("http://localhost:7777/api/auth/google");
+      window.location.assign("https://ecommerceui-one.vercel.app/api/auth/google");
     } catch (error) {
       console.error("Google Auth Error:", error);
       toast.error("Unable to start Google login. Please try again.");
