@@ -41,7 +41,7 @@ window.location.assign("https://ecommerce-8tjk.onrender.com/api/auth/google");
       const result = await requestAuthOtpApi(reqBody);
       console.log("OTP result:", result);
 
-      if (result.success) {
+      if (result?.data?.success) {
         toast.success(`OTP sent to ${emailId}`, {
           position: "bottom-right",
           autoClose: 1200,
@@ -68,48 +68,13 @@ window.location.assign("https://ecommerce-8tjk.onrender.com/api/auth/google");
     }
   };
 
-  // const handleVerifyAuthOtp = async () => {
-  //   try {
-  //     if (!otp.trim() || !emailId.trim()) {
-  //       return toast.error("OTP is required");
-  //     }
 
-  //     const result = await verifyAuthOtpApi({ emailId, otp });
-
-  //     console.log(result);
-
-  //     if (!result.success) {
-  //       return toast.error(result.message || "Invalid OTP");
-  //     }
-
-  // const user =  result?.data?.data;
-
-  //     // ✅ Save user in store
-  //     setUser(user);
-
-  //     console.log(user)
-
-  //     toast.success("Authentication successful");
-
-  //     // ✅ Role-based navigation
-  //    setTimeout(()=>{
-  //      if (user?.isAdmin) {
-  //       navigate("/admin/dashboard", {replace:true});
-  //     } else {
-  //       navigate("/", {replace:true});
-  //     }
-  //    }, 200)
-  //   } catch (error) {
-  //     console.error(error);
-  //     toast.error("Something went wrong");
-  //   }
-  // };
 
   const handleVerifyAuthOtp = async () => {
     try {
       const result = await verifyAuthOtpApi({ emailId, otp });
 
-      if (!result.success) return toast.error(result.message);
+      if (!result?.data?.success) return toast.error(result.message);
 
       const user = result.data.data;
 
