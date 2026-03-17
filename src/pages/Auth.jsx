@@ -42,7 +42,7 @@ window.location.assign("https://ecommerce-8tjk.onrender.com/api/auth/google");
 
     console.log("OTP result:", result);
 
-    if (result?.success && result?.data?.success) {
+    if ( result?.data?.success) {
       toast.success(`OTP sent to ${emailId}`, {
         position: "bottom-right",
         autoClose: 1200,
