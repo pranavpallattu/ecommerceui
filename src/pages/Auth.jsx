@@ -25,7 +25,7 @@ window.location.assign("https://ecommerce-8tjk.onrender.com/api/auth/google");
     }
   };
 
- const handleRequestAuthOtp = async () => {
+const handleRequestAuthOtp = async () => {
   try {
     if (!emailId.trim()) {
       return toast.error("Please enter your email", {
@@ -37,19 +37,18 @@ window.location.assign("https://ecommerce-8tjk.onrender.com/api/auth/google");
 
     setLoading(true);
 
-    const reqBody = { emailId };
-    const result = await requestAuthOtpApi(reqBody);
+    const result = await requestAuthOtpApi({ emailId });
 
     console.log("OTP result:", result);
 
-    if ( result?.data?.success) {
+    if (result?.success && result?.data?.success) {
       toast.success(`OTP sent to ${emailId}`, {
         position: "bottom-right",
         autoClose: 1200,
         transition: Bounce,
       });
 
-      setOtpSent(true); // ✅ THIS WILL NOW WORK RELIABLY
+      setOtpSent(true); // ✅ guaranteed now
     } else {
       toast.error(
         result?.data?.message || result?.message || "Failed to send OTP"
@@ -64,11 +63,11 @@ window.location.assign("https://ecommerce-8tjk.onrender.com/api/auth/google");
 };
 
 
- const handleVerifyAuthOtp = async () => {
+const handleVerifyAuthOtp = async () => {
   try {
     const result = await verifyAuthOtpApi({ emailId, otp });
 
-    if (!result?.success || !result?.data?.success) {
+    if (!(result?.success && result?.data?.success)) {
       return toast.error(
         result?.data?.message || result?.message || "Verification failed"
       );
@@ -84,12 +83,9 @@ window.location.assign("https://ecommerce-8tjk.onrender.com/api/auth/google");
     toast.success("Login successful");
 
     setTimeout(() => {
-      if (user.isAdmin) {
-        navigate("/admin/dashboard", { replace: true });
-      } else {
-        navigate("/", { replace: true });
-      }
+      navigate(user.isAdmin ? "/admin/dashboard" : "/", { replace: true });
     }, 200);
+
   } catch {
     toast.error("Something went wrong");
   }
