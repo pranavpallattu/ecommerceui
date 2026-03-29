@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 
 import ConfirmModal from "./admin/components/ConfirmModal";
 import useAuthStore from "./utils/stores/userAuthStore";
+import ScrollToTop from "./pages/ScrollToTop";
 
 function App() {
   const checkAuth = useAuthStore((state) => state.checkAuth);
@@ -15,6 +16,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-base-200">
+       <ScrollToTop />
       <ToastContainer position="top-right" autoClose={3000} />
       <Outlet />
       <ConfirmModal />

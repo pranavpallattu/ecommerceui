@@ -155,7 +155,7 @@ const Navbar = () => {
           {/* Wishlist - Hidden on smallest screens when not logged in */}
           <Link 
             to="/wishlist" 
-            className={`btn btn-ghost btn-circle relative w-10 h-10 min-h-10 sm:w-11 sm:h-11 sm:min-h-11 ${!user ? 'hidden xs:flex' : ''}`}
+            className={`btn btn-ghost btn-circle relative w-10 h-10 min-h-10 sm:w-11 sm:h-11 sm:min-h-11 `}
           >
             <Heart size={20} className="text-gray-700 sm:w-[22px] sm:h-[22px]" />
             {user && wishlistProducts?.length > 0 && (

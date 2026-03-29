@@ -2,6 +2,7 @@
 import { Heart, Star, Package } from "lucide-react";
 import AddToCartButton from "./AddToCartButton";
 import BuyNowButton from "./BuyNowButton";
+import useAuthStore from "../../../utils/stores/userAuthStore";
 
 export default function ProductInfo({
   product,
@@ -13,7 +14,10 @@ export default function ProductInfo({
   onAddToCart,
   onWishlistToggle,
   onBuyNow,
-}) {
+}) 
+{
+  const {user}=useAuthStore()
+
   return (
     <div className="space-y-8 order-1 lg:order-2">
       {/* Title & Wishlist */}
@@ -34,14 +38,14 @@ export default function ProductInfo({
       </div>
 
       {/* Rating */}
-      <div className="flex items-center gap-4">
+      {/* <div className="flex items-center gap-4">
         <div className="flex">
           {[...Array(5)].map((_, i) => (
             <Star key={i} size={20} className="fill-yellow-400 text-yellow-400" />
           ))}
         </div>
         <span className="text-sm text-gray-600">(128 reviews)</span>
-      </div>
+      </div> */}
 
       {/* Stock */}
       <div className="flex items-center gap-3">

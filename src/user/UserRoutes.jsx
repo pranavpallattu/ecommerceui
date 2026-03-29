@@ -16,6 +16,7 @@ import CouponsPage from "./pages/CouponsPage";
 import ContactPage from "./pages/ContactPage";
 import AboutPage from "./pages/AboutPage";
 import UserProtectedRoute from "../admin/components/ProtectedRoute";
+import OrderResultPage from "./pages/OrderResultsPage";
 
 
 const userRoutes = {
@@ -41,6 +42,7 @@ const userRoutes = {
         { path: "wallet", element: <WalletPage /> },
         { path: "address", element: <AddressPage /> },
         { path: "coupons", element: <CouponsPage /> },
+       { path:"/order/:status", element:<OrderResultPage />}
       ],
     },
   ],

@@ -1,6 +1,6 @@
 // src/pages/CheckoutPage.jsx
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   MapPin,
   Plus,
@@ -22,6 +22,7 @@ import OrderSummary from "../components/checkout/OrderSummary";
 export default function CheckoutPage() {
   const { buyNowId } = useParams();
   const isBuyNow = Boolean(buyNowId);
+  const navigate=useNavigate()
 
   const { buyNowCheckout, getBuyNowCheckout } = useBuyNowStore();
 
@@ -57,84 +58,60 @@ export default function CheckoutPage() {
   const discount = checkoutData?.discount || 0;
   const grandTotal = checkoutData?.finalTotal || subTotal;
 
-  const handlePayment = async () => {
-    if (!defaultAddress) return;
+ const handlePayment = async () => {
+  if (!defaultAddress) {
+    alert("Please select a delivery address");
+    return;
+  }
 
-    try {
-      const addressPayload = {
-        addressId: defaultAddress._id,
-        snapshot: {
-          addressType: defaultAddress.addressType,
-          streetAddress: defaultAddress.streetAddress,
-          name: defaultAddress.name,
-          city: defaultAddress.city,
-          landmark: defaultAddress.landmark,
-          state: defaultAddress.state,
-          country: defaultAddress.country,
-          pincode: defaultAddress.pincode,
-          phone: defaultAddress.phone,
-        },
-      };
+  try {
+    const addressPayload = {
+      addressId: defaultAddress._id,
+      snapshot: {
+        addressType: defaultAddress.addressType,
+        streetAddress: defaultAddress.streetAddress,
+        name: defaultAddress.name,
+        city: defaultAddress.city,
+        landmark: defaultAddress.landmark,
+        state: defaultAddress.state,
+        country: defaultAddress.country,
+        pincode: defaultAddress.pincode,
+        phone: defaultAddress.phone,
+      },
+    };
 
-      if (selectedPayment === "cod" || selectedPayment === "wallet") {
-        if (isBuyNow) {
-          await placeBuyNowOrder({
-            buyNowId,
-            paymentMethod: selectedPayment,
-            address: addressPayload,
-          });
-        } else {
-          await placeOrder({
-            paymentMethod: selectedPayment,
-            address: addressPayload,
-            couponId: appliedCoupon?._id,
-            couponCode: appliedCoupon?.code,
-          });
-        }
-        return;
+    // === COD & Wallet Payment ===
+    if (selectedPayment === "cod" || selectedPayment === "wallet") {
+      let orderId;
+
+      if (isBuyNow) {
+        const result = await placeBuyNowOrder({
+          buyNowId,
+          paymentMethod: selectedPayment,
+          address: addressPayload,
+        });
+        orderId = result?.orderId || buyNowId;   // adjust based on your API response
+      } else {
+        const result = await placeOrder({
+          paymentMethod: selectedPayment,
+          address: addressPayload,
+          couponId: appliedCoupon?._id,
+          couponCode: appliedCoupon?.code,
+        });
+        orderId = result?.orderId || result?._id; // adjust according to your backend response
       }
 
-      if (selectedPayment === "razorpay") {
-        const cartOrderDetails = {
-          subTotal,
-          discount,
-          grandTotal,
-          couponId: appliedCoupon?._id || null,
-          couponCode: appliedCoupon?.code || null,
-          address: addressPayload,
-        };
+      // Navigate to Success Page
+      navigate("/order/success", { 
+        state: { orderId } 
+      });
+      return;
+    }
 
-        if (isBuyNow) {
-          const { order, key } = await createBuyNowRazorpayOrder(buyNowId);
-
-          const rzp = new window.Razorpay({
-            key,
-            amount: order.amount,
-            currency: "INR",
-            order_id: order.id,
-            name: "Your Store",
-            description: "Buy Now Payment",
-            handler: async (response) => {
-              await verifyBuyNowRazorpayPayment({
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_signature: response.razorpay_signature,
-                buyNowId,
-                address: addressPayload,
-              });
-            },
-            prefill: {
-              name: defaultAddress.name,
-              contact: defaultAddress.phone,
-            },
-            theme: { color: "#000000" },
-          });
-
-          rzp.open();
-          return;
-        }
-
-        const { order, key } = await createRazorpayOrder(grandTotal);
+    // === Razorpay Payment ===
+    if (selectedPayment === "razorpay") {
+      if (isBuyNow) {
+        const { order, key } = await createBuyNowRazorpayOrder(buyNowId);
 
         const rzp = new window.Razorpay({
           key,
@@ -142,14 +119,25 @@ export default function CheckoutPage() {
           currency: "INR",
           order_id: order.id,
           name: "Your Store",
-          description: "Order Payment",
+          description: "Buy Now Payment",
           handler: async (response) => {
-            await verifyRazorpayPayment({
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
-              orderDetails: cartOrderDetails,
-            });
+            try {
+              await verifyBuyNowRazorpayPayment({
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                buyNowId,
+                address: addressPayload,
+              });
+
+              // Success after Razorpay verification
+              navigate("/order/success", { 
+                state: { orderId: buyNowId } 
+              });
+            } catch (err) {
+              console.error("Razorpay verification failed", err);
+              navigate("/order/failure");
+            }
           },
           prefill: {
             name: defaultAddress.name,
@@ -159,11 +147,58 @@ export default function CheckoutPage() {
         });
 
         rzp.open();
-      }
-    } catch (error) {
-      console.error(error);
+        return;
+      } 
+      
+      // Normal Cart Razorpay
+      const { order, key } = await createRazorpayOrder(grandTotal);
+
+      const rzp = new window.Razorpay({
+        key,
+        amount: order.amount,
+        currency: "INR",
+        order_id: order.id,
+        name: "Your Store",
+        description: "Order Payment",
+        handler: async (response) => {
+          try {
+            await verifyRazorpayPayment({
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+              orderDetails: {
+                subTotal,
+                discount,
+                grandTotal,
+                couponId: appliedCoupon?._id || null,
+                couponCode: appliedCoupon?.code || null,
+                address: addressPayload,
+              },
+            });
+
+            // Success
+            navigate("/order/success", { 
+              state: { orderId: response.razorpay_order_id } 
+            });
+          } catch (err) {
+            console.error("Razorpay verification failed", err);
+            navigate("/order/failure");
+          }
+        },
+        prefill: {
+          name: defaultAddress.name,
+          contact: defaultAddress.phone,
+        },
+        theme: { color: "#000000" },
+      });
+
+      rzp.open();
     }
-  };
+  } catch (error) {
+    console.error("Payment error:", error);
+    navigate("/order/failure");
+  }
+};
 
   if (cartLoading || addrLoading) {
     return (
