@@ -2,4 +2,4 @@
 // export const serverUrl = import.meta.env.VITE_SERVER_URL;
 // export const serverUrl= "http://localhost:7777"
 
-feag
+export const serverUrl = import.meta.env.VITE_SERVER_URL;
