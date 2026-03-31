@@ -22,11 +22,11 @@ const Auth = () => {
 
 useEffect(() => {
   if (user) {
-    navigate(user.role === "admin" ? "/admin/dashboard" : "/", {
-      replace: true,
-    });
+    window.location.replace(
+      user.role === "admin" ? "/admin/dashboard" : "/"
+    );
   }
-}, [user, navigate]);
+}, [user]);
 
 
 
