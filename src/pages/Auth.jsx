@@ -11,99 +11,92 @@ const Auth = () => {
   const [emailId, setEmailId] = useState("");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
-
+  const navigate = useNavigate();
 
   const { setUser } = useAuthStore();
 
-
-
   const { user } = useAuthStore();
 
-useEffect(() => {
-  if (user) {
-    window.location.replace(
-      user.role === "admin" ? "/admin/dashboard" : "/"
-    );
-  }
-}, [user]);
-
-
+  useEffect(() => {
+    if (user) {
+      window.location.replace(user.role === "admin" ? "/admin/dashboard" : "/");
+    }
+  }, [user]);
 
   const handleGoogleSignup = () => {
     try {
-window.location.assign("https://ecommerce-8tjk.onrender.com/api/auth/google");
+      window.location.assign(
+        "https://ecommerce-8tjk.onrender.com/api/auth/google",
+      );
     } catch (error) {
       console.error("Google Auth Error:", error);
       toast.error("Unable to start Google login. Please try again.");
     }
   };
 
-const handleRequestAuthOtp = async () => {
-  try {
-    if (!emailId.trim()) {
-      return toast.error("Please enter your email", {
-        position: "bottom-right",
-        autoClose: 1000,
-        transition: Bounce,
+  const handleRequestAuthOtp = async () => {
+    try {
+      if (!emailId.trim()) {
+        return toast.error("Please enter your email", {
+          position: "bottom-right",
+          autoClose: 1000,
+          transition: Bounce,
+        });
+      }
+
+      setLoading(true);
+
+      const result = await requestAuthOtpApi({ emailId });
+
+      console.log("OTP result:", result);
+
+      if (result?.success && result?.data?.success) {
+        toast.success(`OTP sent to ${emailId}`, {
+          position: "bottom-right",
+          autoClose: 1200,
+          transition: Bounce,
+        });
+
+        setOtpSent(true); // ✅ guaranteed now
+      } else {
+        toast.error(
+          result?.data?.message || result?.message || "Failed to send OTP",
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyAuthOtp = async () => {
+    try {
+      const result = await verifyAuthOtpApi({ emailId, otp });
+
+      if (!(result?.success && result?.data?.success)) {
+        return toast.error(
+          result?.data?.message || result?.message || "Verification failed",
+        );
+      }
+
+      const user = result.data.data;
+
+      setUser({
+        ...user,
+        role: user.isAdmin ? "admin" : "user",
       });
+
+      toast.success("Login successful");
+
+      setTimeout(() => {
+        navigate(user.isAdmin ? "/admin/dashboard" : "/", { replace: true });
+      }, 200);
+    } catch {
+      toast.error("Something went wrong");
     }
-
-    setLoading(true);
-
-    const result = await requestAuthOtpApi({ emailId });
-
-    console.log("OTP result:", result);
-
-    if (result?.success && result?.data?.success) {
-      toast.success(`OTP sent to ${emailId}`, {
-        position: "bottom-right",
-        autoClose: 1200,
-        transition: Bounce,
-      });
-
-      setOtpSent(true); // ✅ guaranteed now
-    } else {
-      toast.error(
-        result?.data?.message || result?.message || "Failed to send OTP"
-      );
-    }
-  } catch (error) {
-    console.error(error);
-    toast.error("Something went wrong. Try again.");
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-const handleVerifyAuthOtp = async () => {
-  try {
-    const result = await verifyAuthOtpApi({ emailId, otp });
-
-    if (!(result?.success && result?.data?.success)) {
-      return toast.error(
-        result?.data?.message || result?.message || "Verification failed"
-      );
-    }
-
-    const user = result.data.data;
-
-    setUser({
-      ...user,
-      role: user.isAdmin ? "admin" : "user",
-    });
-
-    toast.success("Login successful");
-
-    setTimeout(() => {
-      navigate(user.isAdmin ? "/admin/dashboard" : "/", { replace: true });
-    }, 200);
-
-  } catch {
-    toast.error("Something went wrong");
-  }
-};
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
