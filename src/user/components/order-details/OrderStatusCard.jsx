@@ -12,6 +12,18 @@ import {
 } from "lucide-react";
 
 export default function OrderStatusCard({ order, onReturnOrder }) {
+
+  const formattedDate = new Date(order.createdAt).toLocaleDateString("en-IN", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+});
+
+const formattedTime = new Date(order.createdAt).toLocaleTimeString("en-IN", {
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: true,
+});
   const statusConfig = {
     Pending: {
       icon: <Clock className="text-warning" />,
@@ -94,13 +106,12 @@ export default function OrderStatusCard({ order, onReturnOrder }) {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
           <div>
             <p className="text-gray-500">Placed on</p>
-            <p className="font-medium">
-              {new Date(order.createdAt).toLocaleDateString("en-IN", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              })}
-            </p>
+           <p className="font-medium">
+  {formattedDate}
+</p>
+<p className="text-xs text-gray-500">
+  {formattedTime}
+</p>
           </div>
 
           <div>

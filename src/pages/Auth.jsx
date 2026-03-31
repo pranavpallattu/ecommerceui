@@ -1,6 +1,6 @@
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { requestAuthOtpApi, verifyAuthOtpApi } from "../services/allApis";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -11,10 +11,24 @@ const Auth = () => {
   const [emailId, setEmailId] = useState("");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
 
   const { setUser } = useAuthStore();
 
-  const navigate = useNavigate();
+
+
+  const { user } = useAuthStore();
+
+useEffect(() => {
+  if (user) {
+    navigate(user.role === "admin" ? "/admin/dashboard" : "/", {
+      replace: true,
+    });
+  }
+}, [user, navigate]);
+
+
 
   const handleGoogleSignup = () => {
     try {

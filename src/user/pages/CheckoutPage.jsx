@@ -22,13 +22,22 @@ import OrderSummary from "../components/checkout/OrderSummary";
 export default function CheckoutPage() {
   const { buyNowId } = useParams();
   const isBuyNow = Boolean(buyNowId);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
 
   const { buyNowCheckout, getBuyNowCheckout } = useBuyNowStore();
 
-  const { cartProducts: cart, loading: cartLoading, fetchCartProducts } = useCartStore();
+  const {
+    cartProducts: cart,
+    loading: cartLoading,
+    fetchCartProducts,
+  } = useCartStore();
   const { appliedCoupon } = useCouponStore();
-  const { addresses, defaultAddressId, loading: addrLoading, fetchAddresses } = useAddressStore();
+  const {
+    addresses,
+    defaultAddressId,
+    loading: addrLoading,
+    fetchAddresses,
+  } = useAddressStore();
 
   const {
     placeOrder,
@@ -51,78 +60,86 @@ export default function CheckoutPage() {
     fetchAddresses();
   }, [isBuyNow, buyNowId]);
 
-  const defaultAddress = addresses.find(a => a._id === defaultAddressId) || addresses[0];
+  const defaultAddress =
+    addresses.find((a) => a._id === defaultAddressId) || addresses[0];
   const checkoutData = isBuyNow ? buyNowCheckout : cart;
 
   const subTotal = checkoutData?.subTotal || 0;
   const discount = checkoutData?.discount || 0;
   const grandTotal = checkoutData?.finalTotal || subTotal;
 
- const handlePayment = async () => {
-  if (!defaultAddress) {
-    alert("Please select a delivery address");
-    return;
-  }
+  const handlePayment = async () => {
+    if (!defaultAddress) return;
 
-  try {
-    const addressPayload = {
-      addressId: defaultAddress._id,
-      snapshot: {
-        addressType: defaultAddress.addressType,
-        streetAddress: defaultAddress.streetAddress,
-        name: defaultAddress.name,
-        city: defaultAddress.city,
-        landmark: defaultAddress.landmark,
-        state: defaultAddress.state,
-        country: defaultAddress.country,
-        pincode: defaultAddress.pincode,
-        phone: defaultAddress.phone,
-      },
-    };
+    try {
+      const addressPayload = {
+        addressId: defaultAddress._id,
+        snapshot: {
+          addressType: defaultAddress.addressType,
+          streetAddress: defaultAddress.streetAddress,
+          name: defaultAddress.name,
+          city: defaultAddress.city,
+          landmark: defaultAddress.landmark,
+          state: defaultAddress.state,
+          country: defaultAddress.country,
+          pincode: defaultAddress.pincode,
+          phone: defaultAddress.phone,
+        },
+      };
 
-    // === COD & Wallet Payment ===
-    if (selectedPayment === "cod" || selectedPayment === "wallet") {
-      let orderId;
+      if (selectedPayment === "cod" || selectedPayment === "wallet") {
+        const result = isBuyNow
+          ? await placeBuyNowOrder({
+              buyNowId,
+              paymentMethod: selectedPayment,
+              address: addressPayload,
+            })
+          : await placeOrder({
+              paymentMethod: selectedPayment,
+              address: addressPayload,
+              couponId: appliedCoupon?._id,
+              couponCode: appliedCoupon?.code,
+            });
 
-      if (isBuyNow) {
-        const result = await placeBuyNowOrder({
-          buyNowId,
-          paymentMethod: selectedPayment,
-          address: addressPayload,
+        // ✅ Extract orderId properly
+        console.log(result);
+
+        if (!result?.success || !result?.orderId) {
+          console.error("Order failed:", result);
+          return;
+        }
+
+        const orderId = result?.orderId;
+
+        navigate("/order/success", {
+          state: { orderId },
         });
-        orderId = result?.orderId || buyNowId;   // adjust based on your API response
-      } else {
-        const result = await placeOrder({
-          paymentMethod: selectedPayment,
-          address: addressPayload,
-          couponId: appliedCoupon?._id,
-          couponCode: appliedCoupon?.code,
-        });
-        orderId = result?.orderId || result?._id; // adjust according to your backend response
+
+        return;
       }
 
-      // Navigate to Success Page
-      navigate("/order/success", { 
-        state: { orderId } 
-      });
-      return;
-    }
+      if (selectedPayment === "razorpay") {
+        const cartOrderDetails = {
+          subTotal,
+          discount,
+          grandTotal,
+          couponId: appliedCoupon?._id || null,
+          couponCode: appliedCoupon?.code || null,
+          address: addressPayload,
+        };
 
-    // === Razorpay Payment ===
-    if (selectedPayment === "razorpay") {
-      if (isBuyNow) {
-        const { order, key } = await createBuyNowRazorpayOrder(buyNowId);
+        if (isBuyNow) {
+          const { order, key } = await createBuyNowRazorpayOrder(buyNowId);
 
-        const rzp = new window.Razorpay({
-          key,
-          amount: order.amount,
-          currency: "INR",
-          order_id: order.id,
-          name: "Your Store",
-          description: "Buy Now Payment",
-          handler: async (response) => {
-            try {
-              await verifyBuyNowRazorpayPayment({
+          const rzp = new window.Razorpay({
+            key,
+            amount: order.amount,
+            currency: "INR",
+            order_id: order.id,
+            name: "One Bazaar",
+            description: "Buy Now Payment",
+            handler: async (response) => {
+              const result = await verifyBuyNowRazorpayPayment({
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_signature: response.razorpay_signature,
@@ -130,14 +147,57 @@ export default function CheckoutPage() {
                 address: addressPayload,
               });
 
-              // Success after Razorpay verification
-              navigate("/order/success", { 
-                state: { orderId: buyNowId } 
+              if (!result?.success || !result?.orderId) {
+                console.error("Order failed:", result);
+                return;
+              }
+
+              // ✅ Extract correct orderId
+              const orderId = result?.orderId;
+
+              navigate("/order/success", {
+                state: { orderId },
               });
-            } catch (err) {
-              console.error("Razorpay verification failed", err);
-              navigate("/order/failure");
+            },
+            prefill: {
+              name: defaultAddress.name,
+              contact: defaultAddress.phone,
+            },
+            theme: { color: "#000000" },
+          });
+
+          rzp.open();
+          return;
+        }
+
+        const { order, key } = await createRazorpayOrder(grandTotal);
+
+        const rzp = new window.Razorpay({
+          key,
+          amount: order.amount,
+          currency: "INR",
+          order_id: order.id,
+          name: "One Bazaar",
+          description: "Order Payment",
+          handler: async (response) => {
+            const result = await verifyRazorpayPayment({
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+              orderDetails: cartOrderDetails,
+            });
+
+            if (!result?.success || !result?.orderId) {
+              console.error("Order failed:", result);
+              return;
             }
+
+            // ✅ IMPORTANT FIX
+            const orderId = result?.orderId;
+
+            navigate("/order/success", {
+              state: { orderId },
+            });
           },
           prefill: {
             name: defaultAddress.name,
@@ -147,58 +207,11 @@ export default function CheckoutPage() {
         });
 
         rzp.open();
-        return;
-      } 
-      
-      // Normal Cart Razorpay
-      const { order, key } = await createRazorpayOrder(grandTotal);
-
-      const rzp = new window.Razorpay({
-        key,
-        amount: order.amount,
-        currency: "INR",
-        order_id: order.id,
-        name: "Your Store",
-        description: "Order Payment",
-        handler: async (response) => {
-          try {
-            await verifyRazorpayPayment({
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
-              orderDetails: {
-                subTotal,
-                discount,
-                grandTotal,
-                couponId: appliedCoupon?._id || null,
-                couponCode: appliedCoupon?.code || null,
-                address: addressPayload,
-              },
-            });
-
-            // Success
-            navigate("/order/success", { 
-              state: { orderId: response.razorpay_order_id } 
-            });
-          } catch (err) {
-            console.error("Razorpay verification failed", err);
-            navigate("/order/failure");
-          }
-        },
-        prefill: {
-          name: defaultAddress.name,
-          contact: defaultAddress.phone,
-        },
-        theme: { color: "#000000" },
-      });
-
-      rzp.open();
+      }
+    } catch (error) {
+      console.error(error);
     }
-  } catch (error) {
-    console.error("Payment error:", error);
-    navigate("/order/failure");
-  }
-};
+  };
 
   if (cartLoading || addrLoading) {
     return (
@@ -211,7 +224,7 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-base-200 py-6 px-4">
       <div className="max-w-6xl mx-auto">
-<h1 className="text-3xl font-bold mb-8">Checkout</h1>
+        <h1 className="text-3xl font-bold mb-8">Checkout</h1>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-6">

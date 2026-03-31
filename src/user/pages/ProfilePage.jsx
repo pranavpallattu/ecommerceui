@@ -20,7 +20,7 @@ export default function DashboardPage() {
   const logout = useAuthStore((s) => s?.logout);
 
   const userOrders = userOrderStore((s) => s?.userOrders);
-  const getUserOrder = userOrderStore((s) => s?.getUserOrder);
+  const getUserOrders = userOrderStore((s) => s?.getUserOrders);
 
   const balance = useWalletStore((s) => s?.balance);
   const fetchWallet = useWalletStore((s) => s?.fetchWallet);
@@ -31,7 +31,7 @@ export default function DashboardPage() {
   const wishlistProducts = useUserWishlistStore((s) => s?.wishlistProducts);
 
   useEffect(() => {
-    getUserOrder();
+    getUserOrders();
     fetchWallet();
     fetchAddresses();
   }, []);

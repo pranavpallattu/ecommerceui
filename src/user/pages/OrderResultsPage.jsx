@@ -1,14 +1,22 @@
 // src/pages/OrderResultPage.jsx
 import { useEffect } from "react";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
-import { CheckCircle, XCircle, Package, ArrowRight, Home, ShoppingBag, RefreshCw } from "lucide-react";
+import {
+  CheckCircle,
+  XCircle,
+  Package,
+  ArrowRight,
+  Home,
+  ShoppingBag,
+  RefreshCw,
+} from "lucide-react";
 import useAddressStore from "../../utils/stores/useAddressStore";
 
 export default function OrderResultPage() {
   const { status } = useParams(); // "success" or "failure"
   const { state } = useLocation(); // Get data passed from checkout (orderId, etc.)
   const navigate = useNavigate();
-  const {defaultAddress}=useAddressStore()
+  const { defaultAddress } = useAddressStore();
 
   const isSuccess = status === "success";
   const orderId = state?.orderId || "N/A";
@@ -26,7 +34,9 @@ export default function OrderResultPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-500">Invalid order result</p>
-          <Link to="/" className="btn btn-primary mt-4">Go Home</Link>
+          <Link to="/" className="btn btn-primary mt-4">
+            Go Home
+          </Link>
         </div>
       </div>
     );
@@ -35,10 +45,11 @@ export default function OrderResultPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-lg mx-auto text-center">
-        
         {/* Icon */}
-        <div className={`mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full 
-          ${isSuccess ? "bg-green-100" : "bg-red-100"}`}>
+        <div
+          className={`mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full 
+          ${isSuccess ? "bg-green-100" : "bg-red-100"}`}
+        >
           {isSuccess ? (
             <CheckCircle className="h-16 w-16 text-green-600" />
           ) : (
@@ -47,16 +58,16 @@ export default function OrderResultPage() {
         </div>
 
         {/* Title */}
-        <h1 className={`text-4xl font-bold mb-3 ${isSuccess ? "text-gray-900" : "text-red-600"}`}>
-          {isSuccess 
-            ? "Order Placed Successfully!" 
-            : "Payment Failed"}
+        <h1
+          className={`text-4xl font-bold mb-3 ${isSuccess ? "text-gray-900" : "text-red-600"}`}
+        >
+          {isSuccess ? "Order Placed Successfully!" : "Payment Failed"}
         </h1>
 
         {/* Subtitle */}
         <p className="text-lg text-gray-600 mb-8">
-          {isSuccess 
-            ? "Thank you for shopping with us!" 
+          {isSuccess
+            ? "Thank you for shopping with us!"
             : "We couldn't process your payment. Please try again."}
         </p>
 
@@ -78,15 +89,19 @@ export default function OrderResultPage() {
                 <span className="font-semibold">What's Next?</span>
               </div>
               <ul className="space-y-3 text-sm text-gray-600">
-<li>
-  • Order updates will be sent to {defaultAddress?.phone} via SMS
-</li>                <li>• You can track your order in "My Orders"</li>
+                <li>
+                  • Order updates will be sent to {defaultAddress?.phone} via
+                  SMS
+                </li>{" "}
+                <li>• You can track your order in "My Orders"</li>
                 <li>• Our team will prepare your package soon</li>
               </ul>
             </>
           ) : (
             <>
-              <h3 className="font-semibold text-gray-800 mb-3">What went wrong?</h3>
+              <h3 className="font-semibold text-gray-800 mb-3">
+                What went wrong?
+              </h3>
               <ul className="text-sm text-gray-600 space-y-2">
                 <li>• Your card may have insufficient balance</li>
                 <li>• Payment was declined by your bank</li>
@@ -137,10 +152,7 @@ export default function OrderResultPage() {
                 Return to Cart
               </Link>
 
-              <Link
-                to="/"
-                className="btn btn-ghost w-full text-gray-600 py-3"
-              >
+              <Link to="/" className="btn btn-ghost w-full text-gray-600 py-3">
                 Go to Homepage
               </Link>
             </>
@@ -150,7 +162,10 @@ export default function OrderResultPage() {
         {/* Support */}
         <p className="mt-10 text-sm text-gray-500">
           Need help? Contact us at{" "}
-          <a href="mailto:support@yourstore.com" className="text-blue-600 hover:underline">
+          <a
+            href="mailto:support@yourstore.com"
+            className="text-blue-600 hover:underline"
+          >
             support@yourstore.com
           </a>
         </p>

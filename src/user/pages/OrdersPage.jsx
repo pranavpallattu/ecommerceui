@@ -25,14 +25,14 @@ const getStatusBadge = (status) => {
 };
 
 export default function OrdersPage() {
-  const { userOrders, loading, error, getUserOrder, cancelOrder } =
+  const { userOrders, loading, error, getUserOrders, cancelOrder } =
     useUserOrderStore();
 
   const [cancelOrderId, setCancelOrderId] = useState(null);
   const [cancelReason, setCancelReason] = useState("");
 
   useEffect(() => {
-    getUserOrder();
+    getUserOrders();
   }, []);
 
   const handleCancelClick = (orderId) => {
@@ -73,7 +73,7 @@ export default function OrdersPage() {
         <div className="text-center">
           <AlertCircle size={48} className="mx-auto text-error mb-4" />
           <p className="font-semibold mb-3">{error}</p>
-          <button onClick={getUserOrder} className="btn btn-primary btn-sm">
+          <button onClick={getUserOrders} className="btn btn-primary btn-sm">
             Retry
           </button>
         </div>
@@ -100,7 +100,7 @@ export default function OrdersPage() {
     <div className="min-h-screen bg-base-200 py-6 px-4">
       <div className="max-w-6xl mx-auto">
 
-<h1>My Orders</h1>
+<h1 className="text-2xl lg:text-3xl font-bold text-gray-700 flex items-center gap-3 p-2">My Orders</h1>
 
         <OrdersTable
           orders={userOrders}

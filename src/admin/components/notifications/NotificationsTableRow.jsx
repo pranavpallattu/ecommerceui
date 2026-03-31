@@ -10,6 +10,8 @@ const STATUS_BADGE = {
 };
 
 const NotificationsTableRow = ({ type, data }) => {
+  console.log(data);
+  
   const {
     approveOrderReturn,
     rejectOrderReturn,
@@ -24,9 +26,7 @@ const NotificationsTableRow = ({ type, data }) => {
   const orderId = isOrderReturn ? data._id : data.orderId;
   const customer = isOrderReturn ? data.userId : data.user;
   const status = isOrderReturn ? data.orderStatus : data.item.itemStatus;
-  const reason = isOrderReturn
-    ? data.returnedReason
-    : data.returnReason || "—";
+const reason = data?.returnReason 
 
   const products = isOrderReturn
     ? data.items.map((i) => i.productName).join(", ")

@@ -12,19 +12,17 @@ import {
   verifyBuyNowRazorpayPaymentApi,
   itemReturnApi,
   orderReturnApi,
-
 } from "../../services/allApis";
 import { toast } from "react-toastify";
-
 
 const userOrderStore = create((set, get) => ({
   userOrders: [],
   selectedOrder: null,
   loading: false,
-   paymentLoading: false,
+  paymentLoading: false,
   error: true,
 
-  getUserOrder: async () => {
+  getUserOrders: async () => {
     try {
       set({ loading: true });
       const res = await getUserOrdersApi();
@@ -51,14 +49,14 @@ const userOrderStore = create((set, get) => ({
       });
     }
   },
-  cancelOrder: async (orderId, {reason}) => {
+  cancelOrder: async (orderId, { reason }) => {
     try {
       set({ loading: true });
-      const res=await cancelOrderApi(orderId, {reason});
-      if(!res.success){
-        toast.error(res?.message)
+      const res = await cancelOrderApi(orderId, { reason });
+      if (!res.success) {
+        toast.error(res?.message);
       }
-      toast.success("Ordered cancelled successfully")
+      toast.success("Ordered cancelled successfully");
       await get().getUserOrder();
       set({ loading: false, error: null });
     } catch (error) {
@@ -69,16 +67,16 @@ const userOrderStore = create((set, get) => ({
     }
   },
 
-  cancelItem: async (orderId, itemId, {cancellationReason}) => {
+  cancelItem: async (orderId, itemId, { cancellationReason }) => {
     try {
-      set({ loading: true });      
-     const res = await cancelItemApi(orderId, itemId, {cancellationReason});
-     console.log(res);
-     
-       if(!res.success){
-       return toast.error(res?.message)
+      set({ loading: true });
+      const res = await cancelItemApi(orderId, itemId, { cancellationReason });
+      console.log(res);
+
+      if (!res.success) {
+        return toast.error(res?.message);
       }
-      toast.success("Item cancelled successfully")
+      toast.success("Item cancelled successfully");
       await get().getOrderById(orderId);
       set({ loading: false, error: null });
     } catch (error) {
@@ -89,74 +87,65 @@ const userOrderStore = create((set, get) => ({
     }
   },
 
+  returnItem: async (orderId, itemId, { returnReason }) => {
+    try {
+      set({ loading: true, error: null });
 
-  returnItem: async (orderId, itemId, {returnReason}) => {
-  try {
-    set({ loading: true, error: null });
-
-   const res = await itemReturnApi(orderId, itemId, { returnReason });
-     if(!res.success){
-       return toast.error(res?.message)
+      const res = await itemReturnApi(orderId, itemId, { returnReason });
+      if (!res.success) {
+        return toast.error(res?.message);
       }
-      toast.success("Item return request submitted successfully")
+      toast.success("Item return request submitted successfully");
 
-    // Refresh order details
-    await get().getOrderById(orderId);
+      // Refresh order details
+      await get().getOrderById(orderId);
 
-    set({ loading: false });
-  } catch (error) {
-    set({
-      loading: false,
-      error:
-        error?.response?.data?.message || "Failed to request item return",
-    });
-  }
-},
+      set({ loading: false });
+    } catch (error) {
+      set({
+        loading: false,
+        error:
+          error?.response?.data?.message || "Failed to request item return",
+      });
+    }
+  },
 
+  returnOrder: async (orderId, { returnReason }) => {
+    try {
+      set({ loading: true, error: null });
 
-returnOrder: async (orderId, {returnReason}) => {
-  try {
-    set({ loading: true, error: null });
-
-   const res =  await orderReturnApi(orderId, { returnReason });
-      if(!res.success){
-        toast.error(res?.message)
+      const res = await orderReturnApi(orderId, { returnReason });
+      if (!res.success) {
+        toast.error(res?.message);
       }
-      toast.success("Ordered returned successfully")
+      toast.success("Ordered return request submitted successfully");
 
-    // Refresh orders list + current order
-    await get().getUserOrder();
-    await get().getOrderById(orderId);
+      // Refresh orders list + current order
+      await get().getUserOrder();
+      await get().getOrderById(orderId);
 
-    set({ loading: false });
-  } catch (error) {
-    set({
-      loading: false,
-      error:
-        error?.response?.data?.message || "Failed to request order return",
-    });
-  }
-},
+      set({ loading: false });
+    } catch (error) {
+      set({
+        loading: false,
+        error:
+          error?.response?.data?.message || "Failed to request order return",
+      });
+    }
+  },
 
-
-
-
-
-
-
-
-
-   // ---------------- PLACE ORDER ----------------
+  // ---------------- PLACE ORDER ----------------
   placeOrder: async (payload) => {
     try {
       set({ loading: true });
       const res = await placeOrderApi(payload);
-        if(!res.success){
-      return  toast.error(res?.message)
+      if (!res.success) {
+        set({ loading: false });
+        return toast.error(res?.message);
       }
-      toast.success("Ordered placed successfully")
+      toast.success("Ordered placed successfully");
       set({ loading: false });
-      // return res.data;
+      return res?.data;
     } catch (err) {
       set({ loading: false, error: err.message });
       throw err;
@@ -166,15 +155,15 @@ returnOrder: async (orderId, {returnReason}) => {
   // ---------------- RAZORPAY ----------------
   createRazorpayOrder: async (amount) => {
     console.log(amount);
-    
+
     try {
       set({ paymentLoading: true });
       const res = await createRazorpayOrderApi(amount);
-          if(!res.success){
-      return  toast.error(res?.message)
+      if (!res.success) {
+        return toast.error(res?.message);
       }
       console.log(res);
-      
+
       set({ paymentLoading: false });
       return res.data;
     } catch (err) {
@@ -187,10 +176,10 @@ returnOrder: async (orderId, {returnReason}) => {
     try {
       set({ paymentLoading: true });
       const res = await verifyRazorpayPaymentApi(payload);
-          if(!res.success){
-      return  toast.error(res?.message)
+      if (!res.success) {
+        return toast.error(res?.message);
       }
-      toast.success("Razorpay payment successfull")
+      toast.success("Razorpay payment successfull");
       await get().getUserOrders();
       set({ paymentLoading: false });
       return res.data;
@@ -200,63 +189,61 @@ returnOrder: async (orderId, {returnReason}) => {
     }
   },
   // ---------------- PLACE BUY NOW ORDER ----------------
-placeBuyNowOrder: async (payload) => {
-  try {
-    set({ loading: true });
-    const res = await placeBuyNowOrderApi(payload);
-        if(!res.success){
-      return  toast.error(res?.message)
+  placeBuyNowOrder: async (payload) => {
+    try {
+      set({ loading: true });
+      const res = await placeBuyNowOrderApi(payload);
+      if (!res.success) {
+        set({ loading: false });
+        return toast.error(res?.message);
       }
-      toast.success("Buynow Order placed successfully")
-    set({ loading: false, error: null });
-    return res.data;
-  } catch (err) {
-    set({
-      loading: false,
-      error: err?.response?.data?.message || "Failed to place buy now order",
-    });
-    throw err;
-  }
-},
-// ---------------- BUY NOW RAZORPAY CREATE ORDER ----------------
-createBuyNowRazorpayOrder: async (buyNowId) => {
-  try {
-    set({ paymentLoading: true });
-    const res = await createBuyNowRazorpayOrderApi(
-      {buyNowId}
-    );
-    set({ paymentLoading: false, error: null });
-    return res.data;
-  } catch (err) {
-    set({
-      paymentLoading: false,
-      error: err?.response?.data?.message || "Failed to create Razorpay order",
-    });
-    throw err;
-  }
-},
-// ---------------- BUY NOW RAZORPAY VERIFY ----------------
-verifyBuyNowRazorpayPayment: async (payload) => {
-  try {
-    set({ paymentLoading: true });
-    const res = await verifyBuyNowRazorpayPaymentApi(payload);
-        if(!res.success){
-      return  toast.error(res?.message)
+      toast.success("Buynow Order placed successfully");
+      set({ loading: false, error: null });
+      return res?.data;
+    } catch (err) {
+      set({
+        loading: false,
+        error: err?.response?.data?.message || "Failed to place buy now order",
+      });
+      throw err;
+    }
+  },
+  // ---------------- BUY NOW RAZORPAY CREATE ORDER ----------------
+  createBuyNowRazorpayOrder: async (buyNowId) => {
+    try {
+      set({ paymentLoading: true });
+      const res = await createBuyNowRazorpayOrderApi({ buyNowId });
+      set({ paymentLoading: false, error: null });
+      return res.data;
+    } catch (err) {
+      set({
+        paymentLoading: false,
+        error:
+          err?.response?.data?.message || "Failed to create Razorpay order",
+      });
+      throw err;
+    }
+  },
+  // ---------------- BUY NOW RAZORPAY VERIFY ----------------
+  verifyBuyNowRazorpayPayment: async (payload) => {
+    try {
+      set({ paymentLoading: true });
+      const res = await verifyBuyNowRazorpayPaymentApi(payload);
+      if (!res.success) {
+        return toast.error(res?.message);
       }
-      toast.success("Buynow Razoprpay payment successfull")
-    await get().getUserOrder(); // refresh orders list
-    set({ paymentLoading: false, error: null });
-    return res.data;
-  } catch (err) {
-    set({
-      paymentLoading: false,
-      error: err?.response?.data?.message || "Payment verification failed",
-    });
-    throw err;
-  }
-},
-
-  
+      toast.success("Buynow Razoprpay payment successfull");
+      await get().getUserOrder(); // refresh orders list
+      set({ paymentLoading: false, error: null });
+      return res.data;
+    } catch (err) {
+      set({
+        paymentLoading: false,
+        error: err?.response?.data?.message || "Payment verification failed",
+      });
+      throw err;
+    }
+  },
 }));
 
 export default userOrderStore;
