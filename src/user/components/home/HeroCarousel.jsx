@@ -14,46 +14,52 @@ export default function HeroCarousel() {
   }, []);
 
   return (
-    <div className="carousel w-full h-[400px] lg:h-[600px]">
+    <div className="carousel w-full h-[380px] md:h-[520px] lg:h-[620px] relative">
       {heroSlides.map((slide, index) => (
         <div
           key={slide.id}
           id={`slide${index + 1}`}
-          className="carousel-item relative w-full"
+          className="carousel-item relative w-full h-full"
         >
+          {/* Background Image */}
           <img
             src={slide.image}
-            className="w-full h-full object-cover brightness-75"
+            className="w-full h-full object-cover"
             alt={slide.title}
           />
 
-          <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-            <div className="text-center text-white px-6 max-w-4xl">
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-4 md:mb-6 tracking-tight drop-shadow-lg">
+          {/* Softer Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/70" />
+
+          {/* Content - Centered & Clean */}
+          <div className="absolute inset-0 flex items-center justify-center px-4 text-center">
+            <div className="max-w-3xl">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight drop-shadow-2xl">
                 {slide.title}
               </h1>
-              <p className="text-lg md:text-2xl lg:text-3xl mb-8 md:mb-10 font-light drop-shadow-md">
+              <p className="text-base md:text-xl lg:text-2xl text-white/90 mb-8 font-light drop-shadow-md">
                 {slide.subtitle}
               </p>
               <Link
                 to={slide.link}
-                className="btn btn-primary btn-lg px-10 md:px-14 text-lg uppercase tracking-wider shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition duration-300"
+                className="btn btn-primary btn-lg px-10 md:px-14 py-3 text-base md:text-lg font-medium rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5"
               >
-                {slide.cta}
+                Shop Now
               </Link>
             </div>
           </div>
 
-          <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+          {/* Navigation Arrows - Bottom Center (Modern Look) */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4 z-10">
             <a
               href={`#slide${index === 0 ? heroSlides.length : index}`}
-              className="btn btn-circle btn-outline text-white border-2 border-white/50 hover:bg-white/20"
+              className="btn btn-circle btn-sm btn-outline text-white border-white/60 hover:bg-white/20 transition-all"
             >
               ❮
             </a>
             <a
               href={`#slide${index === heroSlides.length - 1 ? 1 : index + 2}`}
-              className="btn btn-circle btn-outline text-white border-2 border-white/50 hover:bg-white/20"
+              className="btn btn-circle btn-sm btn-outline text-white border-white/60 hover:bg-white/20 transition-all"
             >
               ❯
             </a>

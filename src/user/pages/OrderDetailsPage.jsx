@@ -39,7 +39,6 @@ export default function OrderDetailsPage() {
       <div className="min-h-screen bg-base-200 flex items-center justify-center py-12">
         <div className="text-center">
           <span className="loading loading-spinner loading-lg text-primary mb-4"></span>
-          <p className="text-gray-600">Loading order details...</p>
         </div>
       </div>
     );

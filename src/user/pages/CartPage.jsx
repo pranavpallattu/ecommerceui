@@ -28,7 +28,10 @@ const CartPage = () => {
   const handleApplyCoupon = () => applyCoupon(couponCode);
   const handleRemoveCoupon = () => removeCoupon();
 
-  if (loading) return <div className="min-h-screen flex justify-center items-center">Loading...</div>;
+  if (loading) return <div className="min-h-screen flex justify-center items-center">
+            <span className="loading loading-spinner loading-lg"></span>
+
+  </div>;
 
   if (!cart?.items?.length) return <EmptyCart />;
 

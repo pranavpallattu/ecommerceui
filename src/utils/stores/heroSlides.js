@@ -16,8 +16,8 @@ export const heroSlides = [
       "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1920",
     title: "Latest Smartphones & Gadgets",
     subtitle: "Upgrade your tech with exclusive launch offers",
-    cta: "Explore Electronics",
-    link: "/shop?category=electronics",
+    cta: "Shop Now",
+    link: "/shop",
   },
   {
     id: 3,
@@ -25,8 +25,8 @@ export const heroSlides = [
       "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1920",
     title: "Trendy Fashion Collection",
     subtitle: "New styles for men & women starting at ₹499",
-    cta: "Shop Fashion",
-    link: "/shop?category=fashion",
+    cta: "Shop Now",
+    link: "/shop",
   },
   {
     id: 4,
@@ -34,8 +34,8 @@ export const heroSlides = [
       "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?q=80&w=1920",
     title: "Home & Living Essentials",
     subtitle: "Transform your home with modern furniture & decor",
-    cta: "Shop Home",
-    link: "/shop?category=home",
+    cta: "Shop Now",
+    link: "/shop",
   },
   {
     id: 5,
@@ -43,7 +43,7 @@ export const heroSlides = [
       "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1920",
     title: "Beauty & Personal Care",
     subtitle: "Top beauty brands with exciting discounts",
-    cta: "Discover Beauty",
-    link: "/shop?category=beauty",
+    cta: "Shop Now",
+    link: "/shop",
   },
 ];

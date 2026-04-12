@@ -24,7 +24,7 @@ const useProductStore = create(
 
     search: "",
     page: 1,
-    limit: 10,
+    limit: 12,
 
     pagination: {
       totalProducts: 0,
