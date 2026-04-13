@@ -7,9 +7,12 @@ const useAuthStore = create((set) => ({
   role: null,
   loading: true,
 
+  
+
   checkAuth: async () => {
     try {
       const res = await getMeApi();
+      
       set({ user: res.data.data, role: res.data.data.role, loading: false });
     } catch {
       set({ user: null, role: null, loading: false });

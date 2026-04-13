@@ -2,27 +2,19 @@ import { useEffect } from "react";
 import useAuthStore from "../utils/stores/userAuthStore";
 
 export default function GoogleSuccess() {
-  const checkAuth = useAuthStore((s) => s.checkAuth);
+const { user, loading } = useAuthStore();
 
-  useEffect(() => {
-    const init = async () => {
-      await checkAuth();
+useEffect(() => {
+  if (loading) return;
 
-      const state = useAuthStore.getState();
-
-      if (state.role === "admin") {
-        return window.location.replace("/admin/dashboard");
-      }
-
-      if (state.user) {
-        return window.location.replace("/");
-      }
-
-      window.location.replace("/auth");
-    };
-
-    init();
-  }, []);
+  if (user?.isAdmin) {
+    window.location.replace("/admin/dashboard");
+  } else if (user) {
+    window.location.replace("/");
+  } else {
+    window.location.replace("/auth");
+  }
+}, [user, loading]);
 
   return <h1>Logging in...</h1>;
 }
