@@ -124,9 +124,8 @@ const useCouponStore = create(
           res = await addCouponApi(formData);
         }
 
-        // ❌ backend failure
         if (!res?.success) {
-          toast.error(res?.data?.message || "Operation failed");
+          toast.error(res?.message || "Operation failed");
           set({ loading: false });
           return;
         }

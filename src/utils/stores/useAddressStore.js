@@ -72,7 +72,7 @@ const useAddressStore = create((set, get) => ({
     try {
       const res = await editAddressApi(id, addressData);
       if (!res.success) {
-        toast.error(res?.message);
+       return toast.error(res?.message);
       }
       toast.success("Address edited successfully");
       // Refresh the address list
