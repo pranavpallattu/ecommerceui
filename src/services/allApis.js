@@ -36,7 +36,7 @@ export const addCategoryApi = async (reqBody) => {
 };
 
 export const editCategoryApi = async (reqBody, id) => {
-  return await commonApi("PATCH", `${serverUrl}/api/admin/category/edit/${id}`, reqBody, "");
+  return await commonApi("PUT", `${serverUrl}/api/admin/category/edit/${id}`, reqBody, "");
 };
 
 export const listCategoryApi = async (id) => {
@@ -48,7 +48,7 @@ export const unlistCategoryApi = async (id) => {
 };
 
 export const softDeleteCategoryApi = async (id) => {
-  return await commonApi("PATCH", `${serverUrl}/api/admin/category/softDelete/${id}`, {}, "");
+  return await commonApi("PUT", `${serverUrl}/api/admin/category/softDelete/${id}`, {}, "");
 };
 
 
@@ -63,9 +63,9 @@ export const getAllCustomersApi = async (search = "", page = 1, limit = 5) => {
   );
 };
 
-// PATCH /admin/user/:id
+// PUT /admin/user/:id
 export const updateUserStatusApi = async (id) => {
-  return await commonApi("PATCH", `${serverUrl}/api/admin/user/${id}`, {}, "");
+  return await commonApi("PUT", `${serverUrl}/api/admin/user/${id}`, {}, "");
 };
 
 
@@ -126,19 +126,19 @@ export const addProductApi = async (formData) => {
 };
 
 
-// PATCH /product/editProduct/:id
+// PUT /product/editProduct/:id
 export const editProductApi = async (id, formData) => {
   return await commonApi("PUT", `${serverUrl}/api/admin/product/editProduct/${id}`, formData, {}, true);
 };
 
-// PATCH /product/list/:id
+// PUT /product/list/:id
 export const listProductApi = async (id) => {
-  return await commonApi("PATCH", `${serverUrl}/api/admin/product/list/${id}`, {});
+  return await commonApi("PUT", `${serverUrl}/api/admin/product/list/${id}`, {});
 };
 
-// PATCH /product/unlist/:id
+// PUT /product/unlist/:id
 export const unlistProductApi = async (id) => {
-  return await commonApi("PATCH", `${serverUrl}/api/admin/product/unlist/${id}`, {});
+  return await commonApi("PUT", `${serverUrl}/api/admin/product/unlist/${id}`, {});
 };
 
 // DELETE /product/delete/:id
@@ -158,11 +158,11 @@ export const addCouponApi=async(reqBody) =>{
 }
 
 export const editCouponApi=async(id, reqBody) =>{
-  return await commonApi("PATCH",`${serverUrl}/api/admin/coupons/${id}`, reqBody, "")
+  return await commonApi("PUT",`${serverUrl}/api/admin/coupons/${id}`, reqBody, "")
 }
 
 export const updateCouponStatusApi=async(id) =>{
-  return await commonApi("PATCH",`${serverUrl}/api/admin/coupons/${id}/status`, {}, "")
+  return await commonApi("PUT",`${serverUrl}/api/admin/coupons/${id}/status`, {}, "")
 }
 
 
@@ -186,7 +186,7 @@ export const getOrderApi=async(id) =>{
 
 
 export const updateOrderStatusApi=async(id,body) =>{
-  return await commonApi("PATCH",`${serverUrl}/api/admin/orders/${id}`, body, "")
+  return await commonApi("PUT",`${serverUrl}/api/admin/orders/${id}`, body, "")
 }
 
 
@@ -213,7 +213,7 @@ export const getReturnPendingNotificationsApi = async () => {
 // Approve full order return
 export const approveOrderReturnApi = async (orderId) => {
   return await commonApi(
-    "PATCH",
+    "PUT",
     `${serverUrl}/api/admin/orders/${orderId}/return/approve`,
     {},
     ""
@@ -223,7 +223,7 @@ export const approveOrderReturnApi = async (orderId) => {
 // Reject full order return
 export const rejectOrderReturnApi = async (orderId, reason = "") => {
   return await commonApi(
-    "PATCH",
+    "PUT",
     `${serverUrl}/api/admin/orders/${orderId}/return/reject`,
     { reason },
     ""
@@ -237,7 +237,7 @@ export const rejectOrderReturnApi = async (orderId, reason = "") => {
 // Approve item return
 export const approveItemReturnApi = async (orderId, itemId) => {
   return await commonApi(
-    "PATCH",
+    "PUT",
     `${serverUrl}/api/admin/orders/${orderId}/items/${itemId}/return/approve`,
     {},
     ""
@@ -247,7 +247,7 @@ export const approveItemReturnApi = async (orderId, itemId) => {
 // Reject item return
 export const rejectItemReturnApi = async (orderId, itemId, reason = "") => {
   return await commonApi(
-    "PATCH",
+    "PUT",
     `${serverUrl}/api/admin/orders/${orderId}/items/${itemId}/return/reject`,
     { reason },
     ""
@@ -321,7 +321,7 @@ export const removeFromCartApi=async(productId)=>{
 }
 
 export const updateQuantityApi=async(reqBody)=>{
-  return await commonApi("PATCH",`${serverUrl}/api/user/cart/updatequantity`,reqBody,"")
+  return await commonApi("PUT",`${serverUrl}/api/user/cart/updatequantity`,reqBody,"")
 }
 
 
@@ -362,7 +362,7 @@ export const deleteAddressApi=async(id)=>{
 }
 
 export const editAddressApi=async(id,reqBody)=>{
-  return await commonApi("PATCH", `${serverUrl}/api/user/addresses/${id}`,reqBody,"")
+  return await commonApi("PUT", `${serverUrl}/api/user/addresses/${id}`,reqBody,"")
 }
 
 
