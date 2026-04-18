@@ -67,38 +67,41 @@ const useCustomerStore = create(
     },
 
     // === TOGGLE BLOCK/UNBLOCK ===
-   toggleBlockCustomer: async (id) => {
+toggleBlockCustomer: async (id) => {
   set({ loading: true, error: null });
 
   try {
     const res = await updateUserStatusApi(id);
 
     if (!res.success) {
-      const errorMessage = res?.data?.message || res.message || "Failed to update user status";
+      const errorMessage =
+        res?.data?.message || res.message || "Failed to update user status";
       toast.error(errorMessage);
       set({ loading: false });
       return;
     }
 
-    // If successful, update the customer status
+    const updatedUser = res.data.data;
+
     set((state) => ({
       customers: state.customers.map((c) =>
-        c._id === id ? { ...c, isBlocked: !c.isBlocked } : c
+        c._id === id ? updatedUser : c
       ),
       loading: false,
     }));
 
-    // Show success toast
-    toast.success(res?.data?.message || "Customer status updated successfully");
-
+    toast.success(
+      res?.data?.message || "Customer status updated successfully"
+    );
   } catch (err) {
-    // Handle network or unexpected errors
-    const errorMessage = err?.response?.data?.message || err.message || "Failed to update user status";
+    const errorMessage =
+      err?.response?.data?.message ||
+      err.message ||
+      "Failed to update user status";
     toast.error(errorMessage);
     set({ loading: false, error: errorMessage });
   }
 },
-
   }))
 );
 
