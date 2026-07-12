@@ -1,14 +1,47 @@
 // src/components/order-details/OrderSummary.jsx
 export default function OrderSummary({ order }) {
   const STATUS_COLORS = {
+    Pending: "bg-yellow-100 text-yellow-700",
+
     Confirmed: "bg-blue-100 text-blue-700",
+
     Processing: "bg-indigo-100 text-indigo-700",
+
     Shipped: "bg-purple-100 text-purple-700",
+
     Delivered: "bg-green-100 text-green-700",
+
     Cancelled: "bg-red-100 text-red-700",
+    PartiallyCancelled: "bg-red-50 text-red-600",
+
+    ReturnPending: "bg-amber-100 text-amber-700",
+    PartiallyReturnPending: "bg-amber-50 text-amber-600",
+
     Returned: "bg-orange-100 text-orange-700",
-    ReturnPending: "bg-orange-100 text-orange-700",
-    ReturnRejected: "bg-red-100 text-red-700",
+    PartiallyReturned: "bg-orange-50 text-orange-600",
+
+    ReturnRejected: "bg-gray-200 text-gray-700",
+    PartiallyReturnRejected: "bg-gray-100 text-gray-600",
+  };
+
+  const STATUS_LABELS = {
+    Pending: "Pending",
+    Confirmed: "Confirmed",
+    Processing: "Processing",
+    Shipped: "Shipped",
+    Delivered: "Delivered",
+
+    Cancelled: "Cancelled",
+    PartiallyCancelled: "Partially Cancelled",
+
+    ReturnPending: "Return Pending",
+    PartiallyReturnPending: "Partially Return Pending",
+
+    Returned: "Returned",
+    PartiallyReturned: "Partially Returned",
+
+    ReturnRejected: "Return Rejected",
+    PartiallyReturnRejected: "Partially Return Rejected",
   };
 
   return (
@@ -40,7 +73,7 @@ export default function OrderSummary({ order }) {
           <span
             className={`inline-block px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-medium ${STATUS_COLORS[order.orderStatus]}`}
           >
-            {order.orderStatus}
+            {STATUS_LABELS[order.orderStatus] || order.orderStatus}{" "}
           </span>
         </div>
       </div>

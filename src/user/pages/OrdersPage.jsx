@@ -7,22 +7,30 @@ import useUserOrderStore from "../../utils/stores/userOrderStore";
 import OrdersTable from "../components/orders/OrdersTable";
 import CancelModal from "../components/orders/CancelModal";
 
-const getStatusBadge = (status) => {
-  switch (status) {
-    case "Pending": return "badge-warning";
-    case "Confirmed":
-    case "Processing": return "badge-info";
-    case "Shipped": return "badge-primary";
-    case "Delivered": return "badge-success";
-    case "Cancelled":
-    case "PartiallyCancelled": return "badge-error";
-    case "Returned":
-    case "PartiallyReturned": return "badge-secondary";
-    case "ReturnPending": return "badge-warning";
-    case "ReturnRejected": return "badge-error";
-    default: return "badge-ghost";
-  }
+const STATUS_BADGES = {
+  Pending: "badge-warning",
+
+  Confirmed: "badge-info",
+  Processing: "badge-info",
+
+  Shipped: "badge-primary",
+
+  Delivered: "badge-success",
+
+  Cancelled: "badge-error",
+  PartiallyCancelled: "badge-error",
+
+  ReturnPending: "badge-warning",
+  PartiallyReturnPending: "badge-warning",
+
+  Returned: "badge-secondary",
+  PartiallyReturned: "badge-secondary",
+
+  ReturnRejected: "badge-error",
+  PartiallyReturnRejected: "badge-error",
 };
+
+const getStatusBadge = (status) => STATUS_BADGES[status] || "badge-ghost";
 
 export default function OrdersPage() {
   const { userOrders, loading, error, getUserOrders, cancelOrder } =

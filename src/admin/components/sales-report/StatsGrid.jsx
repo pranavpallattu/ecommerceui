@@ -2,17 +2,70 @@
 import { Package, IndianRupee, ShoppingCart, Zap } from "lucide-react";
 
 export default function StatsGrid({ report }) {
-  const stats = [
-    { label: "Total Orders", value: report?.totalOrders || 0, icon: Package, color: "blue" },
-    { label: "Total Amount", value: `₹${report?.totalAmount?.toLocaleString() || 0}`, icon: IndianRupee, color: "emerald" },
-    { label: "Total Discount", value: `₹${report?.totalDiscount?.toLocaleString() || 0}`, icon: IndianRupee, color: "blue" },
-    { label: "Coupon Deduction", value: `₹${report?.couponDeduction?.toLocaleString() || 0}`, icon: IndianRupee, color: "blue" },
-    { label: "Total Refunded", value: `₹${report?.totalRefunded?.toLocaleString() || 0}`, icon: IndianRupee, color: "blue" },
-    { label: "Delivered", value: report?.delivered || 0, icon: Package, color: "green" },
-    { label: "Cart Orders", value: report?.cartOrders || 0, icon: ShoppingCart, color: "red" },
-    { label: "Buy Now Orders", value: report?.buynowOrders || 0, icon: Zap, color: "red" },
-  ];
+const stats = [
+  {
+    label: "Total Orders",
+    value: report?.totalOrders || 0,
+    icon: Package,
+    color: "blue",
+  },
 
+  {
+    label: "Total Amount",
+    value: `₹${report?.totalAmount?.toLocaleString() || 0}`,
+    icon: IndianRupee,
+    color: "emerald",
+  },
+
+  {
+    label: "Net Revenue",
+    value: `₹${report?.netRevenue?.toLocaleString() || 0}`,
+    icon: IndianRupee,
+    color: "green",
+  },
+
+  {
+    label: "Total Refunded",
+    value: `₹${report?.totalRefunded?.toLocaleString() || 0}`,
+    icon: IndianRupee,
+    color: "red",
+  },
+
+  {
+    label: "Total Discount",
+    value: `₹${report?.totalDiscount?.toLocaleString() || 0}`,
+    icon: IndianRupee,
+    color: "blue",
+  },
+
+  {
+    label: "Coupon Deduction",
+    value: `₹${report?.couponDeduction?.toLocaleString() || 0}`,
+    icon: IndianRupee,
+    color: "orange",
+  },
+
+  {
+    label: "Delivered",
+    value: report?.delivered || 0,
+    icon: Package,
+    color: "green",
+  },
+
+  {
+    label: "Cart Orders",
+    value: report?.cartOrders || 0,
+    icon: ShoppingCart,
+    color: "purple",
+  },
+
+  {
+    label: "Buy Now Orders",
+    value: report?.buynowOrders || 0,
+    icon: Zap,
+    color: "yellow",
+  },
+];
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
       {stats.map((stat, i) => (

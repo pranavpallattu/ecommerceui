@@ -68,11 +68,7 @@ const useProductStore = create(
       const finalLimit = params.limit ?? state.limit;
 
       try {
-        const res = await getProductsApi(
-          finalSearch,
-          finalPage,
-          finalLimit
-        );
+        const res = await getProductsApi(finalSearch, finalPage, finalLimit);
 
         if (!res?.success) {
           toast.error(res?.message || "Failed to fetch products");
@@ -156,8 +152,11 @@ const useProductStore = create(
         toast.success(res?.data?.message || "Product saved successfully");
 
         await get().fetchProducts();
-        await get().fetchProductById(editData ? editData?._id : formData?._id);
 
+        // only fetch single product during edit
+        if (editData?._id) {
+          await get().fetchProductById(editData._id);
+        }
         set({
           loading: false,
           isModalOpen: false,
@@ -180,15 +179,13 @@ const useProductStore = create(
           : await unlistProductApi(id);
 
         if (!res?.success) {
-         return toast.error(res?.message || "Failed to update status");
+          return toast.error(res?.message || "Failed to update status");
         }
 
-        toast.success(
-          isChecked ? "Product listed " : "Product unlisted "
-        );
+        toast.success(isChecked ? "Product listed " : "Product unlisted ");
 
         get().fetchProducts();
-        get().fetchProductById(id)
+        get().fetchProductById(id);
       } catch (err) {
         console.error(err);
         toast.error("Failed to update product status");
@@ -214,7 +211,7 @@ const useProductStore = create(
         toast.error("Delete failed");
       }
     },
-  }))
+  })),
 );
 
 export default useProductStore;

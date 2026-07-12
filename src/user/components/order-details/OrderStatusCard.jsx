@@ -24,56 +24,98 @@ const formattedTime = new Date(order.createdAt).toLocaleTimeString("en-IN", {
   minute: "2-digit",
   hour12: true,
 });
-  const statusConfig = {
-    Pending: {
-      icon: <Clock className="text-warning" />,
-      color: "text-warning",
-    },
-    Confirmed: {
-      icon: <ThumbsUp className="text-success" />,
-      color: "text-success",
-    },
-    Processing: {
-      icon: <Settings className="text-info" />,
-      color: "text-info",
-    },
-    Shipped: {
-      icon: <Truck className="text-primary" />,
-      color: "text-primary",
-    },
-    Delivered: {
-      icon: <CheckCircle className="text-success" />,
-      color: "text-success",
-    },
-    Cancelled: {
-      icon: <XCircle className="text-error" />,
-      color: "text-error",
-    },
-    PartiallyCancelled: {
-      icon: <XCircle className="text-error" />,
-      color: "text-error",
-      label: "Partially Cancelled",
-    },
-    Returned: {
-      icon: <RotateCcw className="text-orange-600" />,
-      color: "text-orange-600",
-    },
-    PartiallyReturned: {
-      icon: <RotateCcw className="text-orange-600" />,
-      color: "text-orange-600",
-      label: "Partially Returned",
-    },
-    ReturnPending: {
-      icon: <Clock className="text-warning" />,
-      color: "text-warning",
-      label: "Return Pending",
-    },
-    ReturnRejected: {
-      icon: <AlertTriangle className="text-error" />,
-      color: "text-error",
-      label: "Return Rejected",
-    },
-  };
+ const statusConfig = {
+  Pending: {
+    icon: <Clock className="text-warning" />,
+    color: "text-warning",
+    title: "Order Pending",
+    description: "Your order has been placed and is awaiting confirmation.",
+  },
+
+  Confirmed: {
+    icon: <ThumbsUp className="text-success" />,
+    color: "text-success",
+    title: "Order Confirmed",
+    description: "Seller has confirmed your order.",
+  },
+
+  Processing: {
+    icon: <Settings className="text-info" />,
+    color: "text-info",
+    title: "Preparing Order",
+    description: "Your items are being packed.",
+  },
+
+  Shipped: {
+    icon: <Truck className="text-primary" />,
+    color: "text-primary",
+    title: "Order Shipped",
+    description: "Your package is on the way.",
+  },
+
+  Delivered: {
+    icon: <CheckCircle className="text-success" />,
+    color: "text-success",
+    title: "Delivered",
+    description: "Package delivered successfully.",
+  },
+
+  Cancelled: {
+    icon: <XCircle className="text-error" />,
+    color: "text-error",
+    title: "Cancelled",
+    description: "This order has been cancelled.",
+  },
+
+  PartiallyCancelled: {
+    icon: <XCircle className="text-error" />,
+    color: "text-error",
+    title: "Partially Cancelled",
+    description: "Some items in your order were cancelled.",
+  },
+
+Returned: {
+  icon: <RotateCcw className="text-orange-600" />,
+  color: "text-orange-600",
+  title: "Returned",
+  description: "Your return has been completed. The refund has been credited to your wallet.",
+},
+
+  PartiallyReturned: {
+    icon: <RotateCcw className="text-orange-500" />,
+    color: "text-orange-500",
+    title: "Partially Returned",
+    description: "Some items have been returned.",
+  },
+
+  ReturnPending: {
+    icon: <Clock className="text-warning" />,
+    color: "text-warning",
+    title: "Return Requested",
+    description: "Your return request is waiting for seller approval.",
+  },
+
+  PartiallyReturnPending: {
+    icon: <Clock className="text-warning" />,
+    color: "text-warning",
+    title: "Partial Return Requested",
+    description: "Return request for some items is awaiting seller approval.",
+  },
+
+  ReturnRejected: {
+    icon: <AlertTriangle className="text-error" />,
+    color: "text-error",
+    title: "Return Rejected",
+    description: "Your return request was rejected by the seller.",
+  },
+
+  PartiallyReturnRejected: {
+    icon: <AlertTriangle className="text-error" />,
+    color: "text-error",
+    title: "Partial Return Rejected",
+    description: "Return request for some items was rejected.",
+  },
+};
 
   const config = statusConfig[order.orderStatus] || {
     icon: null,
@@ -81,25 +123,31 @@ const formattedTime = new Date(order.createdAt).toLocaleTimeString("en-IN", {
     label: order.orderStatus,
   };
 
-  const displayStatus = config.label || order.orderStatus;
-
+const displayStatus = config.title || order.orderStatus;
   return (
     <div className="card bg-base-100 shadow-lg">
       <div className="card-body">
-        <h2 className={`card-title flex items-center gap-3 flex-wrap ${config.color}`}>
-          {config.icon}
-          {displayStatus}
+       <div className="flex items-start justify-between flex-wrap gap-4">
+  <div>
+    <h2 className={`card-title flex items-center gap-3 ${config.color}`}>
+      {config.icon}
+      {displayStatus}
+    </h2>
 
-          {/* Return Order Button – only shown when eligible */}
-          {order.orderStatus === "Delivered" && (
-            <button
-              className="btn btn-warning btn-outline btn-xs ml-3"
-              onClick={onReturnOrder}
-            >
-              Return Order
-            </button>
-          )}
-        </h2>
+    <p className="text-sm text-gray-500 mt-1">
+      {config.description}
+    </p>
+  </div>
+
+  {order.orderStatus === "Delivered" && (
+    <button
+      className="btn btn-warning btn-outline btn-sm"
+      onClick={onReturnOrder}
+    >
+      Return Order
+    </button>
+  )}
+</div>
 
         <div className="divider my-2"></div>
 

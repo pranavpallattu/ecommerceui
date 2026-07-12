@@ -26,9 +26,24 @@ export default function OrderTimeline({ order }) {
           </p>
         )}
 
-        {order.returnedReason && (
+        {order.returnedAt && (
           <p className="text-orange-600">
-            <span className="font-medium">Return Reason:</span> {order.returnedReason}
+            <span className="font-medium">Returned:</span>{" "}
+            {new Date(order.returnedAt).toLocaleString()}
+          </p>
+        )}
+
+        {order.returnReason && (
+          <p className="text-orange-600">
+            <span className="font-medium">Return Reason:</span>{" "}
+            {order.returnReason}
+          </p>
+        )}
+
+        {order.cancellationReason && (
+          <p className="text-red-600">
+            <span className="font-medium">Cancellation Reason:</span>{" "}
+            {order.cancellationReason}
           </p>
         )}
       </div>

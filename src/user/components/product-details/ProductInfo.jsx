@@ -37,15 +37,7 @@ export default function ProductInfo({
         </button>
       </div>
 
-      {/* Rating */}
-      {/* <div className="flex items-center gap-4">
-        <div className="flex">
-          {[...Array(5)].map((_, i) => (
-            <Star key={i} size={20} className="fill-yellow-400 text-yellow-400" />
-          ))}
-        </div>
-        <span className="text-sm text-gray-600">(128 reviews)</span>
-      </div> */}
+ 
 
       {/* Stock */}
       <div className="flex items-center gap-3">

@@ -7,7 +7,7 @@ export default function CustomerInfo({ order }) {
       </h3>
       <p className="font-medium text-sm sm:text-base">{order.userId?.name || "—"}</p>
       <p className="text-xs sm:text-sm text-gray-500 break-all">
-        {order.userId?.emailId}
+        {order.userId?.emailId || order.userId?._id }
       </p>
     </div>
   );
