@@ -15,11 +15,11 @@ export default function OrderSummary({
         <h2 className="card-title">Order Summary</h2>
 
         {isBuyNow ? (
-          <div className="flex justify-between text-sm">
-            <span>{checkoutData?.product?.productName} × 1</span>
-            <span>₹{checkoutData?.subTotal}</span>
-          </div>
-        ) : (
+  <div className="flex justify-between text-sm">
+    <span>{checkoutData?.product?.name} × {checkoutData?.quantity}</span>
+    <span>₹{checkoutData?.subTotal}</span>
+  </div>
+)  : (
           checkoutData?.items?.map((item) => (
             <div key={item._id} className="flex justify-between text-sm">
               <span>{item.product?.productName} × {item.quantity}</span>
@@ -35,10 +35,12 @@ export default function OrderSummary({
           <span>₹{subTotal}</span>
         </div>
 
-        <div className="flex justify-between text-success">
-          <span>Discount</span>
-          <span>-₹{discount}</span>
-        </div>
+       {discount > 0 && (
+  <div className="flex justify-between text-success">
+    <span>Discount</span>
+    <span>-₹{discount}</span>
+  </div>
+)}
 
         <div className="flex justify-between font-bold text-lg">
           <span>Total</span>

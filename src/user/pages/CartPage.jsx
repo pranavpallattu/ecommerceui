@@ -1,17 +1,17 @@
 // src/pages/CartPage.jsx
 import { useEffect, useState } from "react";
 import useCartStore from "../../utils/stores/CartStore";
-import useCouponStore from "../../utils/stores/useCouponStore";
+// import useCouponStore from "../../utils/stores/useCouponStore";
 
 import CartItem from "../components/cart/CartItem";
 import OrderSummary from "../components/cart/OrderSummary";
-import CouponSection from "../components/cart/CouponSection";
+// import CouponSection from "../components/cart/CouponSection";
 import EmptyCart from "../components/cart/EmptyCart"
 const CartPage = () => {
-  const [couponCode, setCouponCode] = useState("");
+  // const [couponCode, setCouponCode] = useState("");
 
   const { cartProducts: cart, loading, fetchCartProducts, removeFromCart, updateQuantity } = useCartStore();
-  const { applyCoupon, removeCoupon, loading: couponLoading } = useCouponStore();
+  // const { applyCoupon, removeCoupon, loading: couponLoading } = useCouponStore();
 
   useEffect(() => {
     fetchCartProducts();
@@ -25,8 +25,8 @@ const CartPage = () => {
     updateQuantity({ productId, quantity: newQty });
   };
 
-  const handleApplyCoupon = () => applyCoupon(couponCode);
-  const handleRemoveCoupon = () => removeCoupon();
+  // const handleApplyCoupon = () => applyCoupon(couponCode);
+  // const handleRemoveCoupon = () => removeCoupon();
 
   if (loading) return <div className="min-h-screen flex justify-center items-center">
             <span className="loading loading-spinner loading-lg"></span>
@@ -54,14 +54,14 @@ const CartPage = () => {
 
           <div className="space-y-6">
             <OrderSummary cart={cart} />
-            <CouponSection
+            {/* <CouponSection
               couponCode={couponCode}
               setCouponCode={setCouponCode}
               handleApplyCoupon={handleApplyCoupon}
               handleRemoveCoupon={handleRemoveCoupon}
               couponLoading={couponLoading}
               cart={cart}
-            />
+            /> */}
           </div>
         </div>
       </div>

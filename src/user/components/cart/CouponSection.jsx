@@ -1,6 +1,6 @@
 // src/components/cart/CouponSection.jsx
 import { Tag, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const CouponSection = ({
   couponCode,
@@ -10,6 +10,7 @@ const CouponSection = ({
   couponLoading,
   cart,
 }) => {
+  const location = useLocation();
   return (
     <div className="bg-white rounded-2xl shadow-sm p-8">
       <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
@@ -28,7 +29,7 @@ const CouponSection = ({
         <button
           onClick={handleApplyCoupon}
           disabled={couponLoading || !couponCode.trim()}
-          className="btn btn-outline rounded-xl px-6"
+          className="btn btn-outline rounded-xl min-w-[92px]"
         >
           {couponLoading ? "Applying..." : "Apply"}
         </button>
@@ -40,9 +41,7 @@ const CouponSection = ({
             <span className="text-green-800 font-medium">
               {cart.appliedCoupon.code} applied
             </span>
-            <p className="text-sm text-green-700">
-              Saved ₹{cart.discount}
-            </p>
+            <p className="text-sm text-green-700">Saved ₹{cart.discount}</p>
           </div>
 
           <button
@@ -57,6 +56,7 @@ const CouponSection = ({
 
       <Link
         to="/coupons"
+        state={{ from: location.pathname }}
         className="block text-center mt-4 text-blue-600 hover:underline text-sm"
       >
         View available coupons →

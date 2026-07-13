@@ -11,6 +11,7 @@ import {
   Settings,
 } from "lucide-react";
 
+import { serverUrl } from "../../../services/serverUrl";
 export default function OrderStatusCard({ order, onReturnOrder }) {
 
   const formattedDate = new Date(order.createdAt).toLocaleDateString("en-IN", {
@@ -184,19 +185,17 @@ const displayStatus = config.title || order.orderStatus;
             </p>
           </div>
 
-          {order.invoice?.url && (
             <div className="mt-3">
-              <a
-                href={order.invoice.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-blue-600 border border-gray-200 hover:border-blue-500 px-3 py-2 rounded-md transition w-full sm:w-auto"
-              >
-                <Download size={16} />
-                Download Invoice
-              </a>
+           <a
+  href={`${serverUrl}/api/user/download/${order._id}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:border-blue-300 transition-all duration-200 font-medium text-sm shadow-sm"
+>
+  <Download size={16} />
+  Download Invoice
+</a>
             </div>
-          )}
         </div>
 
         {/* Refund History (if any) */}

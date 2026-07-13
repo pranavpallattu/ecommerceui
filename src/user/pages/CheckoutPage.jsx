@@ -18,13 +18,15 @@ import useBuyNowStore from "../../utils/stores/useBuyNowStore";
 import AddressSection from "../components/checkout/AddressSection";
 import PaymentMethods from "../components/checkout/PaymentMethods";
 import OrderSummary from "../components/checkout/OrderSummary";
+import CouponSection from "../components/cart/CouponSection";
+
 
 export default function CheckoutPage() {
   const { buyNowId } = useParams();
   const isBuyNow = Boolean(buyNowId);
   const navigate = useNavigate();
 
-  const { buyNowCheckout, getBuyNowCheckout } = useBuyNowStore();
+  const { buyNowCheckout, getBuyNowCheckout, clearBuyNow } = useBuyNowStore();
 
   const {
     cartProducts: cart,
@@ -55,10 +57,22 @@ export default function CheckoutPage() {
     if (isBuyNow) {
       getBuyNowCheckout(buyNowId);
     } else {
+      clearBuyNow();
       fetchCartProducts();
     }
     fetchAddresses();
   }, [isBuyNow, buyNowId]);
+
+  const [couponCode, setCouponCode] = useState("");
+
+  const {
+    applyCoupon,
+    removeCoupon,
+    loading: couponLoading,
+  } = useCouponStore();
+
+  const handleApplyCoupon = () => applyCoupon(couponCode);
+  const handleRemoveCoupon = () => removeCoupon();
 
   const defaultAddress =
     addresses.find((a) => a._id === defaultAddressId) || addresses[0];
@@ -247,6 +261,14 @@ export default function CheckoutPage() {
               orderLoading={orderLoading}
               defaultAddress={defaultAddress}
               onPlaceOrder={handlePayment}
+            />
+            <CouponSection
+              couponCode={couponCode}
+              setCouponCode={setCouponCode}
+              handleApplyCoupon={handleApplyCoupon}
+              handleRemoveCoupon={handleRemoveCoupon}
+              couponLoading={couponLoading}
+              cart={cart}
             />
           </div>
         </div>
