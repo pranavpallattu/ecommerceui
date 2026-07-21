@@ -1,4 +1,3 @@
-// src/components/sales-report/ReportHeader.jsx
 import { Download } from "lucide-react";
 
 export default function ReportHeader({

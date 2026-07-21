@@ -1,12 +1,19 @@
-// src/pages/AddressPage.jsx
 import { useEffect, useState } from "react";
 import { Plus, MapPin, AlertCircle } from "lucide-react";
 import AddressModal from "../components/address/AddressModal";
 import AddressCard from "../components/address/AddressCard";
-import useAddressStore from "../../utils/stores/useAddressStore";
+import useAddressStore from "../../utils/stores/user/useAddressStore";
 import AddressHeader from "../components/address/AddressHeader";
 
+import { useLocation, useNavigate } from "react-router-dom";
+
 export default function AddressPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from;
+  console.log(from);
+
   const {
     addresses = [],
     loading,
@@ -34,26 +41,33 @@ export default function AddressPage() {
     setEditingAddress(address);
     setModalOpen(true);
   };
-
   const handleSave = async (data) => {
-    try {
-      if (editingAddress) {
-        await editAddress(editingAddress._id, data);
-      } else {
-        await addAddress(data);
-      }
-      setModalOpen(false);
-      setEditingAddress(null);
-    } catch (err) {
-      // error already handled in store
+    let success = false;
+
+    if (editingAddress) {
+      success = await editAddress(editingAddress._id, data);
+    } else {
+      success = await addAddress(data);
+    }
+
+    if (!success) return;
+
+    setModalOpen(false);
+    setEditingAddress(null);
+
+    if (from) {
+      navigate(from, { replace: true });
     }
   };
-
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <AddressHeader handleOpenAdd={handleOpenAdd} loading={loading} />
+        <AddressHeader
+          handleOpenAdd={handleOpenAdd}
+          loading={loading}
+          from={from}
+        />
 
         {/* Error */}
         {error && (

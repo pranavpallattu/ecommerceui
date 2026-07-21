@@ -1,5 +1,4 @@
-// src/admin/components/coupons/CouponFormModal.jsx
-import useCouponStore from "../../../utils/stores/couponStore";
+import useCouponStore from "../../../utils/stores/admin/useCouponStore";
 import CouponFormContent from "./CouponFormContent";
 
 export default function CouponFormModal() {
@@ -8,12 +7,9 @@ export default function CouponFormModal() {
   if (!isModalOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div
-        className="absolute inset-0"
-        onClick={closeModal}
-      />
+      <div className="absolute inset-0" onClick={closeModal} />
 
       {/* Modal */}
       <div className="relative bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">

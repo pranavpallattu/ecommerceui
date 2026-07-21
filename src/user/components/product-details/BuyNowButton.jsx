@@ -1,8 +1,7 @@
 import { toast } from "react-toastify";
-import useAuthStore from "../../../utils/stores/userAuthStore";
+import useAuthStore from "../../../utils/stores/auth/useAuthStore";
 import { useNavigate } from "react-router-dom";
 
-// src/components/product-details/BuyNowButton.jsx
 export default function BuyNowButton({ inStock, onBuyNow }) {
   const { user } = useAuthStore();
   const navigate = useNavigate();
@@ -19,7 +18,7 @@ export default function BuyNowButton({ inStock, onBuyNow }) {
     <button
       onClick={handleClick}
       disabled={!inStock}
-      className="btn btn-primary btn-lg flex-1 gap-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+      className="btn btn-primary flex-1 w-full h-12 sm:h-14 gap-2 text-sm sm:text-base disabled:opacity-50"
     >
       Buy Now
     </button>

@@ -1,4 +1,3 @@
-// src/components/product-details/Breadcrumb.jsx
 import { Link } from "react-router-dom";
 import { Home, ChevronRight } from "lucide-react";
 
@@ -12,7 +11,9 @@ export default function Breadcrumb({ productName }) {
             Home
           </Link>
           <ChevronRight size={16} />
-          <Link to="/shop" className="hover:text-blue-600">Shop</Link>
+          <Link to="/shop" className="hover:text-blue-600">
+            Shop
+          </Link>
           <ChevronRight size={16} />
           <span className="font-medium text-gray-900">{productName}</span>
         </nav>

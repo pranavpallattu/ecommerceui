@@ -1,40 +1,30 @@
-// src/pages/OrdersPage.jsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Eye, Ban, Package, AlertCircle } from "lucide-react";
-import useUserOrderStore from "../../utils/stores/userOrderStore";
-
+import {  AlertCircle, Search, Filter, Package } from "lucide-react";
+import useOrderStore from "../../utils/stores/user/useOrderStore";
 import OrdersTable from "../components/orders/OrdersTable";
 import CancelModal from "../components/orders/CancelModal";
-
-const STATUS_BADGES = {
-  Pending: "badge-warning",
-
-  Confirmed: "badge-info",
-  Processing: "badge-info",
-
-  Shipped: "badge-primary",
-
-  Delivered: "badge-success",
-
-  Cancelled: "badge-error",
-  PartiallyCancelled: "badge-error",
-
-  ReturnPending: "badge-warning",
-  PartiallyReturnPending: "badge-warning",
-
-  Returned: "badge-secondary",
-  PartiallyReturned: "badge-secondary",
-
-  ReturnRejected: "badge-error",
-  PartiallyReturnRejected: "badge-error",
-};
+import { STATUS_BADGES } from "../../utils/helpers/statusBadges";
+import { toast } from "react-toastify";
+import OrdersFilter from "../components/orders/OrderFilters";
+import OrdersHeader from "../components/orders/OrdersHeader";
 
 const getStatusBadge = (status) => STATUS_BADGES[status] || "badge-ghost";
 
 export default function OrdersPage() {
-  const { userOrders, loading, error, getUserOrders, cancelOrder } =
-    useUserOrderStore();
+  const {
+    userOrders,
+    loading,
+    error,
+    filters,
+    setFilters,
+    getUserOrders,
+    cancelOrder,
+  } = useOrderStore();
+
+  const [searchInput, setSearchInput] = useState(filters?.search || "");
+  // useRef() creates an object that persists across re-renders without causing re-renders when its value changes.
+  const isFirstRun = useRef(true);
 
   const [cancelOrderId, setCancelOrderId] = useState(null);
   const [cancelReason, setCancelReason] = useState("");
@@ -43,18 +33,56 @@ export default function OrdersPage() {
     getUserOrders();
   }, []);
 
+  // Debounced search
+  useEffect(() => {
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+    }
+    const timer = setTimeout(() => {
+      const next = { ...filters, search: searchInput };
+      setFilters({ search: searchInput });
+      getUserOrders(next);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  const toggleStatus = (value) => {
+    const current = filters.status || [];
+    const nextStatus = current.includes(value)
+      ? current.filter((v) => v !== value)
+      : [...current, value];
+    setFilters({ status: nextStatus });
+    getUserOrders({ ...filters, status: nextStatus });
+  };
+
+  const toggleTime = (value) => {
+    const current = filters.time || [];
+    const nextTime = current.includes(value)
+      ? current.filter((v) => v !== value)
+      : [...current, value];
+    setFilters({ time: nextTime });
+    getUserOrders({ ...filters, time: nextTime });
+  };
+
+  const clearFilters = () => {
+    const next = { search: "", status: [], time: [] };
+    setSearchInput("");
+    setFilters(next);
+    getUserOrders(next);
+  };
+
   const handleCancelClick = (orderId) => {
     setCancelOrderId(orderId);
-    setCancelReason(""); // reset reason every time
+    setCancelReason("");
     document.getElementById("cancel_modal")?.showModal();
   };
 
   const handleConfirmCancel = async () => {
     if (!cancelReason.trim()) {
-      alert("Please provide a cancellation reason"); // or use toast
+      toast.error("Please provide a cancellation reason");
       return;
     }
-
     await cancelOrder(cancelOrderId, { reason: cancelReason });
     setCancelOrderId(null);
     setCancelReason("");
@@ -67,21 +95,24 @@ export default function OrdersPage() {
     document.getElementById("cancel_modal")?.close();
   };
 
-  if (loading) {
+  if (loading && userOrders.length === 0) {
     return (
-      <div className="min-h-screen bg-base-200 flex items-center justify-center">
-        <span className="loading loading-spinner loading-lg"></span>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <span className="loading loading-spinner loading-lg text-blue-600"></span>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-base-200 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <AlertCircle size={48} className="mx-auto text-error mb-4" />
-          <p className="font-semibold mb-3">{error}</p>
-          <button onClick={getUserOrders} className="btn btn-primary btn-sm">
+          <AlertCircle size={48} className="mx-auto text-red-500 mb-4" />
+          <p className="font-semibold text-gray-900 mb-3">{error}</p>
+          <button
+            onClick={() => getUserOrders()}
+            className="btn btn-primary btn-sm"
+          >
             Retry
           </button>
         </div>
@@ -89,14 +120,22 @@ export default function OrdersPage() {
     );
   }
 
-  if (!userOrders?.length) {
+  const hasNoOrdersAtAll =
+    !userOrders?.length &&
+    !searchInput &&
+    !filters.status?.length &&
+    !filters.time?.length;
+
+  if (hasNoOrdersAtAll) {
     return (
-      <div className="min-h-screen bg-base-200 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <Package size={64} className="mx-auto text-base-300 mb-4" />
-          <h2 className="text-xl font-bold mb-2">No orders yet</h2>
-          <p className="text-gray-500 mb-4">Your orders will appear here</p>
-          <Link to="/shop" className="btn btn-primary btn-sm">
+          <Package size={56} className="mx-auto text-gray-300 mb-4" />
+          <h2 className="text-xl font-bold text-gray-900 mb-2">
+            No orders yet
+          </h2>
+          <p className="text-gray-500 mb-6">Your orders will appear here</p>
+          <Link to="/shop" className="btn btn-primary btn-sm px-6">
             Start Shopping
           </Link>
         </div>
@@ -105,19 +144,67 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-base-200 py-6 px-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        {/* Header */}
+        <OrdersHeader userOrders={userOrders} />
 
-<h1 className="text-2xl lg:text-3xl font-bold text-gray-700 flex items-center gap-3 p-2">My Orders</h1>
+        {/* Content */}
+        <div className="grid grid-cols-12 gap-6 items-start">
+          {/* Filters */}
+          <aside className="col-span-12 xl:col-span-3 xl:sticky xl:top-6">
+            <OrdersFilter
+              status={filters.status || []}
+              time={filters.time || []}
+              onToggleStatus={toggleStatus}
+              onToggleTime={toggleTime}
+              onClear={clearFilters}
+            />
+          </aside>
 
-        <OrdersTable
-          orders={userOrders}
-          getStatusBadge={getStatusBadge}
-          onCancelClick={handleCancelClick}
-        />
+          {/* Table */}
+          <section className="col-span-12 xl:col-span-9">
+            <div className="relative mb-5">
+              <Search
+                size={18}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+              />
+              <input
+                type="text"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder="Search by Product Name..."
+                className="input input-bordered w-full pl-11 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400"
+              />
+            </div>
+
+            {loading ? (
+              <div className="flex justify-center py-16 bg-white rounded-2xl border border-gray-200">
+                <span className="loading loading-spinner loading-md text-blue-600"></span>
+              </div>
+            ) : userOrders.length === 0 ? (
+              <div className="bg-white rounded-2xl border border-gray-200 text-center py-16">
+                <Package size={48} className="mx-auto text-gray-300 mb-4" />
+                <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                  No orders found
+                </h3>
+                <p className="text-gray-500 text-sm">
+                  Try adjusting your filters or search term.
+                </p>
+              </div>
+            ) : (
+              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                <OrdersTable
+                  orders={userOrders}
+                  getStatusBadge={getStatusBadge}
+                  onCancelClick={handleCancelClick}
+                />
+              </div>
+            )}
+          </section>
+        </div>
       </div>
 
-      {/* Custom Cancel Modal */}
       <CancelModal
         cancelOrderId={cancelOrderId}
         cancelReason={cancelReason}

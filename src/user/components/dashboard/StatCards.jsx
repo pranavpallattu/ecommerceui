@@ -1,7 +1,11 @@
-// src/components/dashboard/StatCards.jsx
 import { Wallet, Package, MapPin, Heart } from "lucide-react";
 
-export default function StatCards({ balance, orderCount, addressCount, wishlistCount }) {
+export default function StatCards({
+  balance,
+  orderCount,
+  addressCount,
+  wishlistCount,
+}) {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
       <StatCard

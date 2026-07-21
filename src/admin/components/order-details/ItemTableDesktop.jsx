@@ -1,4 +1,3 @@
-// src/components/order-details/ItemTableDesktop.jsx
 export default function ItemTableDesktop({ items, STATUS_COLORS }) {
   return (
     <table className="w-full text-sm">

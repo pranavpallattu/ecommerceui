@@ -1,12 +1,11 @@
 import { Edit2, Trash2, MapPin, Home, Briefcase, Star } from "lucide-react";
-import useConfirmModalStore from "../../../utils/stores/useConfirmModalStore";
-import useAddressStore from "../../../utils/stores/useAddressStore";
+import useConfirmModalStore from "../../../utils/stores/ui/useConfirmModalStore";
+import useAddressStore from "../../../utils/stores/user/useAddressStore";
 
 export default function AddressCard({ address, onEdit, onDelete }) {
   const { openConfirm } = useConfirmModalStore();
-const defaultAddress = useAddressStore(state => state.defaultAddress);
-const isDefault =
-    defaultAddress && defaultAddress._id === address._id;
+  const defaultAddress = useAddressStore((state) => state.defaultAddress);
+  const isDefault = defaultAddress && defaultAddress._id === address._id;
   const typeIcon = {
     home: <Home size={18} />,
     work: <Briefcase size={18} />,
@@ -25,7 +24,7 @@ const isDefault =
               <span className="capitalize">{address.addressType}</span>
             </div>
 
-          {isDefault && (
+            {isDefault && (
               <div className="badge badge-primary gap-1.5 px-3 py-3">
                 <Star size={14} fill="currentColor" />
                 DEFAULT
@@ -41,23 +40,21 @@ const isDefault =
             >
               <Edit2 size={18} />
             </button>
-      <button
-  onClick={() => {
-    console.log("Delete clicked");
-    openConfirm({
-      title: "Delete Address?",
-      message: "This address will be removed",
-      confirmText: "Delete",
-      confirmVariant: "error",
-      onConfirm: onDelete,
-    });
-  }}
-  className="btn btn-ghost btn-sm btn-circle text-error hover:bg-red-50"
->
-  <Trash2 size={18} />
-</button>
-
-
+            <button
+              onClick={() => {
+                console.log("Delete clicked");
+                openConfirm({
+                  title: "Delete Address?",
+                  message: "This address will be removed",
+                  confirmText: "Delete",
+                  confirmVariant: "error",
+                  onConfirm: onDelete,
+                });
+              }}
+              className="btn btn-ghost btn-sm btn-circle text-error hover:bg-red-50"
+            >
+              <Trash2 size={18} />
+            </button>
           </div>
         </div>
 
@@ -74,7 +71,7 @@ const isDefault =
               </span>
             )}
             <br />
-            {address.city}, {address.state} - {address.postalCode}
+            {address.city}, {address.state} - {address.pincode}
             <br />
             {address.country}
           </address>

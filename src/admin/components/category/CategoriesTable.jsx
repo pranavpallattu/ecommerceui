@@ -1,9 +1,16 @@
-// src/admin/components/categories/CategoriesTable.jsx
-import useCategoryStore from "../../../utils/stores/categoryStore";
+import useCategoryStore from "../../../utils/stores/admin/useCategoryStore";
 import CategoryTableRow from "./CategoryTableRow";
 
 const CategoriesTable = () => {
   const { categories, loading } = useCategoryStore();
+
+  if (loading && categories.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <span className="loading loading-spinner loading-lg text-blue-600"></span>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
@@ -31,7 +38,10 @@ const CategoriesTable = () => {
           <tbody className="divide-y divide-blue-50">
             {categories.length === 0 ? (
               <tr>
-                <td colSpan="5" className="text-center py-12 sm:py-16 text-gray-500 text-sm sm:text-base">
+                <td
+                  colSpan="5"
+                  className="text-center py-12 sm:py-16 text-gray-500 text-sm sm:text-base"
+                >
                   No categories found
                 </td>
               </tr>
@@ -48,10 +58,12 @@ const CategoriesTable = () => {
           </div>
         )}
       </div>
-      
+
       {/* Mobile Scroll Hint */}
       <div className="sm:hidden bg-blue-50 px-4 py-2 text-center">
-        <p className="text-xs text-blue-600">← Scroll horizontally to see all columns →</p>
+        <p className="text-xs text-blue-600">
+          ← Scroll horizontally to see all columns →
+        </p>
       </div>
     </div>
   );

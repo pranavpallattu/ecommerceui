@@ -1,4 +1,3 @@
-// src/components/cart/EmptyCart.jsx
 import { Link } from "react-router-dom";
 
 const EmptyCart = () => {

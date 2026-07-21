@@ -1,4 +1,3 @@
-// src/components/order-details/PriceSummaryCard.jsx
 export default function PriceSummaryCard({ order }) {
   return (
     <div className="card bg-base-100 shadow-lg">
@@ -55,8 +54,8 @@ export default function PriceSummaryCard({ order }) {
                 order.paymentStatus === "Refunded"
                   ? "text-info"
                   : order.paymentStatus === "Paid"
-                  ? "text-success"
-                  : "text-warning"
+                    ? "text-success"
+                    : "text-warning"
               }`}
             >
               {order.paymentStatus}

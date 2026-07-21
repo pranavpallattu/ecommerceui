@@ -1,4 +1,3 @@
-// src/components/dashboard/RecentOrders.jsx
 import { Package } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -18,7 +17,11 @@ export default function RecentOrders({ recentOrders }) {
 
         {recentOrders?.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
-            <Package size={64} strokeWidth={1.2} className="mx-auto mb-4 opacity-50" />
+            <Package
+              size={64}
+              strokeWidth={1.2}
+              className="mx-auto mb-4 opacity-50"
+            />
             <p className="text-lg">You haven’t placed any orders yet</p>
             <Link to="/shop" className="btn btn-primary btn-sm mt-6">
               Start Shopping
@@ -53,8 +56,8 @@ export default function RecentOrders({ recentOrders }) {
                       order.orderStatus === "Delivered"
                         ? "badge-success"
                         : order.orderStatus === "Cancelled"
-                        ? "badge-error"
-                        : "badge-warning"
+                          ? "badge-error"
+                          : "badge-warning"
                     }`}
                   >
                     {order.orderStatus}

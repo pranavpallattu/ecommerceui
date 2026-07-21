@@ -1,28 +1,39 @@
-// src/components/dashboard/TopCategoriesSection.jsx
 export default function TopCategoriesSection({ bestCategories }) {
   return (
-    <div className="bg-white rounded-xl shadow p-4 sm:p-6 border border-gray-100">
-      <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 sm:mb-6">Best Selling Categories</h2>
+    <div className="rounded-2xl border border-gray-200 bg-white p-6">
+      <h2 className="mb-6 text-lg font-semibold text-gray-900">
+        Best Selling Categories
+      </h2>
+
       {bestCategories.length === 0 ? (
-        <p className="text-center py-8 sm:py-12 text-gray-400 text-sm sm:text-base">No data yet</p>
+        <div className="py-10 text-center text-sm text-gray-500">
+          No category sales yet
+        </div>
       ) : (
-        <div className="space-y-2 sm:space-y-3">
-          {bestCategories.map((c, i) => (
+        <div className="space-y-2">
+          {bestCategories.map((category, index) => (
             <div
-              key={c.categoryId}
-              className="flex items-center justify-between p-3 sm:p-4 bg-gray-50 rounded-lg hover:bg-blue-50 transition-colors"
+              key={category.categoryId}
+              className="flex items-center justify-between rounded-xl px-4 py-3 hover:bg-gray-50 transition-colors"
             >
-              <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-md bg-blue-600 flex items-center justify-center text-white text-xs sm:text-sm font-semibold flex-shrink-0">
-                  {i + 1}
+              <div className="flex items-center gap-4">
+                <div
+                  className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold ${
+                    index < 3
+                      ? "bg-blue-50 text-blue-700"
+                      : "bg-gray-100 text-gray-600"
+                  }`}
+                >
+                  {index + 1}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-gray-900 text-sm sm:text-base truncate">{c.name}</p>
-                  <p className="text-xs sm:text-sm text-gray-500">{c.totalSold} items sold</p>
-                </div>
+                <p className="font-medium text-gray-900">{category.name}</p>
               </div>
-              <div className="text-base sm:text-lg font-semibold text-blue-600 ml-2 flex-shrink-0">
-                {c.totalSold}
+
+              <div className="text-right">
+                <p className="text-lg font-semibold text-gray-900">
+                  {category.totalSold}
+                </p>
+                <p className="text-xs text-gray-500">Sold</p>
               </div>
             </div>
           ))}

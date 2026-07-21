@@ -1,13 +1,20 @@
-// src/components/product-details/InfoRow.jsx
 export default function InfoRow({ icon, label, value }) {
   return (
-    <div className="flex items-center gap-3 sm:gap-4 bg-gray-50/70 rounded-lg sm:rounded-xl px-3 sm:px-4 md:px-5 py-3 sm:py-4 border border-gray-200 shadow-sm hover:shadow transition-shadow">
-      {icon && <div className="text-indigo-600 flex-shrink-0">{icon}</div>}
-      <div className="min-w-0 flex-1">
-        <p className="text-[10px] sm:text-xs text-gray-500 mb-0.5">
+    <div className="flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+      {/* Icon */}
+      {icon && (
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600 flex-shrink-0">
+          {icon}
+        </div>
+      )}
+
+      {/* Content */}
+      <div className="flex-1 min-w-0">
+        <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
           {label}
         </p>
-        <div className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 truncate">
+
+        <div className="mt-1 text-lg font-semibold text-gray-900 break-words">
           {value}
         </div>
       </div>

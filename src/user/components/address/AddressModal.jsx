@@ -1,63 +1,86 @@
-import { useEffect, useState } from 'react';
-import { X, MapPin, Home, Briefcase, Building } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { X, MapPin, Home, Briefcase, Building } from "lucide-react";
 
-export default function AddressModal({ show, onClose, editData, onSave, isLoading = false }) {
+export default function AddressModal({
+  show,
+  onClose,
+  editData,
+  onSave,
+  isLoading = false,
+}) {
   const [form, setForm] = useState({
-    name: '',
-    phone: '',
-    streetAddress: '',
-    city: '',
-    state: '',
-    pincode: '',
-    landmark: '',
-    addressType: 'home',
+    name: "",
+    phone: "",
+    streetAddress: "",
+    city: "",
+    state: "",
+    pincode: "",
+    landmark: "",
+    addressType: "home",
     isDefault: false,
-    country: 'India'
+    country: "India",
   });
 
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (editData) {
-      setForm(editData);
+      setForm({
+        name: editData.name || "",
+        phone: editData.phone || "",
+        streetAddress: editData.streetAddress || "",
+        city: editData.city || "",
+        state: editData.state || "",
+        pincode: editData.pincode || "",
+        landmark: editData.landmark || "",
+        addressType: editData.addressType || "home",
+        isDefault: editData.isDefault ?? false,
+        country: editData.country || "India",
+      });
+
       setErrors({});
     } else {
       setForm({
-        name: '',
-        phone: '',
-        streetAddress: '',
-        city: '',
-        state: '',
-        pincode: '',
-        landmark: '',
-        addressType: 'home',
+        name: "",
+        phone: "",
+        streetAddress: "",
+        city: "",
+        state: "",
+        pincode: "",
+        landmark: "",
+        addressType: "home",
         isDefault: false,
-        country: 'India'
+        country: "India",
       });
+
+      setErrors({});
     }
   }, [editData]);
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
 
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   const validate = () => {
     const errs = {};
 
-    if (!form.name.trim()) errs.name = 'Name is required';
-    if (!form.phone.match(/^[6-9]\d{9}$/)) errs.phone = 'Enter valid 10-digit mobile number';
-    if (!form.streetAddress.trim()) errs.streetAddress = 'Street address is required';
-    if (!form.city.trim()) errs.city = 'City is required';
-    if (!form.state.trim()) errs.state = 'State is required';
-    if (!form.pincode.match(/^[1-9][0-9]{5}$/)) errs.pincode = 'Enter valid 6-digit PIN code';
+    if (!form.name.trim()) errs.name = "Name is required";
+    if (!form.phone.match(/^[6-9]\d{9}$/))
+      errs.phone = "Enter valid 10-digit mobile number";
+    if (!form.streetAddress.trim())
+      errs.streetAddress = "Street address is required";
+    if (!form.city.trim()) errs.city = "City is required";
+    if (!form.state.trim()) errs.state = "State is required";
+    if (!form.pincode.match(/^[1-9][0-9]{5}$/))
+      errs.pincode = "Enter valid 6-digit PIN code";
 
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -78,7 +101,7 @@ export default function AddressModal({ show, onClose, editData, onSave, isLoadin
         <div className="sticky top-0 bg-white border-b px-6 py-5 flex items-center justify-between z-10">
           <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
             <MapPin className="text-blue-600" size={26} />
-            {editData ? 'Edit Address' : 'Add New Address'}
+            {editData ? "Edit Address" : "Add New Address"}
           </h2>
           <button
             onClick={onClose}
@@ -101,10 +124,12 @@ export default function AddressModal({ show, onClose, editData, onSave, isLoadin
                 name="name"
                 value={form.name}
                 onChange={handleChange}
-                className={`input input-bordered w-full ${errors.name ? 'input-error' : ''}`}
-                placeholder="John Doe"
+                className={`input input-bordered w-full ${errors.name ? "input-error" : ""}`}
+                placeholder="Samuel Jacob"
               />
-              {errors.name && <p className="text-red-600 text-xs mt-1">{errors.name}</p>}
+              {errors.name && (
+                <p className="text-red-600 text-xs mt-1">{errors.name}</p>
+              )}
             </div>
 
             <div>
@@ -117,10 +142,12 @@ export default function AddressModal({ show, onClose, editData, onSave, isLoadin
                 value={form.phone}
                 onChange={handleChange}
                 maxLength={10}
-                className={`input input-bordered w-full ${errors.phone ? 'input-error' : ''}`}
+                className={`input input-bordered w-full ${errors.phone ? "input-error" : ""}`}
                 placeholder="9876543210"
               />
-              {errors.phone && <p className="text-red-600 text-xs mt-1">{errors.phone}</p>}
+              {errors.phone && (
+                <p className="text-red-600 text-xs mt-1">{errors.phone}</p>
+              )}
             </div>
           </div>
 
@@ -134,52 +161,68 @@ export default function AddressModal({ show, onClose, editData, onSave, isLoadin
               name="streetAddress"
               value={form.streetAddress}
               onChange={handleChange}
-              className={`input input-bordered w-full ${errors.streetAddress ? 'input-error' : ''}`}
+              className={`input input-bordered w-full ${errors.streetAddress ? "input-error" : ""}`}
               placeholder="House No. 12, Street Name, Area"
             />
-            {errors.streetAddress && <p className="text-red-600 text-xs mt-1">{errors.streetAddress}</p>}
+            {errors.streetAddress && (
+              <p className="text-red-600 text-xs mt-1">
+                {errors.streetAddress}
+              </p>
+            )}
           </div>
 
           {/* City, State, PIN */}
           <div className="grid md:grid-cols-3 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">City *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                City *
+              </label>
               <input
                 type="text"
                 name="city"
                 value={form.city}
                 onChange={handleChange}
-                className={`input input-bordered w-full ${errors.city ? 'input-error' : ''}`}
-                placeholder="Malappuram"
+                className={`input input-bordered w-full ${errors.city ? "input-error" : ""}`}
+                placeholder="Kochi"
               />
-              {errors.city && <p className="text-red-600 text-xs mt-1">{errors.city}</p>}
+              {errors.city && (
+                <p className="text-red-600 text-xs mt-1">{errors.city}</p>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">State *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                State *
+              </label>
               <input
                 type="text"
                 name="state"
                 value={form.state}
                 onChange={handleChange}
-                className={`input input-bordered w-full ${errors.state ? 'input-error' : ''}`}
+                className={`input input-bordered w-full ${errors.state ? "input-error" : ""}`}
                 placeholder="Kerala"
               />
-              {errors.state && <p className="text-red-600 text-xs mt-1">{errors.state}</p>}
+              {errors.state && (
+                <p className="text-red-600 text-xs mt-1">{errors.state}</p>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">PIN Code *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                PIN Code *
+              </label>
               <input
                 type="text"
                 name="pincode"
                 value={form.pincode}
                 onChange={handleChange}
                 maxLength={6}
-                className={`input input-bordered w-full ${errors.pincode ? 'input-error' : ''}`}
+                className={`input input-bordered w-full ${errors.pincode ? "input-error" : ""}`}
                 placeholder="676123"
               />
-              {errors.pincode && <p className="text-red-600 text-xs mt-1">{errors.pincode}</p>}
+              {errors.pincode && (
+                <p className="text-red-600 text-xs mt-1">{errors.pincode}</p>
+              )}
             </div>
           </div>
 
@@ -194,7 +237,7 @@ export default function AddressModal({ show, onClose, editData, onSave, isLoadin
               value={form.landmark}
               onChange={handleChange}
               className="input input-bordered w-full"
-              placeholder="Near KSRTC Bus Stand / Opposite Masjid"
+              placeholder="Near KSRTC Bus Stand / Opposite New Mall"
             />
           </div>
 
@@ -204,13 +247,13 @@ export default function AddressModal({ show, onClose, editData, onSave, isLoadin
               Address Type
             </label>
             <div className="grid grid-cols-3 gap-4">
-              {['home', 'work', 'other'].map(type => (
+              {["home", "work", "other"].map((type) => (
                 <label
                   key={type}
                   className={`flex flex-col items-center p-4 border-2 rounded-xl cursor-pointer transition-all ${
                     form.addressType === type
-                      ? 'border-blue-600 bg-blue-50 ring-2 ring-blue-200'
-                      : 'border-gray-200 hover:border-gray-300'
+                      ? "border-blue-600 bg-blue-50 ring-2 ring-blue-200"
+                      : "border-gray-200 hover:border-gray-300"
                   }`}
                 >
                   <input
@@ -221,9 +264,15 @@ export default function AddressModal({ show, onClose, editData, onSave, isLoadin
                     onChange={handleChange}
                     className="sr-only"
                   />
-                  {type === 'home' && <Home size={28} className="mb-2 text-blue-600" />}
-                  {type === 'work' && <Briefcase size={28} className="mb-2 text-blue-600" />}
-                  {type === 'other' && <Building size={28} className="mb-2 text-blue-600" />}
+                  {type === "home" && (
+                    <Home size={28} className="mb-2 text-blue-600" />
+                  )}
+                  {type === "work" && (
+                    <Briefcase size={28} className="mb-2 text-blue-600" />
+                  )}
+                  {type === "other" && (
+                    <Building size={28} className="mb-2 text-blue-600" />
+                  )}
                   <span className="font-medium capitalize text-sm">{type}</span>
                 </label>
               ))}
@@ -243,26 +292,28 @@ export default function AddressModal({ show, onClose, editData, onSave, isLoadin
               Make this my default address
             </label>
           </div>
-{/* Footer */}
-<div className="flex justify-end gap-4 pt-6 border-t mt-6">
-  <button
-    type="button"
-    onClick={onClose}  // ✅ Use the onClose prop
-    className="btn btn-outline px-8"
-    disabled={isLoading}
-  >
-    Cancel
-  </button>
+          {/* Footer */}
+          <div className="flex justify-end gap-4 pt-6 border-t mt-6">
+            <button
+              type="button"
+              onClick={onClose} //
+              className="btn btn-outline px-8"
+              disabled={isLoading}
+            >
+              Cancel
+            </button>
 
-  <button
-    type="submit"
-    disabled={isLoading}
-    className="btn btn-primary min-w-[140px] gap-2"
-  >
-    {isLoading && <span className="loading loading-spinner loading-sm"></span>}
-    {editData ? 'Update Address' : 'Save Address'}
-  </button>
-</div>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="btn btn-primary min-w-[140px] gap-2"
+            >
+              {isLoading && (
+                <span className="loading loading-spinner loading-sm"></span>
+              )}
+              {editData ? "Update Address" : "Save Address"}
+            </button>
+          </div>
         </form>
       </div>
     </div>

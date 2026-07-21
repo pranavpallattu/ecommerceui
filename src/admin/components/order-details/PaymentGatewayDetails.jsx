@@ -1,4 +1,3 @@
-// src/components/order-details/PaymentGatewayDetails.jsx
 export default function PaymentGatewayDetails({ order }) {
   return (
     <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl shadow-md border border-blue-100">
@@ -14,7 +13,9 @@ export default function PaymentGatewayDetails({ order }) {
 
         <div>
           <p className="text-gray-400 mb-1">Razorpay Payment ID</p>
-          <p className="font-mono text-xs break-all">{order.razorpayPaymentId}</p>
+          <p className="font-mono text-xs break-all">
+            {order.razorpayPaymentId}
+          </p>
         </div>
       </div>
     </div>

@@ -1,4 +1,3 @@
-// src/components/order-details/DeliveryAddressCard.jsx
 import { MapPin } from "lucide-react";
 
 export default function DeliveryAddressCard({ address }) {

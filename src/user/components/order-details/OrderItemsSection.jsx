@@ -1,13 +1,15 @@
-// src/components/order-details/OrderItemsSection.jsx
 import OrderItem from "./OrderItem";
 
-export default function OrderItemsSection({ items, order, onReturnItem, onCancelItem }) {
+export default function OrderItemsSection({
+  items,
+  order,
+  onReturnItem,
+  onCancelItem,
+}) {
   return (
     <div className="card bg-base-100 shadow-lg">
       <div className="card-body">
-        <h2 className="card-title">
-          Order Items ({items.length})
-        </h2>
+        <h2 className="card-title">Order Items ({items.length})</h2>
 
         <div className="divider my-2"></div>
 

@@ -1,8 +1,8 @@
-import NotificationsTableRow from "./NotificationsTableRow"
-export default function NotificationsTable({ 
-  orderReturns, 
-  itemReturns, 
-  loading 
+import NotificationsTableRow from "./NotificationsTableRow";
+export default function NotificationsTable({
+  orderReturns,
+  itemReturns,
+  loading,
 }) {
   if (loading) {
     return (
@@ -73,7 +73,9 @@ export default function NotificationsTable({
 
       {/* Mobile Scroll Hint */}
       <div className="sm:hidden bg-blue-50 px-4 py-2 text-center">
-        <p className="text-xs text-blue-600">← Scroll horizontally to see all columns →</p>
+        <p className="text-xs text-blue-600">
+          ← Scroll horizontally to see all columns →
+        </p>
       </div>
     </div>
   );

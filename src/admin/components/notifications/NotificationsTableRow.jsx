@@ -1,7 +1,6 @@
-// src/admin/components/notifications/NotificationsTableRow.jsx
 import { CheckCircle, XCircle } from "lucide-react";
 import { useState } from "react";
-import { useReturnRequestStore } from "../../../utils/stores/useReturnRequestStore";
+import { useReturnManagementStore } from "../../../utils/stores/admin/useReturnManagementStore.js";
 
 const STATUS_BADGE = {
   ReturnPending: "bg-yellow-100 text-yellow-700",
@@ -11,13 +10,13 @@ const STATUS_BADGE = {
 
 const NotificationsTableRow = ({ type, data }) => {
   console.log(data);
-  
+
   const {
     approveOrderReturn,
     rejectOrderReturn,
     approveItemReturn,
     rejectItemReturn,
-  } = useReturnRequestStore();
+  } = useReturnManagementStore();
 
   const [actionLoading, setActionLoading] = useState(false);
 
@@ -26,7 +25,7 @@ const NotificationsTableRow = ({ type, data }) => {
   const orderId = isOrderReturn ? data._id : data.orderId;
   const customer = isOrderReturn ? data.userId : data.user;
   const status = isOrderReturn ? data.orderStatus : data.item.itemStatus;
-const reason = data?.returnReason 
+  const reason = data?.returnReason;
 
   const products = isOrderReturn
     ? data.items.map((i) => i.productName).join(", ")
@@ -64,31 +63,46 @@ const reason = data?.returnReason
     <tr className="hover:bg-blue-50/40 transition">
       {/* Order ID */}
       <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-        <p className="text-xs sm:text-sm text-gray-800 font-mono truncate max-w-[100px] sm:max-w-[150px]" title={orderId}>
+        <p
+          className="text-xs sm:text-sm text-gray-800 font-mono truncate max-w-[100px] sm:max-w-[150px]"
+          title={orderId}
+        >
           {orderId}
         </p>
       </td>
 
       {/* Customer */}
       <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-        <p className="font-medium text-gray-800 text-xs sm:text-sm truncate max-w-[120px]" title={customer?.name}>
+        <p
+          className="font-medium text-gray-800 text-xs sm:text-sm truncate max-w-[120px]"
+          title={customer?.name}
+        >
           {customer?.name || "—"}
         </p>
-        <p className="text-[10px] sm:text-xs text-gray-500 truncate max-w-[120px]" title={customer?.emailId}>
+        <p
+          className="text-[10px] sm:text-xs text-gray-500 truncate max-w-[120px]"
+          title={customer?.emailId}
+        >
           {customer?.emailId || "—"}
         </p>
       </td>
 
       {/* Products */}
       <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-        <p className="text-xs sm:text-sm text-gray-700 truncate max-w-[150px] sm:max-w-[200px]" title={products}>
+        <p
+          className="text-xs sm:text-sm text-gray-700 truncate max-w-[150px] sm:max-w-[200px]"
+          title={products}
+        >
           {products}
         </p>
       </td>
 
       {/* Reason */}
       <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-        <p className="text-xs sm:text-sm text-gray-600 truncate max-w-[150px] sm:max-w-[200px]" title={reason}>
+        <p
+          className="text-xs sm:text-sm text-gray-600 truncate max-w-[150px] sm:max-w-[200px]"
+          title={reason}
+        >
           {reason}
         </p>
       </td>
@@ -98,7 +112,11 @@ const reason = data?.returnReason
         <span
           className={`inline-block px-2 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-medium whitespace-nowrap ${STATUS_BADGE[status]}`}
         >
-          {status === "ReturnPending" ? "Pending" : status === "Returned" ? "Approved" : "Rejected"}
+          {status === "ReturnPending"
+            ? "Pending"
+            : status === "Returned"
+              ? "Approved"
+              : "Rejected"}
         </span>
       </td>
 
@@ -128,7 +146,9 @@ const reason = data?.returnReason
           </div>
         ) : (
           <div className="text-center">
-            <span className="text-[10px] sm:text-xs text-gray-400">No actions</span>
+            <span className="text-[10px] sm:text-xs text-gray-400">
+              No actions
+            </span>
           </div>
         )}
       </td>

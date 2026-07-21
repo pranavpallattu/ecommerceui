@@ -1,6 +1,4 @@
-// src/components/orders/CancelModal.jsx
 export default function CancelModal({
-  cancelOrderId,
   cancelReason,
   setCancelReason,
   onClose,
@@ -9,13 +7,11 @@ export default function CancelModal({
   return (
     <dialog id="cancel_modal" className="modal">
       <div className="modal-box">
-        <h3 className="font-bold text-lg text-red-600">
-          Confirm Cancellation
-        </h3>
+        <h3 className="font-bold text-lg text-red-600">Confirm Cancellation</h3>
 
         <p className="text-sm text-gray-500 mt-1">
-          Please tell us why you want to cancel this order. Once submitted,
-          this action cannot be changed.
+          Please tell us why you want to cancel this order. Once submitted, this
+          action cannot be changed.
         </p>
 
         <textarea
@@ -26,10 +22,7 @@ export default function CancelModal({
         />
 
         <div className="modal-action">
-          <button
-            className="btn btn-outline"
-            onClick={onClose}
-          >
+          <button className="btn btn-outline" onClick={onClose}>
             Close
           </button>
 

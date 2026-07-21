@@ -1,7 +1,6 @@
-// src/components/home/HeroCarousel.jsx
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { heroSlides } from "../../../utils/stores/heroSlides";
+import { heroSlides } from "../../../utils/helpers/heroSlides";
 
 export default function HeroCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);

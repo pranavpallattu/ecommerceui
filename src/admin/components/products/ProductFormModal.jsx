@@ -1,18 +1,17 @@
-// src/admin/components/products/ProductFormModal.jsx
-import useProductStore from "../../../utils/stores/productStore";
+import useProductStore from "../../../utils/stores/admin/useProductStore";
 import ProductFormContent from "./ProductFormContent";
 
 const ProductFormModal = () => {
-  const { isModalOpen, closeModal, editData } = useProductStore();
+  const { isModalOpen, closeModal, editData, loading } = useProductStore();
 
   if (!isModalOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
         className="absolute inset-0"
-        onClick={closeModal}
+        onClick={!loading ? closeModal : undefined}
       />
 
       {/* Modal */}
@@ -24,8 +23,8 @@ const ProductFormModal = () => {
           </h2>
           <button
             onClick={closeModal}
+            disabled={loading}
             className="btn btn-ghost btn-circle btn-sm sm:btn-md"
-            aria-label="Close"
           >
             ✕
           </button>

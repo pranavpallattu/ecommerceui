@@ -1,7 +1,10 @@
-// src/admin/components/coupons/CouponFormContent.jsx
 import { useEffect, useState } from "react";
 
-export default function CouponFormContent({ editData, handleSubmit, closeModal }) {
+export default function CouponFormContent({
+  editData,
+  handleSubmit,
+  closeModal,
+}) {
   const [form, setForm] = useState({
     code: "",
     description: "",
@@ -21,7 +24,7 @@ export default function CouponFormContent({ editData, handleSubmit, closeModal }
         code: editData.code || "",
         description: editData.description || "",
         discountType: editData.discountType || "",
-        discount: editData.discount?.toString() || "",           // ← convert number to string for input
+        discount: editData.discount?.toString() || "", // ← convert number to string for input
         minPurchase: editData.minPurchase?.toString() || "",
         expiryDate: editData.expiryDate?.split("T")[0] || "",
         usageLimit: editData.usageLimit?.toString() || "",
@@ -77,6 +80,7 @@ export default function CouponFormContent({ editData, handleSubmit, closeModal }
           onChange={(e) => setForm({ ...form, code: e.target.value })}
           className="input input-bordered w-full text-sm sm:text-base"
           required
+          placeholder="e.g. SAVE20"
           disabled={isSubmitting}
         />
       </div>
@@ -117,6 +121,9 @@ export default function CouponFormContent({ editData, handleSubmit, closeModal }
         </label>
         <textarea
           value={form.description}
+          placeholder="Enter coupon description"
+          rows={4}
+          maxLength={200}
           onChange={(e) => setForm({ ...form, description: e.target.value })}
           className="textarea textarea-bordered w-full h-24 sm:h-32 text-sm sm:text-base"
           required
@@ -132,6 +139,11 @@ export default function CouponFormContent({ editData, handleSubmit, closeModal }
           </label>
           <input
             type="number"
+            placeholder={
+              form.discountType === "flat"
+                ? "Enter discount amount"
+                : "Enter discount percentage"
+            }
             min="0"
             value={form.discount}
             onChange={(e) => setForm({ ...form, discount: e.target.value })}
@@ -148,6 +160,7 @@ export default function CouponFormContent({ editData, handleSubmit, closeModal }
           <input
             type="number"
             min="0"
+            placeholder="Enter minimum order amount"
             value={form.minPurchase}
             onChange={(e) => setForm({ ...form, minPurchase: e.target.value })}
             className="input input-bordered w-full text-sm sm:text-base"
@@ -183,7 +196,7 @@ export default function CouponFormContent({ editData, handleSubmit, closeModal }
             value={form.usageLimit}
             onChange={(e) => setForm({ ...form, usageLimit: e.target.value })}
             className="input input-bordered w-full text-sm sm:text-base"
-            placeholder="Optional"
+            placeholder="Enter total usage limit (optional)"
             disabled={isSubmitting}
           />
         </div>
@@ -198,7 +211,7 @@ export default function CouponFormContent({ editData, handleSubmit, closeModal }
             value={form.perUserLimit}
             onChange={(e) => setForm({ ...form, perUserLimit: e.target.value })}
             className="input input-bordered w-full text-sm sm:text-base"
-            placeholder="Optional"
+            placeholder="Enter per user usage limit (optional)"
             disabled={isSubmitting}
           />
         </div>
@@ -215,12 +228,16 @@ export default function CouponFormContent({ editData, handleSubmit, closeModal }
           Cancel
         </button>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="btn btn-primary w-full sm:w-auto sm:px-8 text-sm sm:text-base"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Saving..." : (editData ? "Update Coupon" : "Add Coupon")}
+          {isSubmitting
+            ? "Saving..."
+            : editData
+              ? "Update Coupon"
+              : "Add Coupon"}
         </button>
       </div>
     </form>

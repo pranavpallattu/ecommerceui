@@ -1,4 +1,3 @@
-// src/admin/components/orders/OrdersTableRow.jsx
 import { IndianRupee, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 

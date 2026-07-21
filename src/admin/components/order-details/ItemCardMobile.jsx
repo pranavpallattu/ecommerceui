@@ -1,9 +1,5 @@
-// src/components/order-details/ItemCardMobile.jsx
 export default function ItemCardMobile({ item, STATUS_COLORS }) {
-    
-    
   return (
-    
     <div className="bg-gray-50 rounded-lg p-3 space-y-2">
       <div className="flex justify-between items-start">
         <p className="font-medium text-sm flex-1">{item.productName}</p>
@@ -13,7 +9,7 @@ export default function ItemCardMobile({ item, STATUS_COLORS }) {
           {item.itemStatus}
         </span>
       </div>
-      
+
       <div className="grid grid-cols-3 gap-2 text-xs">
         <div>
           <p className="text-gray-500">Qty</p>

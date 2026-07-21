@@ -1,14 +1,9 @@
-import useCategoryStore from "../../../utils/stores/categoryStore";
+import useCategoryStore from "../../../utils/stores/admin/useCategoryStore";
 import CategoryForm from "./CategoryForm";
 
 const CategoryFormModal = () => {
-  const {
-    isModalOpen,
-    modalMode,
-    editData,
-    closeModal,
-    handleSubmit,
-  } = useCategoryStore();
+  const { isModalOpen, modalMode, editData, closeModal, handleSubmit } =
+    useCategoryStore();
 
   return (
     <CategoryForm
@@ -20,6 +15,5 @@ const CategoryFormModal = () => {
     />
   );
 };
-
 
 export default CategoryFormModal;

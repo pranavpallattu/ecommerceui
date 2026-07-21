@@ -1,4 +1,3 @@
-// src/components/order-details/OrderHeader.jsx
 import { Link } from "react-router-dom";
 
 export default function OrderHeader({ orderId }) {
@@ -7,7 +6,8 @@ export default function OrderHeader({ orderId }) {
       <div>
         <h1 className="text-2xl lg:text-3xl font-bold">Order Details</h1>
         <p className="text-gray-600 mt-1">
-          Order ID: <span className="font-mono text-sm">#{orderId.slice(-8)}</span>
+          Order ID:{" "}
+          <span className="font-mono text-sm">#{orderId.slice(-8)}</span>
         </p>
       </div>
 

@@ -1,12 +1,10 @@
-// src/pages/DashboardPage.jsx
 import { useEffect, useState } from "react";
-import useDashboardStore from "../../utils/stores/dashboardStore";
-
 import DashboardHeader from "../components/dashboard/DashboardHeader";
 import StatsGrid from "../components/dashboard/StatsGrid";
 import OrderStatusChart from "../components/dashboard/OrderStatusChart";
 import TopProductsSection from "../components/dashboard/TopProductsSection";
 import TopCategoriesSection from "../components/dashboard/TopCategoriesSection";
+import useDashboardStore from "../../utils/stores/admin/useDashboardStore";
 
 export default function DashboardPage() {
   const [filterType, setFilterType] = useState("all");
@@ -25,9 +23,10 @@ export default function DashboardPage() {
   } = useDashboardStore();
 
   useEffect(() => {
-    const payload = filterType === "custom" && customStart && customEnd
-      ? { filterType: "custom", startDate: customStart, endDate: customEnd }
-      : { filterType };
+    const payload =
+      filterType === "custom" && customStart && customEnd
+        ? { filterType: "custom", startDate: customStart, endDate: customEnd }
+        : { filterType };
 
     fetchOrderSummary(payload);
   }, [filterType, customStart, customEnd]);
@@ -58,12 +57,32 @@ export default function DashboardPage() {
   const chartData = orderSummary
     ? [
         { name: "Pending", value: orderSummary.pending || 0, fill: "#f59e0b" },
-        { name: "Confirmed", value: orderSummary.confirmed || 0, fill: "#3b82f6" },
-        { name: "Processing", value: orderSummary.processing || 0, fill: "#2563eb" },
+        {
+          name: "Confirmed",
+          value: orderSummary.confirmed || 0,
+          fill: "#3b82f6",
+        },
+        {
+          name: "Processing",
+          value: orderSummary.processing || 0,
+          fill: "#2563eb",
+        },
         { name: "Shipped", value: orderSummary.shipped || 0, fill: "#6366f1" },
-        { name: "Delivered", value: orderSummary.delivered || 0, fill: "#10b981" },
-        { name: "Cancelled", value: orderSummary.cancelled || 0, fill: "#ef4444" },
-        { name: "Returned", value: orderSummary.returned || 0, fill: "#8b5cf6" },
+        {
+          name: "Delivered",
+          value: orderSummary.delivered || 0,
+          fill: "#10b981",
+        },
+        {
+          name: "Cancelled",
+          value: orderSummary.cancelled || 0,
+          fill: "#ef4444",
+        },
+        {
+          name: "Returned",
+          value: orderSummary.returned || 0,
+          fill: "#8b5cf6",
+        },
       ]
     : [];
 

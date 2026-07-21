@@ -1,4 +1,3 @@
-// src/components/orders/OrdersTable.jsx
 import OrderRow from "./OrderRow";
 
 export default function OrdersTable({ orders, getStatusBadge, onCancelClick }) {

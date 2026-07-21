@@ -1,8 +1,5 @@
-// src/pages/OrderDetailsPage.jsx
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import useOrderStore from "../../utils/stores/orderStore";
-
 import OrderHeader from "../components/order-details/OrderHeader";
 import OrderSummary from "../components/order-details/OrderSummary";
 import CustomerInfo from "../components/order-details/CustomerInfo";
@@ -11,6 +8,7 @@ import OrderItems from "../components/order-details/OrderItems";
 import PaymentPricing from "../components/order-details/PaymentPricing";
 import PaymentGatewayDetails from "../components/order-details/PaymentGatewayDetails";
 import OrderTimeline from "../components/order-details/OrderTimeline";
+import useOrderStore from "../../utils/stores/user/useOrderStore";
 
 const STATUS_COLORS = {
   Confirmed: "bg-blue-100 text-blue-700",

@@ -1,25 +1,25 @@
-// src/pages/CheckoutPage.jsx
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   MapPin,
   Plus,
   CreditCard,
   Wallet as WalletIcon,
   Truck,
+  ArrowLeft,
 } from "lucide-react";
-
-import useCartStore from "../../utils/stores/CartStore";
-import useAddressStore from "../../utils/stores/useAddressStore";
-import useOrderStore from "../../utils/stores/userOrderStore";
-import useCouponStore from "../../utils/stores/useCouponStore";
-import useBuyNowStore from "../../utils/stores/useBuyNowStore";
+import useCartStore from "../../utils/stores/user/useCartStore";
+import useAddressStore from "../../utils/stores/user/useAddressStore";
+import useOrderStore from "../../utils/stores/user/useOrderStore";
+import useCouponStore from "../../utils/stores/user/useCouponStore";
+import useBuyNowStore from "../../utils/stores/user/useBuyNowStore";
 
 import AddressSection from "../components/checkout/AddressSection";
 import PaymentMethods from "../components/checkout/PaymentMethods";
 import OrderSummary from "../components/checkout/OrderSummary";
-import CouponSection from "../components/cart/CouponSection";
-
+import CouponSection from "../components/checkout/CouponSection";
+import useWalletStore from "../../utils/stores/user/useWalletStore";
+import CheckoutHeader from "../components/checkout/CheckoutHeader";
 
 export default function CheckoutPage() {
   const { buyNowId } = useParams();
@@ -33,13 +33,18 @@ export default function CheckoutPage() {
     loading: cartLoading,
     fetchCartProducts,
   } = useCartStore();
-  const { appliedCoupon } = useCouponStore();
+  const { applyBuyNowCoupon, removeBuyNowCoupon } = useCouponStore();
   const {
     addresses,
     defaultAddressId,
     loading: addrLoading,
     fetchAddresses,
   } = useAddressStore();
+  const { balance, loading: walletLoading, fetchWallet } = useWalletStore();
+
+  useEffect(() => {
+    fetchWallet();
+  }, []);
 
   const {
     placeOrder,
@@ -71,12 +76,25 @@ export default function CheckoutPage() {
     loading: couponLoading,
   } = useCouponStore();
 
-  const handleApplyCoupon = () => applyCoupon(couponCode);
-  const handleRemoveCoupon = () => removeCoupon();
+  const handleApplyCoupon = () => {
+    if (isBuyNow) {
+      return applyBuyNowCoupon(buyNowId, couponCode);
+    }
 
+    return applyCoupon(couponCode);
+  };
+
+  const handleRemoveCoupon = () => {
+    if (isBuyNow) {
+      return removeBuyNowCoupon(buyNowId);
+    }
+
+    return removeCoupon();
+  };
   const defaultAddress =
     addresses.find((a) => a._id === defaultAddressId) || addresses[0];
   const checkoutData = isBuyNow ? buyNowCheckout : cart;
+  const appliedCoupon = checkoutData?.appliedCoupon;
 
   const subTotal = checkoutData?.subTotal || 0;
   const discount = checkoutData?.discount || 0;
@@ -114,9 +132,6 @@ export default function CheckoutPage() {
               couponId: appliedCoupon?._id,
               couponCode: appliedCoupon?.code,
             });
-
-        // ✅ Extract orderId properly
-        console.log(result);
 
         if (!result?.success || !result?.orderId) {
           console.error("Order failed:", result);
@@ -166,7 +181,7 @@ export default function CheckoutPage() {
                 return;
               }
 
-              // ✅ Extract correct orderId
+              //  Extract  orderId
               const orderId = result?.orderId;
 
               navigate("/order/success", {
@@ -206,7 +221,6 @@ export default function CheckoutPage() {
               return;
             }
 
-            // ✅ IMPORTANT FIX
             const orderId = result?.orderId;
 
             navigate("/order/success", {
@@ -238,7 +252,8 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-base-200 py-6 px-4">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Checkout</h1>
+        <CheckoutHeader isBuyNow={isBuyNow} checkoutData={checkoutData} />
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-6">
@@ -247,11 +262,14 @@ export default function CheckoutPage() {
             <PaymentMethods
               selectedPayment={selectedPayment}
               setSelectedPayment={setSelectedPayment}
+              walletBalance={balance}
+              grandTotal={grandTotal}
+              walletLoading={walletLoading}
             />
           </div>
 
           {/* Right Column – Sticky Summary */}
-          <div>
+          <div className="sticky top-6 space-y-6">
             <OrderSummary
               isBuyNow={isBuyNow}
               checkoutData={checkoutData}
@@ -261,6 +279,7 @@ export default function CheckoutPage() {
               orderLoading={orderLoading}
               defaultAddress={defaultAddress}
               onPlaceOrder={handlePayment}
+              selectedPayment={selectedPayment}
             />
             <CouponSection
               couponCode={couponCode}
@@ -268,7 +287,7 @@ export default function CheckoutPage() {
               handleApplyCoupon={handleApplyCoupon}
               handleRemoveCoupon={handleRemoveCoupon}
               couponLoading={couponLoading}
-              cart={cart}
+              checkoutData={checkoutData}
             />
           </div>
         </div>

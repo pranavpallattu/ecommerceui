@@ -1,4 +1,3 @@
-// src/admin/components/orders/OrdersTable.jsx
 import OrdersTableRow from "./OrdersTableRow";
 
 export default function OrdersTable({ orders, loading }) {
@@ -13,7 +12,9 @@ export default function OrdersTable({ orders, loading }) {
   if (!orders?.length) {
     return (
       <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-10 sm:p-16 md:p-20 text-center">
-        <p className="text-lg sm:text-xl md:text-2xl text-gray-500">No orders found</p>
+        <p className="text-lg sm:text-xl md:text-2xl text-gray-500">
+          No orders found
+        </p>
       </div>
     );
   }
@@ -61,7 +62,9 @@ export default function OrdersTable({ orders, loading }) {
 
       {/* Mobile Scroll Hint */}
       <div className="sm:hidden bg-blue-50 px-4 py-2 text-center">
-        <p className="text-xs text-blue-600">← Scroll horizontally to see all columns →</p>
+        <p className="text-xs text-blue-600">
+          ← Scroll horizontally to see all columns →
+        </p>
       </div>
     </div>
   );

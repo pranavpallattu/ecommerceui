@@ -1,4 +1,3 @@
-// src/components/contact/ContactForm.jsx
 import { Send } from "lucide-react";
 
 export default function ContactForm() {

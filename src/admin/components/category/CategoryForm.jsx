@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const CategoryForm = ({
-  isOpen,
-  mode,            // "add" | "edit"
-  initialData,     // category object or null
-  onClose,
-  onSubmit,
-}) => {
+const CategoryForm = ({ isOpen, mode, initialData, onClose, onSubmit }) => {
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -15,7 +9,6 @@ const CategoryForm = ({
 
   const [submitting, setSubmitting] = useState(false);
 
-  // ✅ Sync form safely when modal opens
   useEffect(() => {
     if (!isOpen) return;
 
@@ -36,7 +29,6 @@ const CategoryForm = ({
     }
   }, [isOpen, mode, initialData?._id]);
 
-  // ✅ Controlled submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (submitting) return;
@@ -60,41 +52,61 @@ const CategoryForm = ({
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Category Name */}
-          <input
-            type="text"
-            placeholder="Category Name"
-            value={form.name}
-            onChange={(e) =>
-              setForm((prev) => ({ ...prev, name: e.target.value }))
-            }
-            className="input input-bordered w-full"
-            required
-          />
-
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Category Name
+            </label>
+            <input
+              type="text"
+              placeholder="Enter category name"
+              autoComplete="off"
+              maxLength={50}
+              value={form.name}
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, name: e.target.value }))
+              }
+              className="input input-bordered w-full"
+              required
+            />
+          </div>
           {/* Description */}
-          <textarea
-            placeholder="Description"
-            value={form.description}
-            onChange={(e) =>
-              setForm((prev) => ({ ...prev, description: e.target.value }))
-            }
-            className="textarea textarea-bordered w-full"
-            rows={3}
-            required
-          />
-
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Description
+            </label>
+            <textarea
+              rows={4}
+              maxLength={200}
+              placeholder="Enter category description"
+              value={form.description}
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, description: e.target.value }))
+              }
+              className="textarea textarea-bordered w-full"
+              required
+            />
+            <p className="mt-1 text-xs text-gray-500">
+              {form.description.length}/200
+            </p>
+          </div>
           {/* Offer */}
-          <input
-            type="number"
-            placeholder="Offer % (optional)"
-            value={form.offer}
-            onChange={(e) =>
-              setForm((prev) => ({ ...prev, offer: e.target.value }))
-            }
-            className="input input-bordered w-full"
-            min={0}
-            max={100}
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Category Offer (%)
+            </label>
+            <input
+              type="number"
+              min={0}
+              max={100}
+              step={1}
+              placeholder="Enter discount percentage (optional)"
+              value={form.offer}
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, offer: e.target.value }))
+              }
+              className="input input-bordered w-full"
+            />
+          </div>
 
           {/* Actions */}
           <div className="flex justify-end gap-3 pt-6">
@@ -110,13 +122,15 @@ const CategoryForm = ({
             <button
               type="submit"
               disabled={submitting}
-              className="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {submitting
-                ? "Saving..."
+                ? mode === "edit"
+                  ? "Updating..."
+                  : "Adding..."
                 : mode === "edit"
-                ? "Update"
-                : "Create"}
+                  ? "Update Category"
+                  : "Add Category"}
             </button>
           </div>
         </form>

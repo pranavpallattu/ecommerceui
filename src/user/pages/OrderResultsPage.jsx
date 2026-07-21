@@ -1,4 +1,3 @@
-// src/pages/OrderResultPage.jsx
 import { useEffect } from "react";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import {
@@ -10,18 +9,17 @@ import {
   ShoppingBag,
   RefreshCw,
 } from "lucide-react";
-import useAddressStore from "../../utils/stores/useAddressStore";
+import useAddressStore from "../../utils/stores/user/useAddressStore";
 
 export default function OrderResultPage() {
-  const { status } = useParams(); // "success" or "failure"
-  const { state } = useLocation(); // Get data passed from checkout (orderId, etc.)
+  const { status } = useParams();
+  const { state } = useLocation();
   const navigate = useNavigate();
   const { defaultAddress } = useAddressStore();
 
   const isSuccess = status === "success";
   const orderId = state?.orderId || "N/A";
 
-  // Optional: Auto redirect to home after some time on failure (or success)
   useEffect(() => {
     if (!isSuccess && !orderId) {
       const timer = setTimeout(() => navigate("/"), 5000);
@@ -31,8 +29,8 @@ export default function OrderResultPage() {
 
   if (!isSuccess && !state) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center text-center">
+        <div>
           <p className="text-red-500">Invalid order result</p>
           <Link to="/" className="btn btn-primary mt-4">
             Go Home
@@ -44,115 +42,86 @@ export default function OrderResultPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-lg mx-auto text-center">
+      <div className="max-w-lg mx-auto text-center bg-white rounded-2xl border border-gray-200 shadow-sm p-8">
         {/* Icon */}
         <div
-          className={`mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full 
-          ${isSuccess ? "bg-green-100" : "bg-red-100"}`}
+          className={`mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full ${isSuccess ? "bg-green-50" : "bg-red-50"}`}
         >
           {isSuccess ? (
-            <CheckCircle className="h-16 w-16 text-green-600" />
+            <CheckCircle className="h-10 w-10 text-green-600" />
           ) : (
-            <XCircle className="h-16 w-16 text-red-600" />
+            <XCircle className="h-10 w-10 text-red-600" />
           )}
         </div>
 
-        {/* Title */}
-        <h1
-          className={`text-4xl font-bold mb-3 ${isSuccess ? "text-gray-900" : "text-red-600"}`}
-        >
+        {/* Title & Subtitle */}
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">
           {isSuccess ? "Order Placed Successfully!" : "Payment Failed"}
         </h1>
-
-        {/* Subtitle */}
-        <p className="text-lg text-gray-600 mb-8">
+        <p className="text-gray-500 mb-6">
           {isSuccess
             ? "Thank you for shopping with us!"
             : "We couldn't process your payment. Please try again."}
         </p>
 
-        {/* Order ID (only show on success) */}
+        {/* Order ID */}
         {isSuccess && orderId !== "N/A" && (
-          <div className="inline-flex items-center gap-2 bg-white px-6 py-3 rounded-full border mb-8">
-            <Package size={20} className="text-green-600" />
-            <span className="font-medium text-gray-700">Order ID:</span>
+          <div className="inline-flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full mb-6 text-sm">
+            <Package size={16} className="text-blue-600" />
+            <span className="text-gray-600">Order ID:</span>
             <span className="font-semibold text-gray-900">#{orderId}</span>
           </div>
         )}
 
-        {/* Information Box */}
-        <div className="bg-white rounded-2xl shadow-sm border p-6 mb-10 text-left">
+        {/* Info Box */}
+        <div className="bg-gray-50 rounded-xl p-5 mb-8 text-left text-sm text-gray-600 space-y-2">
           {isSuccess ? (
             <>
-              <div className="flex items-center gap-3 text-green-600 mb-4">
-                <Package size={24} />
-                <span className="font-semibold">What's Next?</span>
-              </div>
-              <ul className="space-y-3 text-sm text-gray-600">
-                <li>
-                  • Order updates will be sent to {defaultAddress?.phone} via
-                  SMS
-                </li>{" "}
-                <li>• You can track your order in "My Orders"</li>
-                <li>• Our team will prepare your package soon</li>
-              </ul>
+              <p className="font-semibold text-gray-900 mb-1">What's Next?</p>
+              <p>
+                • Order updates will be sent to {defaultAddress?.phone} via SMS
+              </p>
+              <p>• You can track your order in "My Orders"</p>
+              <p>• Our team will prepare your package soon</p>
             </>
           ) : (
             <>
-              <h3 className="font-semibold text-gray-800 mb-3">
+              <p className="font-semibold text-gray-900 mb-1">
                 What went wrong?
-              </h3>
-              <ul className="text-sm text-gray-600 space-y-2">
-                <li>• Your card may have insufficient balance</li>
-                <li>• Payment was declined by your bank</li>
-                <li>• Temporary network issue</li>
-              </ul>
-              <p className="mt-4 text-xs text-gray-500">
+              </p>
+              <p>• Your card may have insufficient balance</p>
+              <p>• Payment was declined by your bank</p>
+              <p>• Temporary network issue</p>
+              <p className="text-xs text-gray-400 pt-2">
                 No amount has been deducted from your account.
               </p>
             </>
           )}
         </div>
 
-        {/* Action Buttons */}
+        {/* Actions */}
         <div className="space-y-3">
           {isSuccess ? (
             <>
               <Link
                 to={`/orders/${orderId}`}
-                className="btn btn-primary w-full gap-3 text-lg py-3.5"
+                className="btn btn-primary w-full gap-2"
               >
-                Track Your Order
-                <ArrowRight size={22} />
+                Track Your Order <ArrowRight size={18} />
               </Link>
-
-              <Link
-                to="/"
-                className="btn btn-outline w-full gap-3 text-lg py-3.5"
-              >
-                <Home size={22} />
-                Back to Homepage
+              <Link to="/" className="btn btn-outline w-full gap-2">
+                <Home size={18} /> Back to Homepage
               </Link>
             </>
           ) : (
             <>
-              <Link
-                to="/checkout"
-                className="btn btn-primary w-full gap-3 text-lg py-3.5"
-              >
-                <RefreshCw size={22} />
-                Try Payment Again
+              <Link to="/checkout" className="btn btn-primary w-full gap-2">
+                <RefreshCw size={18} /> Try Payment Again
               </Link>
-
-              <Link
-                to="/cart"
-                className="btn btn-outline w-full gap-3 text-lg py-3.5"
-              >
-                <ShoppingBag size={22} />
-                Return to Cart
+              <Link to="/cart" className="btn btn-outline w-full gap-2">
+                <ShoppingBag size={18} /> Return to Cart
               </Link>
-
-              <Link to="/" className="btn btn-ghost w-full text-gray-600 py-3">
+              <Link to="/" className="btn btn-ghost w-full text-gray-500">
                 Go to Homepage
               </Link>
             </>
@@ -160,14 +129,9 @@ export default function OrderResultPage() {
         </div>
 
         {/* Support */}
-        <p className="mt-10 text-sm text-gray-500">
+        <p className="mt-8 text-sm text-gray-500">
           Need help? Contact us at{" "}
-          <a
-            href="mailto:support@yourstore.com"
-            className="text-blue-600 hover:underline"
-          >
-            support@yourstore.com
-          </a>
+          <a className="text-blue-600 hover:underline">support@onebazaar.com</a>
         </p>
       </div>
     </div>

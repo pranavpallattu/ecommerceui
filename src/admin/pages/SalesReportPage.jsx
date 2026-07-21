@@ -1,24 +1,32 @@
-// src/pages/SalesReportPage.jsx
 import { useEffect, useState } from "react";
-import useSalesReportStore from "../../utils/stores/SalesReportStore";
-
 import ReportHeader from "../components/sales-report/ReportHeader";
 import StatsGrid from "../components/sales-report/StatsGrid";
 import OrderStatusBreakdown from "../components/sales-report/OrderStatusBreakdown";
-
+import useSalesReportStore from "../../utils/stores/admin/useSalesReportStore"
 export default function SalesReportPage() {
   const [filterType, setFilterType] = useState("all");
   const [customStart, setCustomStart] = useState("");
   const [customEnd, setCustomEnd] = useState("");
 
-  const { report, loading, downloadLoading, error, fetchReport, downloadPDF, downloadExcel } =
-    useSalesReportStore();
+  const {
+    report,
+    loading,
+    downloadLoading,
+    error,
+    fetchReport,
+    downloadPDF,
+    downloadExcel,
+  } = useSalesReportStore();
 
   useEffect(() => {
     let payload;
     if (filterType === "custom") {
       if (!customStart || !customEnd) return;
-      payload = { filterType: "custom", startDate: customStart, endDate: customEnd };
+      payload = {
+        filterType: "custom",
+        startDate: customStart,
+        endDate: customEnd,
+      };
     } else {
       payload = { filterType };
     }

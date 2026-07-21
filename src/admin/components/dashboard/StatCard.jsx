@@ -1,7 +1,11 @@
-// src/components/dashboard/StatCard.jsx
 import React from "react";
 
-export default function StatCard({ icon, title, value, color = "text-gray-900" }) {
+export default function StatCard({
+  icon,
+  title,
+  value,
+  color = "text-gray-900",
+}) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between">

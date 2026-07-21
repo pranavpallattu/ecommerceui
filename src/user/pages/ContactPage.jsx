@@ -1,4 +1,3 @@
-// src/pages/ContactPage.jsx
 import ContactHeader from "../components/contact/ContactHeader";
 import ContactForm from "../components/contact/ContactForm";
 import ContactInfo from "../components/contact/ContactInfo";

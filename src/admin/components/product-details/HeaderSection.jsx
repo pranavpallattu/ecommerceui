@@ -1,5 +1,4 @@
-// src/components/product-details/HeaderSection.jsx
-import { ArrowLeft, Edit } from "lucide-react";
+import { ArrowLeft, Edit, Eye, EyeOff } from "lucide-react";
 
 export default function HeaderSection({
   product,
@@ -9,66 +8,92 @@ export default function HeaderSection({
   openConfirm,
 }) {
   return (
-    <div className="bg-gradient-to-r from-indigo-50 to-blue-50 border-b px-3 sm:px-4 md:px-6 py-4 sm:py-5 md:py-6 lg:py-8">
-      <div className="flex flex-col gap-4 sm:gap-5">
-        {/* Top Row: Back + Title */}
-        <div className="flex items-center gap-3 sm:gap-4">
+    <div className="border-b border-gray-200 bg-white">
+      <div className="px-6 py-6">
+        {/* Top */}
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          {/* Left */}
+          <div className="flex items-center gap-4 min-w-0">
+            <button
+              onClick={() => navigate(-1)}
+              className="btn btn-circle btn-ghost hover:bg-blue-50"
+            >
+              <ArrowLeft size={20} className="text-gray-700" />
+            </button>
+
+            <div className="min-w-0">
+              <h1 className="text-3xl font-bold text-gray-900 truncate">
+                {product.productName}
+              </h1>
+              <p className="mt-1 text-sm text-gray-500">Product Details</p>
+            </div>
+          </div>
+
+          {/* Right */}
           <button
-            onClick={() => navigate(-1)}
-            className="btn btn-ghost btn-circle btn-sm sm:btn-md flex-shrink-0"
-            aria-label="Go back"
+            onClick={() => openModal(product)}
+            className="btn btn-primary gap-2"
           >
-            <ArrowLeft size={20} className="sm:w-6 sm:h-6" />
+            <Edit size={18} />
+            Edit Product
           </button>
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 truncate flex-1">
-            {product.productName}
-          </h1>
         </div>
 
-        {/* Bottom Row: Actions – all matched height */}
-        <div className="flex flex-wrap items-center gap-3 sm:gap-4 lg:gap-6 h-10 sm:h-12">
-          {/* Status Badge – matched height */}
-          <div
-            className={`badge badge-lg px-4 sm:px-6 py-3 text-white font-medium text-sm sm:text-base shadow-sm h-10 sm:h-12 flex items-center ${
-              product.isActive ? "badge-success" : "badge-error"
+        {/* Bottom */}
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          {/* Listing Badge */}
+          <span
+            className={`px-4 py-2 rounded-full text-sm font-semibold ${
+              product.isActive
+                ? "bg-blue-100 text-blue-700"
+                : "bg-gray-100 text-gray-600"
             }`}
           >
             {product.isActive ? "Listed" : "Unlisted"}
-          </div>
+          </span>
 
-          {/* Toggle + Label – matched height */}
-          <div className="flex items-center gap-3 sm:gap-4 h-10 sm:h-12">
+          {/* Stock Badge */}
+          <span
+            className={`px-4 py-2 rounded-full text-sm font-semibold ${
+              product.status === "Available"
+                ? "bg-blue-50 text-blue-600 border border-blue-200"
+                : "bg-red-50 text-red-600 border border-red-200"
+            }`}
+          >
+            {product.status}
+          </span>
+
+          {/* Toggle */}
+          <div className="ml-auto flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-5 py-2.5">
+            {product.isActive ? (
+              <Eye className="text-blue-600" size={18} />
+            ) : (
+              <EyeOff className="text-gray-400" size={18} />
+            )}
+
+            <span className="text-sm font-medium text-gray-700">
+              Visible to customers
+            </span>
+
             <input
               type="checkbox"
-              className="toggle toggle-primary toggle-md sm:toggle-lg h-10 sm:h-12 w-16 sm:w-20"
+              className="toggle toggle-primary"
               checked={product.isActive}
-              onChange={(e) => {
+              onChange={() => {
                 const isActive = product.isActive;
+
                 openConfirm({
                   title: isActive ? "Unlist Product?" : "List Product?",
                   message: isActive
-                    ? "This product will be hidden from users."
-                    : "This product will be visible to users.",
+                    ? "This product will be hidden from customers."
+                    : "This product will become visible to customers.",
                   confirmText: isActive ? "Unlist" : "List",
                   confirmVariant: isActive ? "error" : "success",
                   onConfirm: () => toggleListing(product._id, !isActive),
                 });
               }}
             />
-            <span className="font-medium text-gray-700 whitespace-nowrap text-sm sm:text-base">
-              {product.isActive ? "Unlist" : "List"}
-            </span>
           </div>
-
-          {/* Edit Button – matched height */}
-          <button
-            onClick={() => openModal(product)}
-            className="btn btn-primary btn-md gap-2 px-5 sm:px-7 h-6 sm:h-12 text-sm sm:text-base font-medium shadow-md flex-shrink-0"
-          >
-            <Edit size={18} className="sm:w-5 sm:h-5" />
-            <span className="hidden xs:inline">Edit Product</span>
-            <span className="xs:hidden">Edit</span>
-          </button>
         </div>
       </div>
     </div>

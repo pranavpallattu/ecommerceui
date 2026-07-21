@@ -1,4 +1,3 @@
-// src/components/home/TrustBadges.jsx
 import { Truck, ShieldCheck, RotateCcw, Headphones } from "lucide-react";
 
 export default function TrustBadges() {

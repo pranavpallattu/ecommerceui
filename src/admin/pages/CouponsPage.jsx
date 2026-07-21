@@ -1,20 +1,13 @@
-// src/admin/pages/CouponsPage.jsx
 import { useEffect } from "react";
-import useCouponStore from "../../utils/stores/couponStore";
-
 import CouponsHeader from "../components/coupons/CouponsHeader";
 import CouponsTable from "../components/coupons/CouponsTable";
 import CouponFormModal from "../components/coupons/CouponFormModal";
-import Pagination from "../components/Pagination";
+import Pagination from "../components/common/Pagination";
+import useCouponStore from "../../utils/stores/admin/useCouponStore";
 
 export default function CouponsPage() {
-  const {
-    coupons,
-    loading,
-    search,
-    pagination,
-    fetchCoupons,
-  } = useCouponStore();
+  const { coupons, loading, search, pagination, fetchCoupons } =
+    useCouponStore();
 
   useEffect(() => {
     const timer = setTimeout(() => {

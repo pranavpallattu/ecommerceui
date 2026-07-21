@@ -5,7 +5,8 @@ export const commonApi = async (
   url,
   body = {},
   reqHeader = {},
-  isFile = false
+  isFile = false,
+  params={}
 ) => {
   try {
     const isForm = body instanceof FormData;
@@ -14,6 +15,7 @@ export const commonApi = async (
       method,
       url,
       data: method !== "GET" ? body : undefined,
+       params: method === "GET" ? params : undefined,
 
       // If FormData → DO NOT set Content-Type; Axios handles it automatically.
       headers: isForm
@@ -26,22 +28,25 @@ export const commonApi = async (
       responseType: isFile ? "blob" : "json",
 
       // Prevent Axios from modifying FormData (important for PATCH)
-      transformRequest: isForm ? [(data) => data] : axios.defaults.transformRequest
+      transformRequest: isForm
+        ? [(data) => data]
+        : axios.defaults.transformRequest,
     });
 
     return {
       success: true,
       data: !isFile ? response.data : null,
       url: isFile ? URL.createObjectURL(response.data) : null,
-      status: response.status
+      status: response.status,
     };
-
   } catch (error) {
+    console.log(error);
+
     return {
       success: false,
       message: error?.response?.data?.message || "Something went wrong",
       status: error?.response?.status || 500,
-      error: error?.response
+      error: error?.response,
     };
   }
 };

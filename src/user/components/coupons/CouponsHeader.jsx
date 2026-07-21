@@ -1,4 +1,3 @@
-// src/components/coupons/CouponsHeader.jsx
 export default function CouponsHeader() {
   return (
     <div className="text-center mb-12">

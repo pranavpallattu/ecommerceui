@@ -1,10 +1,9 @@
-// src/pages/ProductDetailsPage.jsx
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import useUserProductStore from "../../utils/stores/userProductStore";
-import useCartStore from "../../utils/stores/CartStore";
-import useUserWishlistStore from "../../utils/stores/WishlistStore";
-import useBuyNowStore from "../../utils/stores/useBuyNowStore";
+import useProductStore from "../../utils/stores/user/useProductStore";
+import useCartStore from "../../utils/stores/user/useCartStore";
+import useWishlistStore from "../../utils/stores/user/useWishlistStore";
+import useBuyNowStore from "../../utils/stores/user/useBuyNowStore";
 
 import Breadcrumb from "../components/product-details/Breadcrumb";
 import ImageGallery from "../components/product-details/ImageGallery";
@@ -22,26 +21,33 @@ export default function ProductDetailsPage() {
     loading,
     error,
     fetchProductDetails,
-  } = useUserProductStore();
+  } = useProductStore();
 
   const { addToCart, cartProducts } = useCartStore();
-  const { wishlistProducts, addtoWishlist, removeFromWishlist } = useUserWishlistStore();
+  const { wishlistProducts, addtoWishlist, removeFromWishlist } =
+    useWishlistStore();
   const { createBuyNow } = useBuyNowStore();
 
   const navigate = useNavigate();
 
-  const alreadyInCart = cartProducts?.items?.some(item => item.product._id === id);
+  const alreadyInCart = cartProducts?.items?.some(
+    (item) => item.product._id === id,
+  );
 
   useEffect(() => {
     fetchProductDetails(id);
   }, [id]);
 
-  const isInWishlist = wishlistProducts?.some(item => item._id === product?._id) || false;
+  const isInWishlist =
+    wishlistProducts?.some((item) => item._id === product?._id) || false;
 
   const hasDiscount = product?.regularPrice > product?.salePrice;
   const inStock = product?.quantity > 0 && product?.isActive;
   const discountPercent = hasDiscount
-    ? Math.round(((product.regularPrice - product.salePrice) / product.regularPrice) * 100)
+    ? Math.round(
+        ((product.regularPrice - product.salePrice) / product.regularPrice) *
+          100,
+      )
     : 0;
 
   if (loading) {
@@ -56,9 +62,15 @@ export default function ProductDetailsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center py-12 px-4">
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Product Not Found</h2>
-          <p className="text-gray-600 mb-8">Sorry, we couldn't find the product you're looking for.</p>
-          <Link to="/shop" className="btn btn-primary px-8">Continue Shopping</Link>
+          <h2 className="text-3xl font-bold text-gray-800 mb-4">
+            Product Not Found
+          </h2>
+          <p className="text-gray-600 mb-8">
+            Sorry, we couldn't find the product you're looking for.
+          </p>
+          <Link to="/shop" className="btn btn-primary px-8">
+            Continue Shopping
+          </Link>
         </div>
       </div>
     );
@@ -69,26 +81,34 @@ export default function ProductDetailsPage() {
       <Breadcrumb productName={product.productName} />
 
       <div className="container mx-auto px-4 py-8 lg:py-12 max-w-7xl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16 items-start">
           <ImageGallery
             images={product.productImage}
             selectedImage={selectedImage}
             setSelectedImage={setSelectedImage}
             discountPercent={discountPercent}
             inStock={inStock}
+            isInWishlist={isInWishlist}
+            onWishlistToggle={() => {
+              isInWishlist
+                ? removeFromWishlist(product._id)
+                : addtoWishlist(product._id);
+            }}
           />
 
           <ProductInfo
             product={product}
-            quantity={quantity}
-            setQuantity={setQuantity}
             inStock={inStock}
             hasDiscount={hasDiscount}
             discountPercent={discountPercent}
             isInWishlist={isInWishlist}
             alreadyInCart={alreadyInCart}
             onAddToCart={() => addToCart(product._id)}
-            onWishlistToggle={() => isInWishlist ? removeFromWishlist(product._id) : addtoWishlist(product._id)}
+            onWishlistToggle={() =>
+              isInWishlist
+                ? removeFromWishlist(product._id)
+                : addtoWishlist(product._id)
+            }
             onBuyNow={async () => {
               if (!inStock) return;
               const buyNowId = await createBuyNow(product._id);
@@ -96,9 +116,6 @@ export default function ProductDetailsPage() {
             }}
           />
         </div>
-
-        {/* <TrustBadges /> */}
-
         <RelatedProducts relatedProducts={relatedProducts} />
       </div>
     </div>

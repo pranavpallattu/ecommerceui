@@ -1,13 +1,12 @@
-// src/pages/HomePage.jsx
 import { useEffect } from "react";
-import useUserProductStore from "../../utils/stores/userProductStore";
+import useProductStore from "../../utils/stores/user/useProductStore";
 
 import HeroCarousel from "../components/home/HeroCarousel";
 import TrustBadges from "../components/home/TrustBadges";
 import CategorySection from "../components/home/CategorySection";
 
 export default function HomePage() {
-  const { fetchHomeProducts, homeProducts, loading } = useUserProductStore();
+  const { fetchHomeProducts, homeProducts, loading } = useProductStore();
 
   useEffect(() => {
     fetchHomeProducts();

@@ -1,9 +1,6 @@
-// src/components/order-details/CancelModal.jsx
 export default function CancelModal({
   cancellationReason,
   setCancellationReason,
-  activeItemId,
-  orderId,
   onSubmitCancel,
 }) {
   return (

@@ -1,10 +1,8 @@
-// src/components/order-details/ReturnModal.jsx
 export default function ReturnModal({
   actionType,
   returnReason,
   setReturnReason,
-  activeItemId,
-  orderId,
+
   onSubmitReturn,
 }) {
   return (

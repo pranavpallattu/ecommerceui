@@ -1,4 +1,3 @@
-// src/components/order-details/OrderStatusCard.jsx
 import {
   CheckCircle,
   Truck,
@@ -25,6 +24,8 @@ const formattedTime = new Date(order.createdAt).toLocaleTimeString("en-IN", {
   minute: "2-digit",
   hour12: true,
 });
+
+
  const statusConfig = {
   Pending: {
     icon: <Clock className="text-warning" />,
@@ -75,12 +76,13 @@ const formattedTime = new Date(order.createdAt).toLocaleTimeString("en-IN", {
     description: "Some items in your order were cancelled.",
   },
 
-Returned: {
-  icon: <RotateCcw className="text-orange-600" />,
-  color: "text-orange-600",
-  title: "Returned",
-  description: "Your return has been completed. The refund has been credited to your wallet.",
-},
+  Returned: {
+    icon: <RotateCcw className="text-orange-600" />,
+    color: "text-orange-600",
+    title: "Returned",
+    description:
+      "Your return has been completed. The refund has been credited to your wallet.",
+  },
 
   PartiallyReturned: {
     icon: <RotateCcw className="text-orange-500" />,
@@ -117,6 +119,8 @@ Returned: {
     description: "Return request for some items was rejected.",
   },
 };
+
+
 
   const config = statusConfig[order.orderStatus] || {
     icon: null,

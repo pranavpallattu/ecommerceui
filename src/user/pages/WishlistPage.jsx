@@ -1,9 +1,9 @@
-// src/pages/WishlistPage.jsx
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import useUserWishlistStore from "../../utils/stores/WishlistStore";
-import useCartStore from "../../utils/stores/CartStore";
+import useWishlistStore from "../../utils/stores/user/useWishlistStore";
+import useCartStore from "../../utils/stores/user/useCartStore";
 import WishlistCard from "../components/wishlist/WishlistCard";
+import WishlistHeader from "../components/wishlist/WishlistHeader";
 
 const WishlistPage = () => {
   const {
@@ -11,7 +11,7 @@ const WishlistPage = () => {
     fetchWishlistProducts,
     removeFromWishlist,
     loading,
-  } = useUserWishlistStore();
+  } = useWishlistStore();
 
   const { addToCart } = useCartStore();
 
@@ -32,9 +32,9 @@ const WishlistPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-6 sm:py-8 lg:py-12">
       <div className="container mx-auto px-3 sm:px-4 max-w-5xl">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-6 sm:mb-8">
-          My Wishlist ({wishlistProducts.length})
-        </h1>
+        <div className="bg-white rounded-3xl border border-base-200 shadow-sm p-4 sm:p-6 lg:p-8 mb-8">
+          <WishlistHeader wishlistProducts={wishlistProducts} />
+        </div>
 
         {wishlistProducts.length === 0 ? (
           <div className="text-center py-20">

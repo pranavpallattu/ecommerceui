@@ -1,4 +1,3 @@
-// src/components/order-details/OrderSummary.jsx
 export default function OrderSummary({ order }) {
   const STATUS_COLORS = {
     Pending: "bg-yellow-100 text-yellow-700",

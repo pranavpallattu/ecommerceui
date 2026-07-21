@@ -1,6 +1,5 @@
-// src/pages/CouponsPage.jsx
-import { useEffect , useState } from "react";
-import useCouponStore from "../../utils/stores/useCouponStore";
+import { useEffect, useState } from "react";
+import useCouponStore from "../../utils/stores/user/useCouponStore";
 
 import CouponsHeader from "../components/coupons/CouponsHeader";
 import CouponCard from "../components/coupons/CouponCard";

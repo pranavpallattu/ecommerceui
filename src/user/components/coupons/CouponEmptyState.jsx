@@ -1,4 +1,3 @@
-// src/components/coupons/CouponEmptyState.jsx
 import { Tag } from "lucide-react";
 
 export default function CouponEmptyState() {
@@ -8,9 +7,7 @@ export default function CouponEmptyState() {
       <h3 className="text-2xl font-medium text-gray-700 mb-4">
         No active coupons right now
       </h3>
-      <p className="text-gray-600">
-        Check back later for exciting offers!
-      </p>
+      <p className="text-gray-600">Check back later for exciting offers!</p>
     </div>
   );
 }

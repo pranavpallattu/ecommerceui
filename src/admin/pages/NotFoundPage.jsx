@@ -1,4 +1,3 @@
-// src/pages/NotFound.jsx
 import { Link } from "react-router-dom";
 import { Home, AlertCircle } from "lucide-react";
 
@@ -8,7 +7,10 @@ export default function NotFound() {
       <div className="text-center max-w-lg">
         {/* Icon */}
         <div className="mx-auto mb-8">
-          <AlertCircle className="w-24 h-24 lg:w-32 lg:h-32 text-indigo-500 mx-auto opacity-80" strokeWidth={1.2} />
+          <AlertCircle
+            className="w-24 h-24 lg:w-32 lg:h-32 text-indigo-500 mx-auto opacity-80"
+            strokeWidth={1.2}
+          />
         </div>
 
         {/* Main Text */}
@@ -26,16 +28,11 @@ export default function NotFound() {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
-            to="/"
-            className="btn btn-primary btn-lg gap-2 px-10"
-          >
+          <Link to="/" className="btn btn-primary btn-lg gap-2 px-10">
             <Home size={20} />
             Back to Home
           </Link>
         </div>
-
-      
       </div>
     </div>
   );

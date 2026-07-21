@@ -1,71 +1,85 @@
-// src/components/product-details/ProductInfo.jsx
+import { useState } from "react";
 import { CheckCircle, Package, ShoppingBag, Tag, XCircle } from "lucide-react";
 import InfoRow from "./InfoRow";
 import PriceCard from "./PriceCard";
 import TimeCard from "./TimeCard";
 
+function Description({ text }) {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = text && text.length > 200;
+  const shown = expanded || !isLong ? text : text.slice(0, 200) + "...";
+
+  return (
+    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+      <h3 className="text-lg font-semibold text-gray-900 mb-3">Description</h3>
+
+      <p className="text-gray-600 leading-7 whitespace-pre-line break-words">
+        {shown || "No description provided."}
+      </p>
+      {isLong && (
+        <button
+          onClick={() => setExpanded((prev) => !prev)}
+          className="mt-2 text-sm font-semibold text-blue-600 hover:text-blue-700"
+        >
+          {expanded ? "Show less" : "Read more"}
+        </button>
+      )}
+    </div>
+  );
+}
+
 export default function ProductInfo({ product }) {
   return (
-    <div className="space-y-5 sm:space-y-6 md:space-y-7 lg:space-y-9">
-      <div>
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-4 leading-tight">
-          {product.productName}
-        </h2>
-        <p className="text-sm sm:text-base lg:text-lg text-gray-700 leading-relaxed">
-          {product.description || "No description provided."}
-        </p>
-      </div>
+    <div className="space-y-8">
+      <Description text={product.description} />
 
-      {/* Info Rows */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
+      {/* Product Information */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <InfoRow
-          icon={<Tag className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600" />}
+          icon={<Tag className="w-6 h-6 text-blue-600" />}
           label="Category"
           value={product.category?.name || "—"}
         />
+
         <InfoRow
-          icon={<Package assName="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600" />}
+          icon={<Package className="w-6 h-6 text-blue-600" />}
           label="Stock"
           value={
             <span
-              className={`font-bold text-base sm:text-lg ${
-                product.quantity > 0 ? "text-emerald-700" : "text-red-700"
+              className={`font-bold ${
+                product.quantity > 0 ? "text-gray-900" : "text-red-600"
               }`}
             >
-              {product.quantity} units
+              {product.quantity} Units
             </span>
           }
         />
+
         <InfoRow
-          icon={<ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600" />}
-          label="Status"
+          icon={<ShoppingBag className="w-6 h-6 text-blue-600" />}
+          label="Availability"
           value={
             <span
-              className={`font-bold text-base sm:text-lg flex items-center gap-1 sm:gap-2 ${
+              className={`flex items-center gap-2 font-bold ${
                 product.status === "Available"
-                  ? "text-emerald-700"
-                  : "text-red-700"
+                  ? "text-blue-700"
+                  : "text-red-600"
               }`}
             >
               {product.status === "Available" ? (
-                <CheckCircle size={18} className="sm:w-[22px] sm:h-[22px]" />
+                <CheckCircle size={18} />
               ) : (
-                <XCircle size={18} className="sm:w-[22px] sm:h-[22px]" />
+                <XCircle size={18} />
               )}
               {product.status}
             </span>
           }
         />
-        <InfoRow
-          label="Offer"
-          value={`${product.offer || 0}%`}
-          icon={<span className="text-xl sm:text-2xl font-bold text-amber-600">%</span>}
-        />
       </div>
 
       <PriceCard product={product} />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6 pt-2 sm:pt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <TimeCard label="Created At" value={product.createdAt} />
         <TimeCard label="Updated At" value={product.updatedAt} />
       </div>

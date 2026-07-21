@@ -1,7 +1,6 @@
-// src/pages/OrderDetailsPage.jsx
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import useUserOrderStore from "../../utils/stores/userOrderStore";
+import useOrderStore from "../../utils/stores/user/useOrderStore";
 import { AlertCircle } from "lucide-react";
 
 import OrderHeader from "../components/order-details/OrderHeader";
@@ -23,7 +22,7 @@ export default function OrderDetailsPage() {
     cancelItem,
     error,
     getOrderById,
-  } = useUserOrderStore();
+  } = useOrderStore();
 
   const [actionType, setActionType] = useState(""); // "return-item" | "return-order"
   const [returnReason, setReturnReason] = useState("");
@@ -51,7 +50,9 @@ export default function OrderDetailsPage() {
           <AlertCircle size={64} className="mx-auto text-error mb-6" />
           <h2 className="text-2xl font-bold mb-4">Order not found</h2>
           <p className="text-gray-600 mb-6">{error || "Invalid order ID"}</p>
-          <Link to="/orders" className="btn btn-primary">Back to Orders</Link>
+          <Link to="/orders" className="btn btn-primary">
+            Back to Orders
+          </Link>
         </div>
       </div>
     );

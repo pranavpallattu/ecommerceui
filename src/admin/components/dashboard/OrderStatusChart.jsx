@@ -1,4 +1,3 @@
-// src/components/dashboard/OrderStatusChart.jsx
 import {
   BarChart,
   Bar,
@@ -14,7 +13,9 @@ export default function OrderStatusChart({ chartData }) {
   return (
     <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 md:p-8 border border-blue-100">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Order Status Overview</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+          Order Status Overview
+        </h2>
         <div className="px-3 py-2 sm:px-4 bg-blue-600 text-white rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap">
           Total: {chartData.reduce((sum, item) => sum + item.value, 0)} Orders
         </div>
@@ -25,31 +26,56 @@ export default function OrderStatusChart({ chartData }) {
           <BarChart
             data={chartData}
             margin={{ top: 20, right: 10, left: -10, bottom: 60 }}
-            barSize={window.innerWidth < 640 ? 30 : window.innerWidth < 1024 ? 40 : 50}
+            barSize={
+              window.innerWidth < 640 ? 30 : window.innerWidth < 1024 ? 40 : 50
+            }
           >
             <defs>
               {chartData.map((entry, index) => (
-                <linearGradient key={index} id={`gradient-${index}`} x1="0" y1="0" x2="0" y2="1">
+                <linearGradient
+                  key={index}
+                  id={`gradient-${index}`}
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
                   <stop offset="0%" stopColor={entry.fill} stopOpacity={0.9} />
-                  <stop offset="100%" stopColor={entry.fill} stopOpacity={0.6} />
+                  <stop
+                    offset="100%"
+                    stopColor={entry.fill}
+                    stopOpacity={0.6}
+                  />
                 </linearGradient>
               ))}
             </defs>
 
-            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#f3f4f6"
+              vertical={false}
+            />
 
             <XAxis
               dataKey="name"
               angle={-35}
               textAnchor="end"
               height={70}
-              tick={{ fill: "#4b5563", fontSize: window.innerWidth < 640 ? 10 : 13, fontWeight: 600 }}
+              tick={{
+                fill: "#4b5563",
+                fontSize: window.innerWidth < 640 ? 10 : 13,
+                fontWeight: 600,
+              }}
               interval={0}
               axisLine={{ stroke: "#e5e7eb", strokeWidth: 2 }}
             />
 
             <YAxis
-              tick={{ fill: "#4b5563", fontSize: window.innerWidth < 640 ? 10 : 13, fontWeight: 600 }}
+              tick={{
+                fill: "#4b5563",
+                fontSize: window.innerWidth < 640 ? 10 : 13,
+                fontWeight: 600,
+              }}
               axisLine={{ stroke: "#e5e7eb", strokeWidth: 2 }}
               tickLine={false}
             />
@@ -62,12 +88,26 @@ export default function OrderStatusChart({ chartData }) {
                 boxShadow: "0 20px 25px -5px rgba(0,0,0,0.3)",
                 padding: "10px 14px",
               }}
-              labelStyle={{ color: "#ffffff", fontWeight: 700, marginBottom: "6px", fontSize: "13px" }}
-              itemStyle={{ color: "#e5e7eb", fontSize: "13px", fontWeight: 600 }}
+              labelStyle={{
+                color: "#ffffff",
+                fontWeight: 700,
+                marginBottom: "6px",
+                fontSize: "13px",
+              }}
+              itemStyle={{
+                color: "#e5e7eb",
+                fontSize: "13px",
+                fontWeight: 600,
+              }}
               cursor={{ fill: "rgba(59,130,246,0.05)", radius: 8 }}
             />
 
-            <Bar dataKey="value" radius={[8, 8, 0, 0]} animationDuration={1000} animationBegin={0}>
+            <Bar
+              dataKey="value"
+              radius={[8, 8, 0, 0]}
+              animationDuration={1000}
+              animationBegin={0}
+            >
               {chartData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={`url(#gradient-${index})`} />
               ))}
@@ -87,7 +127,9 @@ export default function OrderStatusChart({ chartData }) {
               className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full shadow-sm flex-shrink-0"
               style={{ backgroundColor: item.fill }}
             />
-            <span className="text-[10px] sm:text-xs font-semibold text-gray-700 truncate">{item.name}</span>
+            <span className="text-[10px] sm:text-xs font-semibold text-gray-700 truncate">
+              {item.name}
+            </span>
           </div>
         ))}
       </div>

@@ -1,4 +1,3 @@
-// src/components/contact/ContactHeader.jsx
 export default function ContactHeader() {
   return (
     <div className="text-center mb-12">

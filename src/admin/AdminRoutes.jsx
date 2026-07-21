@@ -9,14 +9,14 @@ import SalesReportPage from "./pages/SalesReportPage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import OrderDetailsPage from "./pages/OrderDetailsPage";
 import NotificationsPage from "./pages/NotificationsPage";
-import AdminProtectedRoute from "./components/AdminProtectedRoute";
+import AdminGuard from "../guards/AdminGuard";
 
 const adminRoutes = {
   path: "/admin",
-  element: <AdminLayout />,
+  element: <AdminGuard />,
   children: [
     {
-      element: <AdminProtectedRoute />,
+      element: <AdminLayout />,
       children: [
         { path: "dashboard", element: <DashboardPage /> },
         { path: "customers", element: <CustomersPage /> },

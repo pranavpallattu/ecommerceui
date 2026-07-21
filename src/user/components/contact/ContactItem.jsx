@@ -1,4 +1,3 @@
-// src/components/contact/ContactItem.jsx
 import React from "react";
 
 export default function ContactItem({ icon, title, text, sub }) {

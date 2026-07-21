@@ -1,4 +1,3 @@
-// src/components/order-details/OrderTimeline.jsx
 export default function OrderTimeline({ order }) {
   return (
     <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl shadow-md border border-blue-100">

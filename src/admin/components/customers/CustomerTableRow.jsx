@@ -1,6 +1,6 @@
 import { Ban, CheckCircle } from "lucide-react";
-import useCustomerStore from "../../../utils/stores/customerStore";
-import useConfirmModalStore from "../../../utils/stores/useConfirmModalStore";
+import useCustomerStore from "../../../utils/stores/admin/useCustomerStore";
+import useConfirmModalStore from "../../../utils/stores/ui/useConfirmModalStore";
 
 const CustomerTableRow = ({ customer }) => {
   const { toggleBlockCustomer } = useCustomerStore();

@@ -1,13 +1,11 @@
-// src/admin/pages/ProductDetailsPage.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useProductStore from "../../utils/stores/productStore";
-import useConfirmModalStore from "../../utils/stores/useConfirmModalStore";
-
 import HeaderSection from "../components/product-details/HeaderSection";
 import ImageGallery from "../components/product-details/ImageGallery";
 import ProductInfo from "../components/product-details/ProductInfo";
 import ProductFormModal from "../components/products/ProductFormModal";
+import useConfirmModalStore from "../../utils/stores/ui/useConfirmModalStore";
+import useProductStore from "../../utils/stores/admin/useProductStore";
 
 export default function ProductDetailsPage() {
   const { id } = useParams();

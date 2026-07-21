@@ -1,5 +1,4 @@
-// src/admin/components/coupons/CouponsTable.jsx
-import useCouponStore from "../../../utils/stores/couponStore";
+import useCouponStore from "../../../utils/stores/admin/useCouponStore";
 import CouponsTableRow from "./CouponsTableRow";
 
 const CouponsTable = () => {
@@ -8,7 +7,9 @@ const CouponsTable = () => {
   if (coupons.length === 0) {
     return (
       <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-10 sm:p-16 md:p-20 text-center">
-        <p className="text-lg sm:text-xl md:text-2xl text-gray-500">No coupons found</p>
+        <p className="text-lg sm:text-xl md:text-2xl text-gray-500">
+          No coupons found
+        </p>
       </div>
     );
   }
@@ -61,10 +62,12 @@ const CouponsTable = () => {
           </tbody>
         </table>
       </div>
-      
+
       {/* Mobile Scroll Hint */}
       <div className="sm:hidden bg-blue-50 px-4 py-2 text-center">
-        <p className="text-xs text-blue-600">← Scroll horizontally to see all columns →</p>
+        <p className="text-xs text-blue-600">
+          ← Scroll horizontally to see all columns →
+        </p>
       </div>
     </div>
   );

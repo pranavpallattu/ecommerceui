@@ -1,4 +1,3 @@
-// src/components/coupons/CouponCard.jsx
 import { Copy, Check } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -54,7 +53,7 @@ export default function CouponCard({ coupon, copiedCode, onCopy, formatDate }) {
 
       {/* Coupon Body */}
       <div className="p-6 space-y-4">
-        <p className="text-gray-700 text-lg leading-relaxed">
+        <p className="text-gray-700 text-lg leading-relaxed break-words">
           {coupon.description}
         </p>
 

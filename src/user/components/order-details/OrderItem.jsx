@@ -1,4 +1,3 @@
-// src/components/order-details/OrderItem.jsx
 export default function OrderItem({ item, order, onReturnItem, onCancelItem }) {
   const isOrderCancelled = order.orderStatus === "Cancelled";
   const isBuyNow = order.checkoutType === "buyNow";
@@ -38,20 +37,23 @@ export default function OrderItem({ item, order, onReturnItem, onCancelItem }) {
         {(item.cancellationReason || item.returnReason) && (
           <div className="mt-2 p-2 border rounded bg-gray-50 text-sm">
             <p>
-              <strong>Reason:</strong> {item.cancellationReason || item.returnReason}
+              <strong>Reason:</strong>{" "}
+              {item.cancellationReason || item.returnReason}
             </p>
           </div>
         )}
 
         {item.cancelledAt && (
           <p className="text-xs text-red-500">
-            Cancelled on {new Date(item.cancelledAt).toLocaleDateString("en-IN")}
+            Cancelled on{" "}
+            {new Date(item.cancelledAt).toLocaleDateString("en-IN")}
           </p>
         )}
 
         {item.returnApprovedAt && (
           <p className="text-xs text-yellow-600">
-            Returned on {new Date(item.returnApprovedAt).toLocaleDateString("en-IN")}
+            Returned on{" "}
+            {new Date(item.returnApprovedAt).toLocaleDateString("en-IN")}
           </p>
         )}
 

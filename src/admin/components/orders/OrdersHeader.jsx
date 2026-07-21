@@ -1,4 +1,3 @@
-// src/admin/components/orders/OrdersHeader.jsx
 import { Search } from "lucide-react";
 
 export default function OrdersHeader({ search, setSearch }) {
@@ -7,7 +6,9 @@ export default function OrdersHeader({ search, setSearch }) {
       <div className="flex flex-col gap-4 sm:gap-6 md:flex-row md:justify-between md:items-center">
         {/* Left Side */}
         <div className="flex-shrink-0">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">Orders</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
+            Orders
+          </h1>
           <p className="text-blue-600 mt-1 sm:mt-2 text-sm sm:text-base md:text-lg">
             Manage and monitor orders
           </p>
@@ -15,8 +16,8 @@ export default function OrdersHeader({ search, setSearch }) {
 
         {/* Search */}
         <div className="relative w-full md:w-auto md:min-w-[400px] lg:min-w-[500px]">
-          <Search 
-            className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-blue-500" 
+          <Search
+            className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-blue-500"
             size={18}
           />
           <input

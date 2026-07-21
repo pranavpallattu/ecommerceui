@@ -1,4 +1,3 @@
-// components/wallet/WalletBalanceCard.jsx
 import { IndianRupee } from "lucide-react";
 
 const WalletBalanceCard = ({ balance }) => {

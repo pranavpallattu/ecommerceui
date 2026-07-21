@@ -1,35 +1,98 @@
-// src/components/dashboard/StatsGrid.jsx
-import { DollarSign, Package, ShoppingCart, Zap } from "lucide-react";
+import {
+  Package,
+  ClipboardCheck,
+  Settings2,
+  Truck,
+  XCircle,
+  RotateCcw,
+  IndianRupee,
+} from "lucide-react";
 
 export default function StatsGrid({ orderSummary }) {
+  const formatCurrency = (value = 0) =>
+    new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(value);
+
   const stats = [
-    { label: "Total Revenue", value: `₹${(orderSummary?.totalAmount || 0).toLocaleString()}`, icon: DollarSign, color: "from-emerald-500 to-teal-600" },
-    { label: "Total Orders", value: orderSummary?.totalOrders || 0, icon: Package, color: "from-blue-500 to-cyan-600" },
-    { label: "Cart Orders", value: orderSummary?.cartOrders || 0, icon: ShoppingCart, color: "from-green-500 to-emerald-600" },
-    { label: "Buy Now Orders", value: orderSummary?.buynowOrders || 0, icon: Zap, color: "from-purple-500 to-pink-600" },
+    {
+      label: "Total Orders",
+      value: orderSummary?.totalOrders || 0,
+      icon: Package,
+    },
+    {
+      label: "Confirmed",
+      value: orderSummary?.confirmed || 0,
+      icon: ClipboardCheck,
+    },
+    {
+      label: "Processing",
+      value: orderSummary?.processing || 0,
+      icon: Settings2,
+    },
+    {
+      label: "Delivered",
+      value: orderSummary?.delivered || 0,
+      icon: Truck,
+    },
+    {
+      label: "Cancelled",
+      value: orderSummary?.cancelled || 0,
+      icon: XCircle,
+    },
+    {
+      label: "Returned",
+      value: orderSummary?.returned || 0,
+      icon: RotateCcw,
+    },
   ];
 
   return (
-    <div className="grid grid-cols-1 min-[500px]:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-      {stats.map((stat, i) => (
-        <div
-          key={i}
-          className="group relative overflow-hidden rounded-2xl sm:rounded-3xl bg-white shadow-xl sm:shadow-2xl border border-gray-100 hover:shadow-3xl transition-all duration-500"
-        >
-          <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-90 group-hover:opacity-100 transition-opacity`}></div>
-          <div className="relative p-5 sm:p-6 md:p-8 text-white">
+    <div className="space-y-6">
+      {/* Featured Revenue Card */}
+      <div className="rounded-3xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-xl p-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-blue-100 text-sm font-medium uppercase tracking-wider">
+              Net Revenue
+            </p>
+
+            <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-bold break-all">
+              {formatCurrency(orderSummary?.netRevenue)}
+            </h2>
+          </div>
+
+          <div className="hidden sm:flex w-20 h-20 rounded-2xl bg-white/15 items-center justify-center">
+            <IndianRupee size={40} />
+          </div>
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 min-[500px]:grid-cols-2 lg:grid-cols-6 gap-4 sm:gap-6">
+        {stats.map((stat, index) => (
+          <div
+            key={index}
+            className="rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 p-5"
+          >
             <div className="flex items-center justify-between">
-              <div className="flex-1 min-w-0">
-                <p className="text-white/90 text-xs sm:text-sm font-medium">{stat.label}</p>
-                <p className="text-2xl sm:text-3xl lg:text-4xl font-black mt-2 sm:mt-3 truncate">{stat.value}</p>
+              <div>
+                <p className="text-sm text-gray-500">{stat.label}</p>
+
+                <h3 className="mt-2 text-3xl font-bold text-gray-900">
+                  {stat.value}
+                </h3>
               </div>
-              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl sm:rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0 ml-3">
-                <stat.icon size={28} className="sm:w-8 sm:h-8 md:w-9 md:h-9" />
+
+              <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
+                <stat.icon className="text-blue-600" size={24} />
               </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

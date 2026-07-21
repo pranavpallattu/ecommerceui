@@ -1,4 +1,3 @@
-// src/components/order-details/OrderHeader.jsx
 export default function OrderHeader({ status, onStatusChange }) {
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
@@ -11,11 +10,13 @@ export default function OrderHeader({ status, onStatusChange }) {
         onChange={onStatusChange}
         className="select select-bordered bg-white w-full sm:w-auto text-sm sm:text-base"
       >
-        {["Confirmed", "Processing", "Shipped", "Delivered", "Cancelled"].map((s) => (
-          <option key={s} value={s}>
-            {s}
-          </option>
-        ))}
+        {["Confirmed", "Processing", "Shipped", "Delivered", "Cancelled"].map(
+          (s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ),
+        )}
       </select>
     </div>
   );

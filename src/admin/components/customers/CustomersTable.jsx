@@ -1,4 +1,3 @@
-// src/components/customers/CustomersTable.jsx
 import CustomerTableRow from "./CustomerTableRow";
 
 export default function CustomersTable({ customers }) {

@@ -1,11 +1,10 @@
 import { Calendar } from "lucide-react";
 
-// src/components/order-details/PaymentPricing.jsx
 export default function PaymentPricing({ order }) {
   return (
     <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl shadow-md border border-blue-100">
       <h3 className="text-base sm:text-lg font-semibold text-gray-700 mb-3 sm:mb-4 flex items-center gap-2">
-        <Calendar size={16} className="sm:w-[18px] sm:h-[18px]" /> 
+        <Calendar size={16} className="sm:w-[18px] sm:h-[18px]" />
         Payment & Pricing
       </h3>
 
@@ -42,7 +41,9 @@ export default function PaymentPricing({ order }) {
 
         <div>
           <p className="text-gray-400">Grand Total</p>
-          <p className="font-semibold text-base sm:text-lg">₹{order.grandTotal}</p>
+          <p className="font-semibold text-base sm:text-lg">
+            ₹{order.grandTotal}
+          </p>
         </div>
       </div>
     </div>

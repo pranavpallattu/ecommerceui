@@ -1,11 +1,11 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar from "../components/common/Navbar";
+import Footer from "../components/common/Footer";
 
 const UserLayout = () => {
   return (
     <>
-      <Navbar/>
+      <Navbar />
 
       <main className="min-h-screen pt-16 bg-gray-50">
         <Outlet />

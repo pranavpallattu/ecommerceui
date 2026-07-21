@@ -1,14 +1,6 @@
-// src/admin/components/coupons/CouponsTableRow.jsx
-import {
-  Edit3,
-  Eye,
-  EyeOff,
-  IndianRupee,
-  Percent,
-  Trash2,
-} from "lucide-react";
-import useCouponStore from "../../../utils/stores/couponStore";
-import useConfirmModalStore from "../../../utils/stores/useConfirmModalStore";
+import { Edit3, Eye, EyeOff, IndianRupee, Percent, Trash2 } from "lucide-react";
+import useConfirmModalStore from "../../../utils/stores/ui/useConfirmModalStore";
+import useCouponStore from "../../../utils/stores/admin/useCouponStore";
 
 const CouponsTableRow = ({ coupon }) => {
   const { openModal, updateCouponStatus, deleteCoupon } = useCouponStore();
@@ -25,7 +17,10 @@ const CouponsTableRow = ({ coupon }) => {
 
       {/* Description */}
       <td className="px-3 sm:px-4 md:px-6 lg:px-8 py-4 md:py-5 lg:py-6">
-        <p className="text-gray-700 text-xs sm:text-sm max-w-[200px] truncate" title={coupon.description}>
+        <p
+          className="text-gray-700 text-xs sm:text-sm max-w-[200px] truncate"
+          title={coupon.description}
+        >
           {coupon.description}
         </p>
       </td>
@@ -76,17 +71,23 @@ const CouponsTableRow = ({ coupon }) => {
 
       {/* Usage Limit */}
       <td className="px-3 sm:px-4 md:px-6 lg:px-8 py-4 md:py-5 lg:py-6 text-center">
-        <span className="text-gray-600 text-xs sm:text-sm">{coupon.usageLimit || "—"}</span>
+        <span className="text-gray-600 text-xs sm:text-sm">
+          {coupon.usageLimit || "—"}
+        </span>
       </td>
 
       {/* Per User Limit */}
       <td className="px-3 sm:px-4 md:px-6 lg:px-8 py-4 md:py-5 lg:py-6 text-center">
-        <span className="text-gray-600 text-xs sm:text-sm">{coupon.perUserLimit || "—"}</span>
+        <span className="text-gray-600 text-xs sm:text-sm">
+          {coupon.perUserLimit || "—"}
+        </span>
       </td>
 
       {/* Used Count */}
       <td className="px-3 sm:px-4 md:px-6 lg:px-8 py-4 md:py-5 lg:py-6 text-center">
-        <span className="text-gray-600 text-xs sm:text-sm">{coupon.usedCount || "0"}</span>
+        <span className="text-gray-600 text-xs sm:text-sm">
+          {coupon.usedCount || "0"}
+        </span>
       </td>
 
       {/* Status */}
@@ -120,12 +121,8 @@ const CouponsTableRow = ({ coupon }) => {
                 message: coupon.isActive
                   ? "This coupon will no longer be usable by customers."
                   : "This coupon will become active and usable.",
-                confirmText: coupon.isActive
-                  ? "Deactivate"
-                  : "Activate",
-                confirmVariant: coupon.isActive
-                  ? "error"
-                  : "success",
+                confirmText: coupon.isActive ? "Deactivate" : "Activate",
+                confirmVariant: coupon.isActive ? "error" : "success",
                 onConfirm: () => updateCouponStatus(coupon._id),
               })
             }
@@ -161,7 +158,10 @@ const CouponsTableRow = ({ coupon }) => {
             }
             aria-label="Delete"
           >
-            <Trash2 size={16} className="sm:w-[18px] sm:h-[18px] text-red-500" />
+            <Trash2
+              size={16}
+              className="sm:w-[18px] sm:h-[18px] text-red-500"
+            />
           </button>
         </div>
       </td>

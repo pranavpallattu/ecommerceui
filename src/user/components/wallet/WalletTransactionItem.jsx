@@ -1,4 +1,3 @@
-// components/wallet/WalletTransactionItem.jsx
 import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 
 const WalletTransactionItem = ({ tx }) => {

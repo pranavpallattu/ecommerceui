@@ -1,16 +1,10 @@
-// src/pages/CustomersPage.jsx
 import { useEffect } from "react";
-import useCustomerStore from "../../utils/stores/customerStore";
-
-// import CustomersHeader from "../components/customers/CustomersHeader";
-// import CustomersTable from "../components/customers/CustomersTable";
-// import CustomersLoading from "../components/customers/CustomersLoading";
-// import CustomersEmptyState from "../components/customers/CustomersEmptyState";
-import Pagination from "../components/Pagination";
+import Pagination from "../components/common/Pagination";
 import CustomersHeader from "../components/customers/CustomersHeader";
 import CustomersEmptyState from "../components/customers/CustomersEmptyState";
 import CustomersTable from "../components/customers/CustomersTable";
 import CustomersLoading from "../components/customers/CustomersLoading";
+import useCustomerStore from "../../utils/stores/admin/useCustomerStore";
 
 export default function CustomersPage() {
   const {
@@ -22,7 +16,7 @@ export default function CustomersPage() {
     fetchCustomers,
     setSearch,
     setPage,
-  } = useCustomerStore ();
+  } = useCustomerStore();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -44,7 +38,9 @@ export default function CustomersPage() {
           <h2 className="text-2xl font-bold text-gray-800 mb-3">Error</h2>
           <p className="text-gray-600 mb-6">{error}</p>
           <button
-            onClick={() => fetchCustomers({ search, page: pagination.currentPage })}
+            onClick={() =>
+              fetchCustomers({ search, page: pagination.currentPage })
+            }
             className="btn btn-primary px-8"
           >
             Retry

@@ -1,12 +1,19 @@
-// src/components/dashboard/QuickLinks.jsx
 import { Link } from "react-router-dom";
 import { Package, Heart, Wallet, User } from "lucide-react";
 
 export default function QuickLinks() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <QuickLinkCard to="/orders" icon={<Package size={28} />} label="My Orders" />
-      <QuickLinkCard to="/wishlist" icon={<Heart size={28} />} label="Wishlist" />
+      <QuickLinkCard
+        to="/orders"
+        icon={<Package size={28} />}
+        label="My Orders"
+      />
+      <QuickLinkCard
+        to="/wishlist"
+        icon={<Heart size={28} />}
+        label="Wishlist"
+      />
       <QuickLinkCard to="/wallet" icon={<Wallet size={28} />} label="Wallet" />
       <QuickLinkCard to="/address" icon={<User size={28} />} label="Address" />
     </div>

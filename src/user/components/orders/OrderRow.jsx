@@ -1,9 +1,10 @@
-// src/components/orders/OrderRow.jsx
 import { Eye, Ban } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function OrderRow({ order, getStatusBadge, onCancelClick }) {
-  const canCancel = ["Pending", "Confirmed", "Processing"].includes(order.orderStatus);
+  const canCancel = ["Pending", "Confirmed", "Processing"].includes(
+    order.orderStatus,
+  );
 
   return (
     <tr className="hover">
@@ -20,7 +21,10 @@ export default function OrderRow({ order, getStatusBadge, onCancelClick }) {
                 className="hover:underline"
               >
                 <span className="font-medium">{item.productName}</span>
-                <span className="text-gray-500 text-xs"> × {item.quantity}</span>
+                <span className="text-gray-500 text-xs">
+                  {" "}
+                  × {item.quantity}
+                </span>
               </Link>
             </li>
           ))}
@@ -28,7 +32,9 @@ export default function OrderRow({ order, getStatusBadge, onCancelClick }) {
       </td>
 
       <td>
-        <span className={`badge badge-sm ${getStatusBadge(order.orderStatus)}`}>
+        <span
+          className={` text-white badge badge-sm ${getStatusBadge(order.orderStatus)}`}
+        >
           {order.orderStatus}
         </span>
       </td>
@@ -48,10 +54,7 @@ export default function OrderRow({ order, getStatusBadge, onCancelClick }) {
       </td>
 
       <td className="flex gap-2">
-        <Link
-          to={`/orders/${order._id}`}
-          className="btn btn-xs btn-outline"
-        >
+        <Link to={`/orders/${order._id}`} className="btn btn-xs btn-outline">
           <Eye size={14} />
           View
         </Link>
