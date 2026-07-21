@@ -48,7 +48,7 @@ const useBuyNowStore = create((set) => ({
     }
   },
 
-  // 3️⃣ Clear store (important)
+  // 3️ Clear store (important)
   clearBuyNow: () => set({ buyNowCheckout: null }),
 }));
 

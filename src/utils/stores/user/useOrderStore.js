@@ -96,7 +96,7 @@ getUserOrders: async (filters = get().filters) => {
         toast.error(res?.message);
       }
       toast.success("Ordered cancelled successfully");
-      await get().getUserOrder();
+      await get().getUserOrders();
       set({ loading: false, error: null });
     } catch (error) {
       set({
@@ -160,7 +160,7 @@ getUserOrders: async (filters = get().filters) => {
       toast.success("Ordered return request submitted successfully");
 
       // Refresh orders list + current order
-      await get().getUserOrder();
+      await get().getUserOrders();
       await get().getOrderById(orderId);
 
       set({ loading: false });
@@ -236,7 +236,7 @@ getUserOrders: async (filters = get().filters) => {
         set({ loading: false });
         return toast.error(res?.message);
       }
-      toast.success("Buynow Order placed successfully");
+      toast.success("Order placed successfully");
       set({ loading: false, error: null });
       return res?.data;
     } catch (err) {
@@ -271,8 +271,8 @@ getUserOrders: async (filters = get().filters) => {
       if (!res.success) {
         return toast.error(res?.message);
       }
-      toast.success("Buynow Razoprpay payment successfull");
-      await get().getUserOrder(); // refresh orders list
+      toast.success("Razoprpay payment successfull");
+      await get().getUserOrders(); // refresh orders list
       set({ paymentLoading: false, error: null });
       return res.data;
     } catch (err) {

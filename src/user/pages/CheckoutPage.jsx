@@ -167,7 +167,32 @@ export default function CheckoutPage() {
             order_id: order.id,
             name: "One Bazaar",
             description: "Buy Now Payment",
+            // handler: async (response) => {
+            //   const result = await verifyBuyNowRazorpayPayment({
+            //     razorpay_payment_id: response.razorpay_payment_id,
+            //     razorpay_order_id: response.razorpay_order_id,
+            //     razorpay_signature: response.razorpay_signature,
+            //     buyNowId,
+            //     address: addressPayload,
+            //   });
+
+            //   if (!result?.success || !result?.orderId) {
+            //     console.error("Order failed:", result);
+            //     return;
+            //   }
+
+            //   //  Extract  orderId
+            //   const orderId = result?.orderId;
+
+            //   navigate("/order/success", {
+            //     state: { orderId },
+            //   });
+            // },
+
             handler: async (response) => {
+              console.log("Handler started");
+              console.log(response);
+
               const result = await verifyBuyNowRazorpayPayment({
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_order_id: response.razorpay_order_id,
@@ -175,17 +200,16 @@ export default function CheckoutPage() {
                 buyNowId,
                 address: addressPayload,
               });
+              console.log("Verification result:", result);
 
               if (!result?.success || !result?.orderId) {
-                console.error("Order failed:", result);
+                console.log("Verification failed");
                 return;
               }
 
-              //  Extract  orderId
-              const orderId = result?.orderId;
-
+              console.log("Navigating...");
               navigate("/order/success", {
-                state: { orderId },
+                state: { orderId: result.orderId },
               });
             },
             prefill: {
