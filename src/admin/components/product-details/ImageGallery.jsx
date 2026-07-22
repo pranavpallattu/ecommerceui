@@ -8,8 +8,8 @@ export default function ImageGallery({
       <div className="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-md sm:shadow-lg border border-gray-200 aspect-square">
         <img
           src={
-            product.productImage?.[selectedImage] ||
-            product.productImage?.[0] ||
+            product.productImage?.[selectedImage]?.imageUrl ||
+            product.productImage?.[0]?.imageUrl ||
             "https://via.placeholder.com/800"
           }
           alt={product.productName}
@@ -30,7 +30,7 @@ export default function ImageGallery({
               }`}
             >
               <img
-                src={img}
+                src={img?.imageUrl}
                 alt={`Thumbnail ${i + 1}`}
                 className="w-full h-full object-cover aspect-square"
               />

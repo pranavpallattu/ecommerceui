@@ -76,6 +76,19 @@ const useCartStore = create((set, get) => ({
       });
     }
   },
+  clearCart: () => {
+  set({
+    cartProducts: {
+      items: [],
+      totalItems: 0,
+      subTotal: 0,
+      discount: 0,
+      finalTotal: 0,
+      appliedCoupon: null,
+    },
+    error: null,
+  });
+},
 }));
 
 export default useCartStore;

@@ -142,7 +142,7 @@ const useProductStore = create(
           res = await addProductApi(formData);
         }
 
-        if (!res?.success) {
+      if (!res?.success) {
           toast.error(res?.message || "Operation failed");
           set({ loading: false });
           return;

@@ -28,6 +28,7 @@ export default function CheckoutPage() {
   const navigate = useNavigate();
 
   const { buyNowCheckout, getBuyNowCheckout, clearBuyNow } = useBuyNowStore();
+  const { clearCart } = useCartStore();
 
   // to retain state of payment method
   const { selectedPayment, setSelectedPayment, resetCheckout } =
@@ -146,6 +147,9 @@ export default function CheckoutPage() {
         const orderId = result?.orderId;
 
         resetCheckout();
+        if (!isBuyNow) {
+          clearCart();
+        }
         navigate("/order/success", {
           state: { orderId },
         });
@@ -231,6 +235,10 @@ export default function CheckoutPage() {
 
             const orderId = result?.orderId;
 
+            resetCheckout();
+            if (!isBuyNow) {
+              clearCart();
+            }
             navigate("/order/success", {
               state: { orderId },
             });
