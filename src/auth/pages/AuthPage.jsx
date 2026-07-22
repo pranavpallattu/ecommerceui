@@ -18,13 +18,13 @@ const AuthPage = () => {
 
   const { setUser } = useAuthStore();
 
-  const { user } = useAuthStore();
+  // const { user } = useAuthStore();
 
-  useEffect(() => {
-    if (user) {
-      window.location.replace(user.role === "admin" ? "/admin/dashboard" : "/");
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user) {
+  //     window.location.replace(user.role === "admin" ? "/admin/dashboard" : "/");
+  //   }
+  // }, [user]);
 
   const handleGoogleSignup = () => {
     try {

@@ -53,7 +53,7 @@ export default function CouponCard({ coupon, copiedCode, onCopy, formatDate }) {
 
       {/* Coupon Body */}
       <div className="p-6 space-y-4">
-        <p className="text-gray-700 text-lg leading-relaxed break-words">
+        <p className="text-gray-700 text-lg leading-relaxed break-words line-clamp-5 min-h-[84px]">
           {coupon.description}
         </p>
 

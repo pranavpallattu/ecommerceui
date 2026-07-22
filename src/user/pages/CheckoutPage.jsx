@@ -20,6 +20,7 @@ import OrderSummary from "../components/checkout/OrderSummary";
 import CouponSection from "../components/checkout/CouponSection";
 import useWalletStore from "../../utils/stores/user/useWalletStore";
 import CheckoutHeader from "../components/checkout/CheckoutHeader";
+import useCheckoutStore from "../../utils/stores/user/useCheckoutStore";
 
 export default function CheckoutPage() {
   const { buyNowId } = useParams();
@@ -27,6 +28,10 @@ export default function CheckoutPage() {
   const navigate = useNavigate();
 
   const { buyNowCheckout, getBuyNowCheckout, clearBuyNow } = useBuyNowStore();
+
+  // to retain state of payment method
+  const { selectedPayment, setSelectedPayment, resetCheckout } =
+    useCheckoutStore();
 
   const {
     cartProducts: cart,
@@ -56,7 +61,7 @@ export default function CheckoutPage() {
     loading: orderLoading,
   } = useOrderStore();
 
-  const [selectedPayment, setSelectedPayment] = useState("cod");
+  // const [selectedPayment, setSelectedPayment] = useState("cod");
 
   useEffect(() => {
     if (isBuyNow) {
@@ -140,6 +145,7 @@ export default function CheckoutPage() {
 
         const orderId = result?.orderId;
 
+        resetCheckout();
         navigate("/order/success", {
           state: { orderId },
         });
@@ -167,28 +173,6 @@ export default function CheckoutPage() {
             order_id: order.id,
             name: "One Bazaar",
             description: "Buy Now Payment",
-            // handler: async (response) => {
-            //   const result = await verifyBuyNowRazorpayPayment({
-            //     razorpay_payment_id: response.razorpay_payment_id,
-            //     razorpay_order_id: response.razorpay_order_id,
-            //     razorpay_signature: response.razorpay_signature,
-            //     buyNowId,
-            //     address: addressPayload,
-            //   });
-
-            //   if (!result?.success || !result?.orderId) {
-            //     console.error("Order failed:", result);
-            //     return;
-            //   }
-
-            //   //  Extract  orderId
-            //   const orderId = result?.orderId;
-
-            //   navigate("/order/success", {
-            //     state: { orderId },
-            //   });
-            // },
-
             handler: async (response) => {
               console.log("Handler started");
               console.log(response);
@@ -207,7 +191,7 @@ export default function CheckoutPage() {
                 return;
               }
 
-              console.log("Navigating...");
+              resetCheckout();
               navigate("/order/success", {
                 state: { orderId: result.orderId },
               });
