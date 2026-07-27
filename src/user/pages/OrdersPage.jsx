@@ -48,8 +48,8 @@ export default function OrdersPage() {
   }, [searchInput]);
 
   const toggleStatus = (value) => {
-    const current = filters.status || [];
-    const nextStatus = current.includes(value)
+    const current = filters?.status || [];
+    const nextStatus = current?.includes(value)
       ? current.filter((v) => v !== value)
       : [...current, value];
     setFilters({ status: nextStatus });
@@ -57,8 +57,8 @@ export default function OrdersPage() {
   };
 
   const toggleTime = (value) => {
-    const current = filters.time || [];
-    const nextTime = current.includes(value)
+    const current = filters?.time || [];
+    const nextTime = current?.includes(value)
       ? current.filter((v) => v !== value)
       : [...current, value];
     setFilters({ time: nextTime });
@@ -95,7 +95,7 @@ export default function OrdersPage() {
     document.getElementById("cancel_modal")?.close();
   };
 
-  if (loading && userOrders.length === 0) {
+  if (loading && userOrders?.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <span className="loading loading-spinner loading-lg text-blue-600"></span>
@@ -145,17 +145,16 @@ export default function OrdersPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        {/* Header */}
+<div className="w-full px-6 xl:px-10 py-8">        {/* Header */}
         <OrdersHeader userOrders={userOrders} />
 
         {/* Content */}
         <div className="grid grid-cols-12 gap-6 items-start">
           {/* Filters */}
-          <aside className="col-span-12 xl:col-span-3 xl:sticky xl:top-6">
+          <aside className="col-span-12 xl:col-span-2 xl:sticky xl:top-6">
             <OrdersFilter
-              status={filters.status || []}
-              time={filters.time || []}
+              status={filters?.status || []}
+              time={filters?.time || []}
               onToggleStatus={toggleStatus}
               onToggleTime={toggleTime}
               onClear={clearFilters}
@@ -163,7 +162,7 @@ export default function OrdersPage() {
           </aside>
 
           {/* Table */}
-          <section className="col-span-12 xl:col-span-9">
+          <section className="col-span-12 xl:col-span-10">
             <div className="relative mb-5">
               <Search
                 size={18}
@@ -182,7 +181,7 @@ export default function OrdersPage() {
               <div className="flex justify-center py-16 bg-white rounded-2xl border border-gray-200">
                 <span className="loading loading-spinner loading-md text-blue-600"></span>
               </div>
-            ) : userOrders.length === 0 ? (
+            ) : userOrders?.length === 0 ? (
               <div className="bg-white rounded-2xl border border-gray-200 text-center py-16">
                 <Package size={48} className="mx-auto text-gray-300 mb-4" />
                 <h3 className="text-lg font-semibold text-gray-800 mb-1">

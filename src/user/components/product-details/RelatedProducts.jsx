@@ -20,8 +20,8 @@ export default function RelatedProducts({ relatedProducts }) {
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
         {" "}
-        {relatedProducts.map((related) => (
-          <ProductCard key={related._id} product={related} />
+        {relatedProducts?.map((related) => (
+          <ProductCard key={related?._id} product={related} />
         ))}
       </div>
     </section>

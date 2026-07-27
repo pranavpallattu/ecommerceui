@@ -40,12 +40,11 @@ export default function CheckoutPage() {
     fetchCartProducts,
   } = useCartStore();
   const { applyBuyNowCoupon, removeBuyNowCoupon } = useCouponStore();
-  const {
-    addresses,
-    defaultAddressId,
-    loading: addrLoading,
-    fetchAddresses,
-  } = useAddressStore();
+ const {
+  defaultAddress,
+  loading: addrLoading,
+  fetchAddresses,
+} = useAddressStore();
   const { balance, loading: walletLoading, fetchWallet } = useWalletStore();
 
   useEffect(() => {
@@ -97,8 +96,8 @@ export default function CheckoutPage() {
 
     return removeCoupon();
   };
-  const defaultAddress =
-    addresses.find((a) => a._id === defaultAddressId) || addresses[0];
+  // const defaultAddress =
+  //   addresses.find((a) => a._id === defaultAddressId) || addresses[0];
   const checkoutData = isBuyNow ? buyNowCheckout : cart;
   const appliedCoupon = checkoutData?.appliedCoupon;
 

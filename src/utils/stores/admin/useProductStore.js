@@ -142,7 +142,7 @@ const useProductStore = create(
           res = await addProductApi(formData);
         }
 
-      if (!res?.success) {
+        if (!res?.success) {
           toast.error(res?.message || "Operation failed");
           set({ loading: false });
           return;
@@ -197,14 +197,16 @@ const useProductStore = create(
 
         if (!res?.success) {
           toast.error(res?.message || "Failed to delete product");
-          return;
+          return false;
         }
 
         toast.success("Product deleted successfully ");
         get().fetchProducts();
+        return true;
       } catch (err) {
         console.error(err);
         toast.error("Delete failed");
+        return false;
       }
     },
   })),

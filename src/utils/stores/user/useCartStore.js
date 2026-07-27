@@ -62,7 +62,7 @@ const useCartStore = create((set, get) => ({
   },
 
   updateQuantity: async (reqBody) => {
-    set({ loading: true, error: null });
+    set({ error: null });
     try {
       const res = await updateQuantityApi(reqBody);
       if (!res.success) {

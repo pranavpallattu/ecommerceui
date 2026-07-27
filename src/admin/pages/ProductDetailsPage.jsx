@@ -10,7 +10,7 @@ import useProductStore from "../../utils/stores/admin/useProductStore";
 export default function ProductDetailsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { openModal, product, fetchProductById, toggleListing, loading } =
+  const { openModal, product, fetchProductById, deleteProduct, toggleListing, loading } =
     useProductStore();
 
   const { openConfirm } = useConfirmModalStore();
@@ -37,6 +37,7 @@ export default function ProductDetailsPage() {
           navigate={navigate}
           openModal={openModal}
           toggleListing={toggleListing}
+          deleteProduct={deleteProduct}
           openConfirm={openConfirm}
         />
 

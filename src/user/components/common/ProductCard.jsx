@@ -5,16 +5,19 @@ import useUserWishlistStore from "../../../utils/stores/user/useWishlistStore";
 const ProductCard = ({ product }) => {
   const { wishlistProducts, addtoWishlist, removeFromWishlist, loading } =
     useUserWishlistStore();
+  console.log(wishlistProducts);
 
   // Safely check if product is in wishlist
   const isInWishlist =
     wishlistProducts?.some(
-      (item) => item._id === product._id || item.productId?._id === product._id,
+      (item) =>
+        item?._id === product?._id || item?.productId?._id === product?._id,
     ) || false;
   const discount =
-    product.regularPrice > product.salePrice
+    product?.regularPrice > product?.salePrice
       ? Math.round(
-          ((product.regularPrice - product.salePrice) / product.regularPrice) *
+          ((product?.regularPrice - product?.salePrice) /
+            product?.regularPrice) *
             100,
         )
       : 0;
@@ -25,9 +28,9 @@ const ProductCard = ({ product }) => {
 
     try {
       if (isInWishlist) {
-        await removeFromWishlist(product._id);
+        await removeFromWishlist(product?._id);
       } else {
-        await addtoWishlist(product._id);
+        await addtoWishlist(product?._id);
       }
     } catch (err) {
       console.error("Wishlist toggle failed:", err);
@@ -52,7 +55,7 @@ const ProductCard = ({ product }) => {
         />
       </button>
 
-      <Link to={`/product/${product._id}`} className="block p-5">
+      <Link to={`/product/${product?._id}`} className="block p-5">
         {/* Image */}
         <div className="w-full h-60 mb-4 rounded-lg overflow-hidden bg-gray-50">
           <img
@@ -67,16 +70,16 @@ const ProductCard = ({ product }) => {
 
         {/* Name */}
         <h3 className="text-lg font-medium text-gray-900 line-clamp-2 mb-2">
-          {product.productName}
+          {product?.productName}
         </h3>
 
         {/* Price */}
         <div className="flex items-end gap-2 mt-3">
-          <span className="text-2xl font-bold">₹{product.salePrice}</span>
+          <span className="text-2xl font-bold">₹{product?.salePrice}</span>
 
           {product.regularPrice > product.salePrice && (
             <span className="text-sm text-gray-400 line-through">
-              ₹{product.regularPrice}
+              ₹{product?.regularPrice}
             </span>
           )}
         </div>
@@ -90,7 +93,7 @@ const ProductCard = ({ product }) => {
             <div />
           )}
 
-          {product.quantity <= 0 && (
+          {product?.quantity <= 0 && (
             <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-600">
               Out of Stock
             </span>

@@ -54,7 +54,7 @@ export default function ImageGallery({
 
       {images?.length > 1 && (
         <div className="grid grid-cols-5 gap-3">
-          {images.map((img, i) => (
+          {images?.map((img, i) => (
             <button
               key={i}
               onClick={() => setSelectedImage(i)}

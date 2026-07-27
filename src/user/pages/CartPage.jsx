@@ -44,7 +44,7 @@ const CartPage = () => {
           <div className="lg:col-span-2 space-y-6">
             {cart.items.map((item) => (
               <CartItem
-                key={item._id}
+                key={item?._id}
                 item={item}
                 handleQuantity={handleQuantity}
                 removeFromCart={removeFromCart}

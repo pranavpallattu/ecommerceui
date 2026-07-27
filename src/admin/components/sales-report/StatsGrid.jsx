@@ -1,4 +1,13 @@
-import { Package, IndianRupee, ShoppingCart, Zap } from "lucide-react";
+import {
+  Package,
+  IndianRupee,
+  ShoppingCart,
+  Zap,
+  ShoppingBag,
+  Receipt,
+  PackageCheck,
+  Boxes,
+} from "lucide-react";
 
 export default function StatsGrid({ report }) {
   const formatCurrency = (value = 0) =>
@@ -15,18 +24,47 @@ export default function StatsGrid({ report }) {
       color: "blue",
     },
 
+      {
+      label: "Products  Sold",
+      value: report?.totalProductsSold || 0,
+      icon: ShoppingBag,
+      color: "indigo",
+    },
+
+
     {
-      label: "Total Amount",
+      label: "Total Items Sold",
+      value: report?.totalItemsSold || 0,
+      icon: Boxes,
+      color: "indigo",
+    },
+
+    {
+      label: "Average Order Value",
+      value: formatCurrency(report?.averageOrderValue),
+      icon: Receipt,
+      color: "cyan",
+    },
+
+    {
+      label: "Total Revenue",
       value: formatCurrency(report?.totalAmount),
       icon: IndianRupee,
       color: "emerald",
     },
 
     {
-      label: "Net Revenue",
-      value: formatCurrency(report?.netRevenue),
+      label: "Offer Discounts",
+      value: formatCurrency(report?.totalDiscount),
       icon: IndianRupee,
-      color: "green",
+      color: "blue",
+    },
+
+    {
+      label: "Coupon Discounts",
+      value: formatCurrency(report?.couponDeduction),
+      icon: IndianRupee,
+      color: "orange",
     },
 
     {
@@ -37,23 +75,9 @@ export default function StatsGrid({ report }) {
     },
 
     {
-      label: "Total Discount",
-      value: formatCurrency(report?.totalDiscount),
+      label: "Net Revenue",
+      value: formatCurrency(report?.netRevenue),
       icon: IndianRupee,
-      color: "blue",
-    },
-
-    {
-      label: "Coupon Deduction",
-      value: formatCurrency(report?.couponDeduction),
-      icon: IndianRupee,
-      color: "orange",
-    },
-
-    {
-      label: "Delivered",
-      value: report?.delivered || 0,
-      icon: Package,
       color: "green",
     },
 
@@ -69,6 +93,13 @@ export default function StatsGrid({ report }) {
       value: report?.buynowOrders || 0,
       icon: Zap,
       color: "yellow",
+    },
+
+    {
+      label: "Delivered Orders",
+      value: report?.delivered || 0,
+      icon: PackageCheck,
+      color: "green",
     },
   ];
 

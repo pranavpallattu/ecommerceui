@@ -7,7 +7,7 @@ const UserLayout = () => {
     <>
       <Navbar />
 
-      <main className="min-h-screen pt-16 bg-gray-50">
+      <main className="min-h-screen pt-16 bg-gray-50  ">
         <Outlet />
       </main>
 

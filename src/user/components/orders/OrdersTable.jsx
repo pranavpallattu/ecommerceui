@@ -17,9 +17,9 @@ export default function OrdersTable({ orders, getStatusBadge, onCancelClick }) {
         </thead>
 
         <tbody>
-          {orders.map((order) => (
+          {orders?.map((order) => (
             <OrderRow
-              key={order._id}
+              key={order?._id}
               order={order}
               getStatusBadge={getStatusBadge}
               onCancelClick={onCancelClick}

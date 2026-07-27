@@ -23,7 +23,7 @@ function OrdersHeader({ userOrders }) {
   {/* Right */}
   <div className="flex-shrink-0 bg-base-100 border border-base-200 rounded-2xl px-4 sm:px-6 py-3 text-center">
     <p className="text-2xl sm:text-3xl font-bold text-blue-700">
-      {userOrders.length}
+      {userOrders?.length}
     </p>
 
     <p className="text-[10px] sm:text-xs uppercase tracking-wide text-gray-400 whitespace-nowrap">

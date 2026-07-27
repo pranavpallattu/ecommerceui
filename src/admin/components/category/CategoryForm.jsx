@@ -45,7 +45,15 @@ const CategoryForm = ({ isOpen, mode, initialData, onClose, onSubmit }) => {
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center">
-      <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl animate-fade-in">
+      <div className="relative bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl animate-fade-in">
+        <button
+          onClick={onClose}
+          disabled={submitting}
+          className="btn btn-ghost btn-circle btn-sm sm:btn-md absolute top-4 right-4"
+        >
+          ✕
+        </button>
+
         <h2 className="text-2xl font-bold mb-6">
           {mode === "edit" ? "Edit Category" : "Add New Category"}
         </h2>

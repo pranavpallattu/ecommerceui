@@ -42,8 +42,8 @@ export default function HomePage() {
       <TrustBadges />
 
       <div className="container mx-auto px-4 py-16 lg:py-20 space-y-20 lg:space-y-28">
-        {homeProducts.map((category) => (
-          <CategorySection key={category.categoryId} category={category} />
+        {homeProducts?.map((category) => (
+          <CategorySection key={category?.categoryId} category={category} />
         ))}
       </div>
     </div>

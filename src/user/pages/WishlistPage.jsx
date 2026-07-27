@@ -36,7 +36,7 @@ const WishlistPage = () => {
           <WishlistHeader wishlistProducts={wishlistProducts} />
         </div>
 
-        {wishlistProducts.length === 0 ? (
+        {wishlistProducts?.length === 0 ? (
           <div className="text-center py-20">
             <div className="max-w-md mx-auto">
               <h3 className="text-2xl font-medium text-gray-700 mb-4">
@@ -52,12 +52,12 @@ const WishlistPage = () => {
           </div>
         ) : (
           <div className="space-y-6">
-            {wishlistProducts.map((product) => (
+            {wishlistProducts?.map((product) => (
               <WishlistCard
-                key={product._id}
+                key={product?._id}
                 product={product}
-                onRemove={() => removeFromWishlist(product._id)}
-                onAddToCart={() => addToCart(product._id)}
+                onRemove={() => removeFromWishlist(product?._id)}
+                onAddToCart={() => addToCart(product?._id)}
               />
             ))}
           </div>

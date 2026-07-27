@@ -31,7 +31,7 @@ export default function ProductGrid({
     return () => observer.disconnect;
   });
 
-  if (loading && products.length === 0) {
+  if (loading && products?.length === 0) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
         {[...Array(9)].map((_, i) => (
@@ -62,8 +62,8 @@ export default function ProductGrid({
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-        {products.map((product) => (
-          <ProductCard key={product._id} product={product} />
+        {products?.map((product) => (
+          <ProductCard key={product?._id} product={product} />
         ))}
       </div>
 

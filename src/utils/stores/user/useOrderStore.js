@@ -95,7 +95,7 @@ getUserOrders: async (filters = get().filters) => {
       if (!res.success) {
         toast.error(res?.message);
       }
-      toast.success("Ordered cancelled successfully");
+      toast.success("Order cancelled successfully");
       await get().getUserOrders();
       set({ loading: false, error: null });
     } catch (error) {
@@ -157,7 +157,7 @@ getUserOrders: async (filters = get().filters) => {
       if (!res.success) {
         toast.error(res?.message);
       }
-      toast.success("Ordered return request submitted successfully");
+      toast.success("Order return request submitted successfully");
 
       // Refresh orders list + current order
       await get().getUserOrders();

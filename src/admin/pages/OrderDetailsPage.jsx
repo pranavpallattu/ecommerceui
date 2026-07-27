@@ -8,7 +8,8 @@ import OrderItems from "../components/order-details/OrderItems";
 import PaymentPricing from "../components/order-details/PaymentPricing";
 import PaymentGatewayDetails from "../components/order-details/PaymentGatewayDetails";
 import OrderTimeline from "../components/order-details/OrderTimeline";
-import useOrderStore from "../../utils/stores/user/useOrderStore";
+import useOrderStore from "../../utils/stores/admin/useOrderStore";
+import RefundHistory from "../components/order-details/RefundHistory";
 
 const STATUS_COLORS = {
   Confirmed: "bg-blue-100 text-blue-700",
@@ -29,9 +30,12 @@ const ALL_STATUSES = [
   "Cancelled",
 ];
 
+const editableStatuses = ["Pending", "Confirmed", "Processing", "Shipped"];
+
 export default function OrderDetailsPage() {
   const { id } = useParams();
   const { order, loading, fetchOrderById, updateOrderStatus } = useOrderStore();
+  const canUpdateStatus = editableStatuses.includes(order?.orderStatus);
 
   useEffect(() => {
     fetchOrderById(id);
@@ -48,6 +52,7 @@ export default function OrderDetailsPage() {
   return (
     <div className="p-3 sm:p-4 md:p-6 lg:p-10 space-y-4 sm:space-y-6">
       <OrderHeader
+        canUpdateStatus={canUpdateStatus}
         status={order.orderStatus}
         onStatusChange={(e) => updateOrderStatus(order._id, e.target.value)}
       />
@@ -62,6 +67,8 @@ export default function OrderDetailsPage() {
       <OrderItems items={order.items} STATUS_COLORS={STATUS_COLORS} />
 
       <PaymentPricing order={order} />
+
+      {order.refunds?.length > 0 && <RefundHistory refunds={order.refunds} />}
 
       {order.paymentMethod === "Razorpay" && (
         <PaymentGatewayDetails order={order} />

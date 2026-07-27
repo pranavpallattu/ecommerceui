@@ -16,7 +16,6 @@ const useWishlistStore = create((set, get) => ({
     try {
       const res = await getWishlistApi();
       if (res.success) {
-        // Backend returns { products: [{ product: { ... } }] }
         const products =
           res.data?.data?.products?.map((item) => item.product) || [];
         set({ wishlistProducts: products, loading: false });
@@ -34,6 +33,8 @@ const useWishlistStore = create((set, get) => ({
     try {
       const res = await addtoWishlistApi(productId);
       if (!res.success) {
+        set({ loading: false });
+
         return toast.error(res?.message);
       }
       toast.success("Product added to wishlist");
@@ -48,6 +49,7 @@ const useWishlistStore = create((set, get) => ({
     try {
       const res = await removeFromWishlistApi(productId);
       if (!res.success) {
+        set({ loading: false });
         return toast.error(res?.message);
       }
       toast.success("Product removed from wishlist");

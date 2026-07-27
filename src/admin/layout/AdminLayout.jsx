@@ -1,11 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/common/Sidebar";
 import Navbar from "../components/common/Navbar";
 import ConfirmModal from "../../components/ConfirmModal";
+import { useReturnManagementStore } from "../../utils/stores/admin/useReturnManagementStore.js";
 
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { fetchReturnRequests } = useReturnManagementStore();
+
+  useEffect(() => {
+    fetchReturnRequests();
+    // polling
+
+    const interval = setInterval(() => {
+      fetchReturnRequests();
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, [fetchReturnRequests]);
 
   return (
     <>

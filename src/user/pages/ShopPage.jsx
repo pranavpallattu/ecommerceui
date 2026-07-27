@@ -28,6 +28,7 @@ export default function ShopPage() {
     resetShopProducts();
     fetchShopProducts({ search, category, sort });
   }, [search, category, sort]);
+  
 
   const handleCategoryChange = (catId) =>
     setSearchParams({ search, category: catId, sort });

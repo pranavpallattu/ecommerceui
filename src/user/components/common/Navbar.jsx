@@ -7,7 +7,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { LayoutDashboard, MapPin, Wallet, LogOut, Package } from "lucide-react";
@@ -17,17 +17,18 @@ import useCartStore from "../../../utils/stores/user/useCartStore";
 import useAuthStore from "../../../utils/stores/auth/useAuthStore";
 
 const Navbar = () => {
-  const [searchText, setSearchText] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [searchText, setSearchText] = useState(
+    searchParams.get("search") || "",
+  );
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
 
   const { wishlistProducts, fetchWishlistProducts } = useWishlistStore();
   const { cartProducts, fetchCartProducts } = useCartStore();
   const { user, logout, checkAuth } = useAuthStore();
-
-  const hasNavigated = useRef(false);
 
   const handleLogout = async () => {
     await logout();
@@ -44,47 +45,45 @@ const Navbar = () => {
     fetchCartProducts();
     fetchWishlistProducts();
   }, [user]);
+
+  useEffect(() => {
+    setSearchText(searchParams.get("search") || "");
+  }, [searchParams]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      const trimmedSearch = searchText.trim();
+      const trimmed = searchText.trim();
 
-      if (!trimmedSearch) {
-        hasNavigated.current = false;
-
+      if (!trimmed) {
         if (location.pathname === "/shop") {
           setSearchParams((prev) => {
             const params = new URLSearchParams(prev);
             params.delete("search");
+            params.delete("page");
             return params;
           });
         }
-
         return;
       }
 
-      // Already on shop -> update query params
+      const currentSearch = searchParams.get("search") || "";
+
       if (location.pathname === "/shop") {
+        if (currentSearch === trimmed) return;
+
         setSearchParams((prev) => {
           const params = new URLSearchParams(prev);
-          params.set("search", trimmedSearch);
+          params.set("search", trimmed);
           params.set("page", "1");
           return params;
         });
-
-        hasNavigated.current = true;
-        return;
+      } else {
+        navigate(`/shop?search=${encodeURIComponent(trimmed)}&page=1`);
       }
-
-      // Coming from another page -> navigate only once
-      if (!hasNavigated.current) {
-        hasNavigated.current = true;
-        navigate(`/shop?search=${encodeURIComponent(trimmedSearch)}&page=1`);
-      }
-    }, 500);
+    }, 1200);
 
     return () => clearTimeout(timer);
   }, [searchText, location.pathname]);
-
   return (
     <div className="navbar bg-white border-b border-gray-200 px-2 sm:px-4 py-3 z-50 relative">
       <div className="navbar-start">
@@ -177,6 +176,7 @@ const Navbar = () => {
               size={20}
             />
             <input
+              value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               type="text"
               placeholder="Search products..."
@@ -325,6 +325,7 @@ const Navbar = () => {
               size={20}
             />
             <input
+              value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               type="text"
               placeholder="Search products..."

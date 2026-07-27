@@ -73,12 +73,14 @@ const NotificationsTableRow = ({ type, data }) => {
 
       {/* Customer */}
       <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
-        <p
+      {
+        customer?.name &&  ( <p
           className="font-medium text-gray-800 text-xs sm:text-sm truncate max-w-[120px]"
           title={customer?.name}
         >
           {customer?.name || "—"}
-        </p>
+        </p>)
+      }
         <p
           className="text-[10px] sm:text-xs text-gray-500 truncate max-w-[120px]"
           title={customer?.emailId}

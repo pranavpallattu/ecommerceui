@@ -40,13 +40,13 @@ export default function CouponsPage() {
       <div className="container mx-auto px-4 max-w-5xl">
         <CouponsHeader />
 
-        {availableCoupons.length === 0 ? (
+        {availableCoupons?.length === 0 ? (
           <CouponEmptyState />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {availableCoupons.map((coupon) => (
+            {availableCoupons?.map((coupon) => (
               <CouponCard
-                key={coupon._id}
+                key={coupon?._id}
                 coupon={coupon}
                 copiedCode={copiedCode}
                 onCopy={handleCopy}

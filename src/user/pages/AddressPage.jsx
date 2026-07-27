@@ -45,7 +45,7 @@ export default function AddressPage() {
     let success = false;
 
     if (editingAddress) {
-      success = await editAddress(editingAddress._id, data);
+      success = await editAddress(editingAddress?._id, data);
     } else {
       success = await addAddress(data);
     }
@@ -78,11 +78,11 @@ export default function AddressPage() {
         )}
 
         {/* Loading / Empty / Content */}
-        {loading && addresses.length === 0 ? (
+        {loading && addresses?.length === 0 ? (
           <div className="flex justify-center py-20">
             <span className="loading loading-spinner loading-lg text-primary"></span>
           </div>
-        ) : addresses.length === 0 ? (
+        ) : addresses?.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
             <MapPin
               className="mx-auto text-gray-300"
@@ -105,13 +105,13 @@ export default function AddressPage() {
           </div>
         ) : (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {addresses.map((addr) => (
+            {addresses?.map((addr) => (
               <AddressCard
-                key={addr._id}
+                key={addr?._id}
                 address={addr}
-                isDefault={defaultAddress?._id === addr._id}
+                isDefault={defaultAddress?._id === addr?._id}
                 onEdit={() => handleOpenEdit(addr)}
-                onDelete={() => deleteAddress(addr._id)}
+                onDelete={() => deleteAddress(addr?._id)}
               />
             ))}
           </div>

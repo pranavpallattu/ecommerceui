@@ -9,27 +9,27 @@ export default function PriceSummaryCard({ order }) {
         <div className="space-y-3 text-sm">
           <div className="flex justify-between">
             <span>Subtotal</span>
-            <span>₹{order.subTotal?.toLocaleString("en-IN")}</span>
+            <span>₹{order?.subTotal?.toLocaleString("en-IN")}</span>
           </div>
 
-          {order.discount > 0 && (
+          {order?.discount > 0 && (
             <div className="flex justify-between text-success">
               <span>
                 Coupon Discount
-                {order.couponCode && (
+                {order?.couponCode && (
                   <span className="badge badge-outline badge-success ml-2">
-                    {order.couponCode}
+                    {order?.couponCode}
                   </span>
                 )}
               </span>
-              <span>− ₹{order.discount.toLocaleString("en-IN")}</span>
+              <span>− ₹{order?.discount?.toLocaleString("en-IN")}</span>
             </div>
           )}
 
-          {order.walletAmountUsed > 0 && (
+          {order?.walletAmountUsed > 0 && (
             <div className="flex justify-between text-success">
               <span>Wallet Used</span>
-              <span>− ₹{order.walletAmountUsed.toLocaleString("en-IN")}</span>
+              <span>− ₹{order?.walletAmountUsed.toLocaleString("en-IN")}</span>
             </div>
           )}
 
@@ -37,7 +37,7 @@ export default function PriceSummaryCard({ order }) {
 
           <div className="flex justify-between font-bold text-lg">
             <span>Grand Total</span>
-            <span>₹{order.grandTotal?.toLocaleString("en-IN")}</span>
+            <span>₹{order?.grandTotal?.toLocaleString("en-IN")}</span>
           </div>
 
           <div className="divider my-1"></div>
@@ -51,14 +51,14 @@ export default function PriceSummaryCard({ order }) {
             <span>Payment Status</span>
             <span
               className={`font-semibold ${
-                order.paymentStatus === "Refunded"
+                order?.paymentStatus === "Refunded"
                   ? "text-info"
                   : order.paymentStatus === "Paid"
                     ? "text-success"
                     : "text-warning"
               }`}
             >
-              {order.paymentStatus}
+              {order?.paymentStatus}
             </span>
           </div>
         </div>

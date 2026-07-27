@@ -22,7 +22,7 @@ const WishlistHeader = ({wishlistProducts}) => {
     {/* Right */}
     <div className="bg-base-100 border rounded-2xl px-3 py-2 sm:px-5 sm:py-4 text-center shrink-0">
       <p className="text-xl sm:text-2xl lg:text-3xl font-bold">
-        {wishlistProducts.length}
+        {wishlistProducts?.length}
       </p>
 
       <p className="text-[10px] sm:text-xs uppercase tracking-wide text-gray-400 whitespace-nowrap">

@@ -17,7 +17,7 @@ export default function OrdersFilter({
           <Filter size={16} className="text-blue-600" />
           <h2 className="font-semibold text-gray-900">Filters</h2>
         </div>
-        {(status.length > 0 || time.length > 0) && (
+        {(status?.length > 0 || time?.length > 0) && (
           <button
             className="text-xs font-medium text-blue-600 hover:underline"
             onClick={onClear}
@@ -32,7 +32,7 @@ export default function OrdersFilter({
           Order Status
         </h3>
         <div className="space-y-2.5">
-          {STATUS_OPTIONS.map((opt) => (
+          {STATUS_OPTIONS?.map((opt) => (
             <label
               key={opt}
               className="flex items-center gap-2.5 text-sm text-gray-700 cursor-pointer"
@@ -41,7 +41,7 @@ export default function OrdersFilter({
                 type="checkbox"
                 className="checkbox checkbox-sm checkbox-primary"
                 // sync checkbox state with react state
-                checked={status.includes(opt)}
+                checked={status?.includes(opt)}
                 onChange={() => onToggleStatus(opt)}
               />
               {opt}
@@ -55,7 +55,7 @@ export default function OrdersFilter({
           Order Time
         </h3>
         <div className="space-y-2.5">
-          {TIME_OPTIONS.map((opt) => (
+          {TIME_OPTIONS?.map((opt) => (
             <label
               key={opt}
               className="flex items-center gap-2.5 text-sm text-gray-700 cursor-pointer"
@@ -63,7 +63,7 @@ export default function OrdersFilter({
               <input
                 type="checkbox"
                 className="checkbox checkbox-sm checkbox-primary"
-                checked={time.includes(opt)}
+                checked={time?.includes(opt)}
                 onChange={() => onToggleTime(opt)}
               />
               {opt}

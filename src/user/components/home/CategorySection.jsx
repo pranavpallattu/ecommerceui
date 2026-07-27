@@ -3,8 +3,8 @@ import ProductCard from "../common/ProductCard";
 
 const CategorySection = ({ category }) => {
   const categoryName =
-    category.categoryName.charAt(0).toUpperCase() +
-    category.categoryName.slice(1);
+    category?.categoryName?.charAt(0)?.toUpperCase() +
+    category?.categoryName?.slice(1);
 
   return (
     <section className="mb-10">
@@ -15,15 +15,15 @@ const CategorySection = ({ category }) => {
             {categoryName}
           </h2>
 
-          {category.categoryOffer > 0 && (
+          {category?.categoryOffer > 0 && (
             <span className="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">
-              {category.categoryOffer}% OFF
+              {category?.categoryOffer}% OFF
             </span>
           )}
         </div>
 
         <Link
-          to={`/shop?category=${category.categoryId}`}
+          to={`/shop?category=${category?.categoryId}`}
           className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline"
         >
           View all →
@@ -32,8 +32,8 @@ const CategorySection = ({ category }) => {
 
       {/* Products */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-        {category.products.map((product) => (
-          <ProductCard key={product._id} product={product} />
+        {category?.products?.map((product) => (
+          <ProductCard key={product?._id} product={product} />
         ))}
       </div>
     </section>

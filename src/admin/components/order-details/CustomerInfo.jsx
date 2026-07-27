@@ -4,9 +4,10 @@ export default function CustomerInfo({ order }) {
       <h3 className="text-base sm:text-lg font-semibold text-gray-700 mb-3 sm:mb-4">
         Customer
       </h3>
-      <p className="font-medium text-sm sm:text-base">
-        {order.userId?.name || "—"}
-      </p>
+      {order.userId?.name && (
+        <p className="font-medium text-sm sm:text-base">{order.userId?.name}</p>
+      )}
+
       <p className="text-xs sm:text-sm text-gray-500 break-all">
         {order.userId?.emailId || order.userId?._id}
       </p>

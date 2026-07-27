@@ -31,7 +31,7 @@ export default function ProductDetailsPage() {
   const navigate = useNavigate();
 
   const alreadyInCart = cartProducts?.items?.some(
-    (item) => item.product._id === id,
+    (item) => item?.product?._id === id,
   );
 
   useEffect(() => {
@@ -39,13 +39,13 @@ export default function ProductDetailsPage() {
   }, [id]);
 
   const isInWishlist =
-    wishlistProducts?.some((item) => item._id === product?._id) || false;
+    wishlistProducts?.some((item) => item?._id === product?._id) || false;
 
   const hasDiscount = product?.regularPrice > product?.salePrice;
   const inStock = product?.quantity > 0 && product?.isActive;
   const discountPercent = hasDiscount
     ? Math.round(
-        ((product.regularPrice - product.salePrice) / product.regularPrice) *
+        ((product?.regularPrice - product?.salePrice) / product?.regularPrice) *
           100,
       )
     : 0;
@@ -78,12 +78,12 @@ export default function ProductDetailsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Breadcrumb productName={product.productName} />
+      <Breadcrumb productName={product?.productName} />
 
       <div className="container mx-auto px-4 py-8 lg:py-12 max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16 items-start">
           <ImageGallery
-            images={product.productImage}
+            images={product?.productImage}
             selectedImage={selectedImage}
             setSelectedImage={setSelectedImage}
             discountPercent={discountPercent}
@@ -91,8 +91,8 @@ export default function ProductDetailsPage() {
             isInWishlist={isInWishlist}
             onWishlistToggle={() => {
               isInWishlist
-                ? removeFromWishlist(product._id)
-                : addtoWishlist(product._id);
+                ? removeFromWishlist(product?._id)
+                : addtoWishlist(product?._id);
             }}
           />
 
@@ -103,15 +103,15 @@ export default function ProductDetailsPage() {
             discountPercent={discountPercent}
             isInWishlist={isInWishlist}
             alreadyInCart={alreadyInCart}
-            onAddToCart={() => addToCart(product._id)}
+            onAddToCart={() => addToCart(product?._id)}
             onWishlistToggle={() =>
               isInWishlist
-                ? removeFromWishlist(product._id)
-                : addtoWishlist(product._id)
+                ? removeFromWishlist(product?._id)
+                : addtoWishlist(product?._id)
             }
             onBuyNow={async () => {
               if (!inStock) return;
-              const buyNowId = await createBuyNow(product._id);
+              const buyNowId = await createBuyNow(product?._id);
               if (buyNowId) navigate(`/checkout/${buyNowId}`);
             }}
           />

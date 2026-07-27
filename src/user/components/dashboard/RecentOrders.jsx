@@ -29,17 +29,17 @@ export default function RecentOrders({ recentOrders }) {
           </div>
         ) : (
           <div className="space-y-5">
-            {recentOrders.map((order) => (
+            {recentOrders?.map((order) => (
               <div
-                key={order._id}
+                key={order?._id}
                 className="flex flex-col sm:flex-row sm:items-center justify-between border-b pb-5 last:border-0 gap-4"
               >
                 <div className="flex-1">
                   <p className="font-medium text-gray-900">
-                    Order #{order._id.slice(-8).toUpperCase()}
+                    Order #{order?._id.slice(-8).toUpperCase()}
                   </p>
                   <p className="text-sm text-gray-600 mt-1">
-                    {new Date(order.createdAt).toLocaleDateString("en-IN", {
+                    {new Date(order?.createdAt).toLocaleDateString("en-IN", {
                       day: "numeric",
                       month: "short",
                       year: "numeric",
@@ -49,11 +49,11 @@ export default function RecentOrders({ recentOrders }) {
 
                 <div className="text-right">
                   <p className="font-bold text-lg">
-                    ₹{order.grandTotal?.toLocaleString("en-IN") || "0"}
+                    ₹{order?.grandTotal?.toLocaleString("en-IN") || "0"}
                   </p>
                   <span
                     className={`badge badge-sm mt-1 ${
-                      order.orderStatus === "Delivered"
+                      order?.orderStatus === "Delivered"
                         ? "badge-success"
                         : order.orderStatus === "Cancelled"
                           ? "badge-error"
@@ -65,7 +65,7 @@ export default function RecentOrders({ recentOrders }) {
                 </div>
 
                 <Link
-                  to={`/orders/${order._id}`}
+                  to={`/orders/${order?._id}`}
                   className="btn btn-outline btn-sm gap-2 sm:ml-4"
                 >
                   View Details

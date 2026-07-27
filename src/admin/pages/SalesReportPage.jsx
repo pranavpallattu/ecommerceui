@@ -3,6 +3,7 @@ import ReportHeader from "../components/sales-report/ReportHeader";
 import StatsGrid from "../components/sales-report/StatsGrid";
 import OrderStatusBreakdown from "../components/sales-report/OrderStatusBreakdown";
 import useSalesReportStore from "../../utils/stores/admin/useSalesReportStore"
+import PaymentMethodsCard from "../components/sales-report/PaymentMethodsCard";
 export default function SalesReportPage() {
   const [filterType, setFilterType] = useState("all");
   const [customStart, setCustomStart] = useState("");
@@ -61,6 +62,8 @@ export default function SalesReportPage() {
         />
 
         <StatsGrid report={report} />
+
+        <PaymentMethodsCard paymentMethods={report?.paymentMethods}/>
 
         <OrderStatusBreakdown report={report} />
       </div>
