@@ -30,7 +30,7 @@ const ALL_STATUSES = [
   "Cancelled",
 ];
 
-const editableStatuses = ["Pending", "Confirmed", "Processing", "Shipped"];
+const editableStatuses = ["Pending", "Confirmed", "Processing", "Shipped", "PartiallyCancelled"];
 
 export default function OrderDetailsPage() {
   const { id } = useParams();

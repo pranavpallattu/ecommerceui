@@ -1,3 +1,35 @@
+// import { useEffect } from "react";
+// import useAuthStore from "../../utils/stores/auth/useAuthStore";
+
+// export default function GoogleSuccessPage() {
+//   const { user, loading, checkAuth } = useAuthStore();
+
+//   useEffect(() => {
+//     const init = async () => {
+//       await checkAuth(); // 
+//     };
+
+//     init();
+//   }, []);
+
+//   useEffect(() => {
+//     if (loading) return;
+
+//     if (user?.isAdmin) {
+//       window.location.replace("/admin/dashboard");
+//     } else if (user) {
+//       window.location.replace("/");
+//     } else {
+//       window.location.replace("/auth");
+//     }
+//   }, [user, loading]);
+
+//   return <h1>Logging in...</h1>;
+// }
+
+
+
+
 import { useEffect } from "react";
 import useAuthStore from "../../utils/stores/auth/useAuthStore";
 
@@ -25,7 +57,7 @@ export default function GoogleSuccessPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4 text-center">
       <img
-        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgiPftJFEcFuclHRqhqXpbM58OXt2F5zRmtA&s"
+        src="/logo.png"
         className="w-20 h-20 mb-6 rounded-xl object-cover"
         alt="OneBazaar Logo"
       />
