@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Bell, UserCircle2, LogOut, Menu } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useReturnManagementStore } from "../../../utils/stores/admin/useReturnManagementStore.js.js";
@@ -6,10 +6,6 @@ import useAuthStore from "../../../utils/stores/auth/useAuthStore.js";
 
 const Navbar = ({ onMenuClick }) => {
   const { totalReturns, fetchReturnRequests } = useReturnManagementStore();
-
-  useEffect(() => {
-    fetchReturnRequests();
-  }, []);
 
   const navigate = useNavigate();
 
@@ -39,7 +35,10 @@ const Navbar = ({ onMenuClick }) => {
         {/* Notification Bell */}
         <div className="relative">
           <Link to="/admin/notifications">
-            <button className="relative p-2 sm:p-2.5 rounded-full hover:bg-gray-100 transition-colors">
+            <button
+              onClick={fetchReturnRequests}
+              className="relative p-2 sm:p-2.5 rounded-full hover:bg-gray-100 transition-colors"
+            >
               <Bell
                 size={20}
                 className="text-gray-700 sm:w-[22px] sm:h-[22px]"
