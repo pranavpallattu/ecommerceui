@@ -40,11 +40,11 @@ export default function CheckoutPage() {
     fetchCartProducts,
   } = useCartStore();
   const { applyBuyNowCoupon, removeBuyNowCoupon } = useCouponStore();
- const {
-  defaultAddress,
-  loading: addrLoading,
-  fetchAddresses,
-} = useAddressStore();
+  const {
+    defaultAddress,
+    loading: addrLoading,
+    fetchAddresses,
+  } = useAddressStore();
   const { balance, loading: walletLoading, fetchWallet } = useWalletStore();
 
   useEffect(() => {
@@ -210,7 +210,7 @@ export default function CheckoutPage() {
           return;
         }
 
-        const { order, key } = await createRazorpayOrder(grandTotal);
+        const { order, key } = await createRazorpayOrder();
 
         const rzp = new window.Razorpay({
           key,

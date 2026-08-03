@@ -23,58 +23,56 @@ const useOrderStore = create((set, get) => ({
   paymentLoading: false,
   error: null,
 
-filters: {
-  search: "",
-  status: [],
-  time: [],
-},
+  filters: {
+    search: "",
+    status: [],
+    time: [],
+  },
 
-setFilters: (filters) => {
-  set((state) => ({
-    filters: {
-      ...state.filters,
-      ...filters,
-    },
-  }));
-},
+  setFilters: (filters) => {
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        ...filters,
+      },
+    }));
+  },
 
-getUserOrders: async (filters = get().filters) => {
-  try {
-    set({
-      loading: true,
-      error: null,
-    });
+  getUserOrders: async (filters = get().filters) => {
+    try {
+      set({
+        loading: true,
+        error: null,
+      });
 
-    const params = {};
+      const params = {};
 
-    if (filters.search?.trim()) {
-      params.search = filters.search.trim();
+      if (filters.search?.trim()) {
+        params.search = filters.search.trim();
+      }
+
+      if (filters.status?.length) {
+        params.status = filters.status.join(",");
+      }
+
+      if (filters.time?.length) {
+        params.time = filters.time.join(",");
+      }
+
+      const res = await getUserOrdersApi(params);
+
+      set({
+        userOrders: res.data.data,
+        loading: false,
+        error: null,
+      });
+    } catch (error) {
+      set({
+        loading: false,
+        error: error?.response?.data?.message || "Failed to fetch user orders",
+      });
     }
-
-    if (filters.status?.length) {
-      params.status = filters.status.join(",");
-    }
-
-    if (filters.time?.length) {
-      params.time = filters.time.join(",");
-    }
-
-    const res = await getUserOrdersApi(params);
-
-    set({
-      userOrders: res.data.data,
-      loading: false,
-      error: null,
-    });
-  } catch (error) {
-    set({
-      loading: false,
-      error:
-        error?.response?.data?.message ||
-        "Failed to fetch user orders",
-    });
-  }
-},
+  },
   getOrderById: async (orderId) => {
     try {
       set({ loading: true });
@@ -192,12 +190,10 @@ getUserOrders: async (filters = get().filters) => {
   },
 
   //  RAZORPAY
-  createRazorpayOrder: async (amount) => {
-    console.log(amount);
-
+  createRazorpayOrder: async () => {
     try {
       set({ paymentLoading: true });
-      const res = await createRazorpayOrderApi(amount);
+      const res = await createRazorpayOrderApi();
       if (!res.success) {
         return toast.error(res?.message);
       }

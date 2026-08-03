@@ -36,7 +36,6 @@ export const getActiveCategoriesApi = async () => {
   );
 };
 
-
 // allApis.js fixes
 export const addCategoryApi = async (reqBody) => {
   return await commonApi(
@@ -501,7 +500,7 @@ export const getUserOrdersApi = async (params = {}) => {
     {},
     {},
     false,
-    params
+    params,
   );
 };
 export const getOrderByIdApi = async (orderId) => {
@@ -540,11 +539,11 @@ export const placeOrderApi = async (reqBody) => {
   );
 };
 
-export const createRazorpayOrderApi = async (amount) => {
+export const createRazorpayOrderApi = async () => {
   return await commonApi(
     "POST",
     `${serverUrl}/api/user/orders/razorpay/create`,
-    { amount },
+    {},
     "",
   );
 };
